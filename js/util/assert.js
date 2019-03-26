@@ -6,11 +6,38 @@ export const verify = function(
     kwargs = {}
 ) {
     if (condition) return;
+    message = message || "Verification failed";
     const Exception = exception || Error;
     kwargs = Object.assign({}, kwargs);
     if (message !== null && message !== undefined) kwargs.message = message;
     if (code !== null && message !== undefined) kwargs.code = code;
-    throw new Exception(kwargs);
+    const throwable = new Exception(kwargs.message || undefined);
+    throwable.kwargs = kwargs;
+    throw throwable;
+};
+
+export const verifyEqual = function(
+    first,
+    second,
+    message = null,
+    code = null,
+    exception = null,
+    kwargs = {}
+) {
+    message = message || `Expected ${first} got ${second}`;
+    return this.verify(first === second, message, code, exception, kwargs);
+};
+
+export const verifyNotEqual = function(
+    first,
+    second,
+    message = null,
+    code = null,
+    exception = null,
+    kwargs = {}
+) {
+    message = message || `Expected ${first} not equal to ${second}`;
+    return this.verify(first !== second, message, code, exception, kwargs);
 };
 
 export const verifyMany = function(

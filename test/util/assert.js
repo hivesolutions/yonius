@@ -8,6 +8,20 @@ describe("#verify", function() {
     });
 });
 
+describe("#verifyEqual", function() {
+    it("should be able to verify equal values", () => {
+        assert.throws(() => ripe.verifyEqual(1, 2), Error);
+        assert.doesNotThrow(() => ripe.verifyEqual(1, 1), Error);
+    });
+});
+
+describe("#verifyNotEqual", function() {
+    it("should be able to verify non equal values", () => {
+        assert.throws(() => ripe.verifyNotEqual(1, 1), Error);
+        assert.doesNotThrow(() => ripe.verifyNotEqual(1, 2), Error);
+    });
+});
+
 describe("#verifyMany", function() {
     it("should be able to verify simple many values", () => {
         assert.throws(() => ripe.verifyMany([false]), Error);
