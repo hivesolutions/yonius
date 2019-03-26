@@ -16,6 +16,7 @@ const banner =
 export default [
     {
         input: "js/index.js",
+        external: ["node-fetch"],
         output: {
             name: "yonius",
             file: pkg.browser,
@@ -23,25 +24,23 @@ export default [
             format: "umd",
             exports: "named",
             compact: true,
-            sourcemap: true
+            sourcemap: true,
+            globals: {
+                "node-fetch": "window"
+            }
         },
         plugins: [
-            resolve({
-                browser: true
-            }),
+            resolve(),
             commonjs(),
             babel({
                 exclude: "node_modules/**",
                 runtimeHelpers: true
             })
-        ],
-        moduleContext: {
-            [require.resolve("node-fetch")]: "window"
-        }
+        ]
     },
     {
         input: "js/index.js",
-        external: ["fs", "zlib", "http", "https", "url", "stream"],
+        external: ["node-fetch"],
         output: [
             {
                 file: pkg.main,
