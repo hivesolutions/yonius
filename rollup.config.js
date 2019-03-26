@@ -25,7 +25,7 @@ export default [
             compact: true,
             sourcemap: true,
             globals: {
-                "node-fetch": "window"
+                "node-fetch": "fetch"
             }
         },
         plugins: [
