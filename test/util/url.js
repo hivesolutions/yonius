@@ -24,4 +24,14 @@ describe("#urlEncode", function() {
         result = ripe.urlEncode([["hello", "世界"]]);
         assert.strictEqual(result, "hello=%E4%B8%96%E7%95%8C");
     });
+
+    it("should be able to encode multiple values", () => {
+        let result;
+
+        result = ripe.urlEncode({ hello: ["world1", "world2"] });
+        assert.strictEqual(result, "hello=world1&hello=world2");
+
+        result = ripe.urlEncode([["hello", ["world1", "world2"]]]);
+        assert.strictEqual(result, "hello=world1&hello=world2");
+    });
 });

@@ -9,13 +9,19 @@ export const urlEncode = function(values) {
         values = Object.entries(values);
     }
 
-    // iterates over the complete set of pairs
-    // available from the key value pairs to be
-    // able to encode them properly
+    // iterates over the complete set of pairs available
+    // from the key value pairs to be able to encode them
+    // properly, notice that the values themselves can be
+    // sequences allowing multiple repetition of key
     values.forEach(([key, value]) => {
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
         const keyEncoded = encodeURIComponent(key);
-        const valueEncoded = encodeURIComponent(value);
-        parts.push(`${keyEncoded}=${valueEncoded}`);
+        value.forEach(_value => {
+            const valueEncoded = encodeURIComponent(_value);
+            parts.push(`${keyEncoded}=${valueEncoded}`);
+        });
     });
 
     // joins the complete set of parts with the and
