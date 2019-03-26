@@ -43,6 +43,7 @@
         "watch": "rollup -c -w"
     },
     "dependencies": {
+        "node-fetch": "^2.3.0"
     },
     "devDependencies": {
         "@babel/core": "^7.4.0",

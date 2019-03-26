@@ -15,7 +15,7 @@ const banner =
 
 export default [
     {
-        input: "js/base.js",
+        input: "js/index.js",
         output: {
             name: "yonius",
             file: pkg.browser,
@@ -34,10 +34,14 @@ export default [
                 exclude: "node_modules/**",
                 runtimeHelpers: true
             })
-        ]
+        ],
+        moduleContext: {
+            [require.resolve("node-fetch")]: "window"
+        }
     },
     {
-        input: "js/base.js",
+        input: "js/index.js",
+        external: ["fs", "zlib", "http", "https", "url", "stream"],
         output: [
             {
                 file: pkg.main,
