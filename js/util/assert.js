@@ -13,4 +13,16 @@ export const verify = function(
     throw new Exception(...kwargs);
 };
 
+export const verifyMany = function(
+    sequence,
+    message = null,
+    code = null,
+    exception = null,
+    ...kwargs
+) {
+    sequence.forEach(element => {
+        verify(element, message, code, exception, ...kwargs);
+    });
+};
+
 export default verify;
