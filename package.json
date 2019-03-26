@@ -18,10 +18,7 @@
         "url": "git+https://github.com/hivesolutions/yonius.git"
     },
     "license": "Apache-2.0",
-    "author": {
-        "name": "Hive Solutions",
-        "url": "https://www.hive.pt"
-    },
+    "author": "Hive Solutions",
     "files": [
         "LICENSE",
         "dist/**/*",
