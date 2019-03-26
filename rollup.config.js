@@ -22,7 +22,6 @@ export default [
             banner: banner,
             format: "umd",
             exports: "named",
-            compact: true,
             sourcemap: true,
             globals: {
                 "node-fetch": "fetch"
