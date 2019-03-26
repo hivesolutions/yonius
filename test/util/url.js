@@ -34,4 +34,20 @@ describe("#urlEncode", function() {
         result = ripe.urlEncode([["hello", ["world1", "world2"]]]);
         assert.strictEqual(result, "hello=world1&hello=world2");
     });
+
+    it("should be able to ignore null or undefined values", () => {
+        let result;
+
+        result = ripe.urlEncode({ hello1: null, hello2: "world2" });
+        assert.strictEqual(result, "hello2=world2");
+
+        result = ripe.urlEncode([["hello1", null], ["hello2", "world2"]]);
+        assert.strictEqual(result, "hello2=world2");
+
+        result = ripe.urlEncode({ hello1: undefined, hello2: "world2" });
+        assert.strictEqual(result, "hello2=world2");
+
+        result = ripe.urlEncode([["hello1", undefined], ["hello2", "world2"]]);
+        assert.strictEqual(result, "hello2=world2");
+    });
 });

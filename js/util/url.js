@@ -19,6 +19,9 @@ export const urlEncode = function(values) {
         }
         const keyEncoded = encodeURIComponent(key);
         value.forEach(_value => {
+            if (_value === undefined || _value === null) {
+                return;
+            }
             const valueEncoded = encodeURIComponent(_value);
             parts.push(`${keyEncoded}=${valueEncoded}`);
         });
