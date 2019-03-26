@@ -1,6 +1,10 @@
 export const urlEncode = function(values) {
+    // constructs the parts array that is going to
+    // store the multiple and values
     const parts = [];
 
+    // in case the provided value is not an array
+    // then assumes it's an object and retrieve entries
     if (!Array.isArray(values)) {
         values = Object.entries(values);
     }
@@ -14,6 +18,8 @@ export const urlEncode = function(values) {
         parts.push(`${keyEncoded}=${valueEncoded}`);
     });
 
+    // joins the complete set of parts with the and
+    // separator and then returns the final string value
     return parts.join("&");
 };
 
