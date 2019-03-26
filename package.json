@@ -5,9 +5,9 @@
     "keywords": [
         "api",
         "foundation",
-        "yonius",
         "js",
-        "library"
+        "library",
+        "yonius"
     ],
     "homepage": "https://github.com/hivesolutions/ripe-id-api-js#readme",
     "bugs": {
