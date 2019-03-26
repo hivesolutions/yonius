@@ -6,6 +6,7 @@ describe("API", function() {
         it("should be able to contruct a new API instance", () => {
             const api = new ripe.API();
             assert.notStrictEqual(api, null);
+            assert.notStrictEqual(api, undefined);
         });
     });
 });
