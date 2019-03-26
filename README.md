@@ -1,2 +1,3 @@
-# yonius
-Foundation structure for Javascript (ES6)
+# [Yonius](http://yonius.hive.pt)
+
+Foundation structure for Javascript (ES6).
