@@ -10,7 +10,6 @@ export class API extends Observable {
         silent = null,
         redirect = null,
         timeout = null,
-        callback = null,
         extra = null
     ) {
         const response = await fetch(url, {
