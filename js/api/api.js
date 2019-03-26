@@ -3,12 +3,7 @@ import { urlEncode } from "../util";
 import fetch from "node-fetch";
 
 export class API extends Observable {
-    async get(
-        url,
-        params = null,
-        headers = null,
-        kwargs = {}
-    ) {
+    async get(url, params = null, headers = null, kwargs = {}) {
         const handle = kwargs.handle !== undefined ? kwargs.handle : true;
         const query = urlEncode(params || {});
         if (query) url += url.includes("?") ? "&" + query : "?" + query;
