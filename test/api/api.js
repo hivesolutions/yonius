@@ -1,12 +1,12 @@
 const assert = require("assert");
-const ripe = require("../..");
+const yonius = require("../..");
 
 const httpbinUrl = "https://httpbin.stage.hive.pt/";
 
 describe("API", function() {
     describe("#constructor()", function() {
         it("should be able to contruct a new API instance", () => {
-            const api = new ripe.API();
+            const api = new yonius.API();
             assert.notStrictEqual(api, null);
             assert.notStrictEqual(api, undefined);
         });
@@ -14,7 +14,7 @@ describe("API", function() {
     describe("#get()", function() {
         it("should be able to run a simple get", async () => {
             let result;
-            const api = new ripe.API();
+            const api = new yonius.API();
 
             result = await api.get(httpbinUrl + "ip");
             assert.notStrictEqual(result.origin, null);
@@ -36,7 +36,7 @@ describe("API", function() {
     describe("#post()", function() {
         it("should be able to run a simple post", async () => {
             let result;
-            const api = new ripe.API();
+            const api = new yonius.API();
 
             result = await api.post(httpbinUrl + "post", {
                 params: { hello: "world" }

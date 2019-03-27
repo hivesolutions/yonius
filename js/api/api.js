@@ -3,23 +3,18 @@ import { urlEncode } from "../util";
 import fetch from "node-fetch";
 
 export class API extends Observable {
-    async build(method, url, options = {}) {
-    }
+    async build(method, url, options = {}) {}
 
     async get(url, options = {}) {
         let params = options.params !== undefined ? options.params : {};
         let headers = options.headers !== undefined ? options.headers : {};
         let kwargs = options.kwargs !== undefined ? options.kwargs : {};
         let handle = options.handle !== undefined ? options.handle : true;
-        this.build(
-            "GET",
-            url,
-            {
-                params: params,
-                headers: headers,
-                kwargs: kwargs
-            }
-        );
+        this.build("GET", url, {
+            params: params,
+            headers: headers,
+            kwargs: kwargs
+        });
         const query = urlEncode(params || {});
         if (query) url += url.includes("?") ? "&" + query : "?" + query;
         const response = await fetch(url, {
@@ -40,19 +35,15 @@ export class API extends Observable {
         let kwargs = options.kwargs !== undefined ? options.kwargs : null;
         let handle = options.handle !== undefined ? options.handle : true;
 
-        this.build(
-            "POST",
-            url,
-            {
-                params: params,
-                headers: headers,
-                data: data,
-                dataJ: dataJ,
-                dataM: dataM,
-                mime: mime,
-                kwargs: kwargs
-            }
-        );
+        this.build("POST", url, {
+            params: params,
+            headers: headers,
+            data: data,
+            dataJ: dataJ,
+            dataM: dataM,
+            mime: mime,
+            kwargs: kwargs
+        });
 
         const query = urlEncode(params || {});
 
