@@ -8,8 +8,6 @@ const CASTS = {
 
 const CONFIGS = {};
 
-const CONFIG_F = [];
-
 export function conf(name, fallback = null, cast = null, ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     cast = _castR(cast);
