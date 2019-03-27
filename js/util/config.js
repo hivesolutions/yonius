@@ -1,9 +1,9 @@
 const CASTS = {
-    int: v => (typeof v === "number" ? v : parseInt(v)),
-    float: v => (typeof v === "number" ? v : parseFloat(v)),
-    bool: v => (typeof v === "boolean" ? v : ["1", "true", "True"].includes(v)),
-    list: v => (Array.isArray(v) ? v : v.split(";")),
-    tuple: v => (Array.isArray(v) ? v : v.split(";"))
+    int: v => typeof v === "number" ? v : parseInt(v),
+    float: v => typeof v === "number" ? v : parseFloat(v),
+    bool: v => typeof v === "boolean" ? v : ["1", "true", "True"].includes(v),
+    list: v => Array.isArray(v) ? v : v.split(";"),
+    tuple: v => Array.isArray(v) ? v : v.split(";")
 };
 
 const CONFIGS = {};
