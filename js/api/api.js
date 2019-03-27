@@ -3,7 +3,7 @@ import { urlEncode } from "../util";
 import fetch from "node-fetch";
 
 export class API extends Observable {
-    async build(method, url, options) {
+    async build(method, url, options = {}) {
     }
 
     async get(url, options = {}) {
