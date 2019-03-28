@@ -24,7 +24,6 @@ export const confS = function(name, value, ctx = null) {
 };
 
 export const load = function(ctx = null) {
-    console.info("vai carregar");
     loadEnv(ctx);
 };
 
