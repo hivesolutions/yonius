@@ -90,7 +90,7 @@ export const loadFile = async function(
 
     await _loadIncludes(basePath, dataJ, encoding);
 
-    for ([key, value] of Object.values(dataJ)) {
+    for ([key, value] of Object.entries(dataJ)) {
         if (!_isValid(key)) continue;
         configs[key] = value;
     }
@@ -176,7 +176,5 @@ export const _isDevel = function() {
 export const _isSecure = function() {
     return conf("SECURE", true, "bool");
 };
-
-load();
 
 export default conf;
