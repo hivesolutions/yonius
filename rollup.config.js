@@ -31,7 +31,14 @@ export default [
         },
         plugins: [
             builtins(),
-            resolve(),
+            resolve({
+                customResolveOptions: {
+                    paths:
+                        process.platform === "win32"
+                            ? process.env.NODE_PATH.split(/;/)
+                            : process.env.NODE_PATH.split(/:/)
+                }
+            }),
             commonjs(),
             babel({
                 babelrc: false,
@@ -57,6 +64,15 @@ export default [
                 sourcemap: true
             }
         ],
-        plugins: [resolve()]
+        plugins: [
+            resolve({
+                customResolveOptions: {
+                    paths:
+                        process.platform === "win32"
+                            ? process.env.NODE_PATH.split(/;/)
+                            : process.env.NODE_PATH.split(/:/)
+                }
+            })
+        ]
     }
 ];
