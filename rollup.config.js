@@ -23,7 +23,7 @@ const banner =
 export default [
     {
         input: "js/index.js",
-        external: ["node-fetch"],
+        external: ["node-fetch", "fs"],
         output: {
             name: "yonius",
             file: pkg.browser,
@@ -32,7 +32,8 @@ export default [
             exports: "named",
             sourcemap: true,
             globals: {
-                "node-fetch": "fetch"
+                "node-fetch": "fetch",
+                fs: "document"
             }
         },
         plugins: [
@@ -52,7 +53,7 @@ export default [
     },
     {
         input: "js/index.js",
-        external: ["node-fetch", "process"],
+        external: ["node-fetch", "fs", "process", "path"],
         output: [
             {
                 file: pkg.main,

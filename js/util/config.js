@@ -1,4 +1,7 @@
+import * as fs from "fs";
+import { resolve, join, normalize, dirname } from "path";
 import { env } from "process";
+import { pathExists } from "./fs";
 
 const FILE_NAME = "yonius.json";
 
@@ -29,16 +32,52 @@ export const confS = function(name, value, ctx = null) {
     configs[name] = value;
 };
 
-export const load = function(ctx = null) {
-    loadEnv(ctx);
+export const load = async function(ctx = null) {
+    await loadFile("c:/users/joamag/desktop/tobias.json");
+    await loadEnv(ctx);
 };
 
-export const loadFile = function(name = FILE_NAME, path = null, ctx = null) {
+export const loadFile = async function(
+    name = FILE_NAME,
+    path = null,
+    encoding = "utf-8",
+    ctx = null
+) {
     const configs = ctx ? ctx.configs : CONFIGS;
     const configF = ctx ? ctx.configF : CONFIG_F;
+
+    let key;
+    let value;
+    let exists;
+    let filePath;
+
+    if (path) path = normalize(path);
+    if (path) filePath = join(path, name);
+    else filePath = name;
+
+    filePath = resolve(filePath);
+    filePath = normalize(filePath);
+    const basePath = dirname(filePath);
+
+    exists = pathExists(filePath);
+    if (!exists) return;
+
+    exists = configF.includes(filePath);
+    if (exists) configF.splice(configF.indexOf(filePath), 1);
+    configF.push(filePath);
+
+    const data = await fs.promises.readFile(filePath, { encoding: encoding });
+    const dataJ = JSON.parse(data);
+
+    _loadIncludes(basePath, dataJ, encoding);
+
+    for ([key, value] of Object.values(dataJ)) {
+        if (!_isValid(key)) continue;
+        configs[key] = value;
+    }
 };
 
-export const loadEnv = function(ctx = null) {
+export const loadEnv = async function(ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     if (env === undefined || env === null) return;
     Object.entries(env).forEach(function([key, value]) {
@@ -50,7 +89,7 @@ export const _castR = function(cast) {
     return CASTS[cast] === undefined ? cast : CASTS[cast];
 };
 
-export const _loadIncludes = function(basePath, config) {
+export const _loadIncludes = function(basePath, config, encoding = "utf-8") {
     let includes = [];
 
     for (const alias of IMPORT_NAMES) {
@@ -62,7 +101,7 @@ export const _loadIncludes = function(basePath, config) {
     }
 
     for (const include of includes) {
-        loadFile(include, basePath);
+        loadFile(include, basePath, encoding);
     }
 };
 
