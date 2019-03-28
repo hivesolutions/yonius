@@ -57,8 +57,6 @@ export default [
                 sourcemap: true
             }
         ],
-        plugins: [
-            resolve()
-        ]
+        plugins: [resolve()]
     }
 ];
