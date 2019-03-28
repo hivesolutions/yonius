@@ -14,7 +14,7 @@ export const conf = function(name, fallback = null, cast = null, ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     cast = _castR(cast);
     let value = configs[name] === undefined ? fallback : configs[name];
-    if (cast && value !== null) value = cast(value);
+    if (cast && value !== undefined && value !== null) value = cast(value);
     return value;
 };
 
