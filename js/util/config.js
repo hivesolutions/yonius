@@ -10,7 +10,7 @@ const CASTS = {
 
 const CONFIGS = {};
 
-export const conf = function(name, fallback = null, cast = null, ctx = null) {
+export const conf = function(name, fallback = undefined, cast = null, ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     cast = _castR(cast);
     let value = configs[name] === undefined ? fallback : configs[name];
