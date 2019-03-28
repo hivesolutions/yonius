@@ -1,6 +1,7 @@
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import builtins from "rollup-plugin-node-builtins";
 import pkg from "./package.json";
 
 const banner =
@@ -29,6 +30,7 @@ export default [
             }
         },
         plugins: [
+            builtins(),
             resolve(),
             commonjs(),
             babel({
@@ -39,7 +41,7 @@ export default [
     },
     {
         input: "js/index.js",
-        external: ["node-fetch"],
+        external: ["node-fetch", "process"],
         output: [
             {
                 file: pkg.main,
@@ -55,6 +57,8 @@ export default [
                 sourcemap: true
             }
         ],
-        plugins: [resolve()]
+        plugins: [
+            resolve()
+        ]
     }
 ];
