@@ -42,10 +42,10 @@ export const load = async function(
     encoding = "utf-8",
     ctx = null
 ) {
-    const paths = [];
+    let paths = [];
     const homes = await getHomes();
     for (const home of homes) {
-        paths.concat([join(home), join(home, ".config")]);
+        paths = paths.concat([join(home), join(home, ".config")]);
     }
     paths.push(path);
     for (const path of paths) {
@@ -88,7 +88,7 @@ export const loadFile = async function(
     const data = await fs.promises.readFile(filePath, { encoding: encoding });
     const dataJ = JSON.parse(data);
 
-    _loadIncludes(basePath, dataJ, encoding);
+    await _loadIncludes(basePath, dataJ, encoding);
 
     for ([key, value] of Object.values(dataJ)) {
         if (!_isValid(key)) continue;
@@ -148,7 +148,7 @@ export const _castR = function(cast) {
     return CASTS[cast] === undefined ? cast : CASTS[cast];
 };
 
-export const _loadIncludes = function(basePath, config, encoding = "utf-8") {
+export const _loadIncludes = async function(basePath, config, encoding = "utf-8") {
     let includes = [];
 
     for (const alias of IMPORT_NAMES) {
@@ -160,7 +160,7 @@ export const _loadIncludes = function(basePath, config, encoding = "utf-8") {
     }
 
     for (const include of includes) {
-        loadFile(include, basePath, encoding);
+        await loadFile(include, basePath, encoding);
     }
 };
 
