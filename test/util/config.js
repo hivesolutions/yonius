@@ -37,4 +37,16 @@ describe("#conf", function() {
         result = yonius.conf("HELLO", undefined, "bool");
         assert.strictEqual(result, false);
     });
+
+    it("should be able to run some internal validations", () => {
+        yonius.confS("LEVEL", "INFO");
+        assert.strictEqual(yonius._isDevel(), false);
+
+        yonius.confS("LEVEL", "DEBUG");
+        assert.strictEqual(yonius._isDevel(), true);
+
+        assert.strictEqual(yonius._isValid("LEVEL"), true);
+
+        assert.strictEqual(yonius._isValid("$include"), false);
+    });
 });

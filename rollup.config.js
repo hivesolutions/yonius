@@ -5,6 +5,11 @@ import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import pkg from "./package.json";
 
+const nodePath = process.env.NODE_PATH
+    ? process.platform === "win32"
+        ? process.env.NODE_PATH.split(/;/)
+        : process.env.NODE_PATH.split(/:/)
+    : null;
 const banner =
     "/**\n" +
     ` * Yonius ${pkg.version}.\n` +
@@ -35,10 +40,7 @@ export default [
             builtins(),
             resolve({
                 customResolveOptions: {
-                    paths:
-                        process.platform === "win32"
-                            ? process.env.NODE_PATH.split(/;/)
-                            : process.env.NODE_PATH.split(/:/)
+                    paths: nodePath
                 }
             }),
             commonjs(),
@@ -69,10 +71,7 @@ export default [
         plugins: [
             resolve({
                 customResolveOptions: {
-                    paths:
-                        process.platform === "win32"
-                            ? process.env.NODE_PATH.split(/;/)
-                            : process.env.NODE_PATH.split(/:/)
+                    paths: nodePath
                 }
             })
         ]
