@@ -1,9 +1,11 @@
 import * as fs from "fs";
 import { resolve, join, normalize, dirname } from "path";
 import { env } from "process";
-import { pathExists } from "./fs";
+import { pathExists, expandUser } from "./fs";
 
 const FILE_NAME = "yonius.json";
+
+const HOME_FILE = "~/.home";
 
 const IMPORT_NAMES = ["$import", "$include", "$IMPORT", "$INCLUDE"];
 
@@ -19,6 +21,8 @@ const CONFIGS = {};
 
 const CONFIG_F = [];
 
+let HOMES = [];
+
 export const conf = function(name, fallback = undefined, cast = null, ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     cast = _castR(cast);
@@ -32,8 +36,23 @@ export const confS = function(name, value, ctx = null) {
     configs[name] = value;
 };
 
-export const load = async function(ctx = null) {
-    await loadFile("c:/users/joamag/desktop/tobias.json");
+export const load = async function(
+    names = [FILE_NAME],
+    path = null,
+    encoding = "utf-8",
+    ctx = null
+) {
+    const paths = [];
+    const homes = await getHomes();
+    for (const home of homes) {
+        paths.concat([join(home), join(home, ".config")]);
+    }
+    paths.push(path);
+    for (const path of paths) {
+        for (const name of names) {
+            await loadFile(name, path, encoding, ctx);
+        }
+    }
     await loadEnv(ctx);
 };
 
@@ -59,7 +78,7 @@ export const loadFile = async function(
     filePath = normalize(filePath);
     const basePath = dirname(filePath);
 
-    exists = pathExists(filePath);
+    exists = await pathExists(filePath);
     if (!exists) return;
 
     exists = configF.includes(filePath);
@@ -83,6 +102,46 @@ export const loadEnv = async function(ctx = null) {
     Object.entries(env).forEach(function([key, value]) {
         configs[key] = value;
     });
+};
+
+export const getHomes = async function(
+    filePath = HOME_FILE,
+    fallback = "~",
+    encoding = "utf-8",
+    forceDefault = false
+) {
+    if (HOMES.length > 0) return HOMES;
+
+    HOMES = env.HOMES === undefined ? null : env.HOMES;
+    HOMES = HOMES ? HOMES.split(";") : HOMES;
+    if (HOMES !== null) return HOMES;
+
+    fallback = expandUser(fallback);
+    fallback = normalize(fallback);
+    HOMES = [fallback];
+
+    filePath = expandUser(filePath);
+    filePath = normalize(filePath);
+    const exists = await pathExists(filePath);
+    if (!exists) return HOMES;
+
+    if (!forceDefault) HOMES.splice(0, HOMES.length);
+
+    let data = await fs.promises.readFile(filePath, { encoding: encoding });
+    data = data.trim();
+
+    let paths = data.split(/\r?\n/);
+    paths = paths.map(v => v.trim());
+
+    for (let path of paths) {
+        path = path.trim();
+        if (!path) continue;
+        path = expandUser(path);
+        path = normalize(path);
+        HOMES.push(path);
+    }
+
+    return HOMES;
 };
 
 export const _castR = function(cast) {
