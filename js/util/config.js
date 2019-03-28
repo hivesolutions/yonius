@@ -23,12 +23,19 @@ const CONFIG_F = [];
 
 let HOMES = [];
 
+let LOADED = false;
+
 export const conf = function(name, fallback = undefined, cast = null, ctx = null) {
     const configs = ctx ? ctx.configs : CONFIGS;
     cast = _castR(cast);
     let value = configs[name] === undefined ? fallback : configs[name];
     if (cast && value !== undefined && value !== null) value = cast(value);
     return value;
+};
+
+export const confP = async function(name, fallback = undefined, cast = null, ctx = null) {
+    await load();
+    return conf(name, fallback, cast, ctx);
 };
 
 export const confS = function(name, value, ctx = null) {
@@ -40,8 +47,10 @@ export const load = async function(
     names = [FILE_NAME],
     path = null,
     encoding = "utf-8",
+    force = false,
     ctx = null
 ) {
+    if (LOADED && !force) return;
     let paths = [];
     const homes = await getHomes();
     for (const home of homes) {
@@ -54,6 +63,7 @@ export const load = async function(
         }
     }
     await loadEnv(ctx);
+    LOADED = true;
 };
 
 export const loadFile = async function(

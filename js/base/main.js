@@ -1,4 +1,4 @@
-import { loadConf } from "..";
+import { loadConf } from "../util";
 
 export const load = async function() {
     await loadConf();
