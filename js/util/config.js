@@ -41,4 +41,6 @@ const _castR = function(cast) {
     return CASTS[cast] === undefined ? cast : CASTS[cast];
 };
 
+load();
+
 export default conf;
