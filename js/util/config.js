@@ -17,16 +17,16 @@ const CASTS = {
     tuple: v => (Array.isArray(v) ? v : v.split(";"))
 };
 
-const CONFIGS = {};
+global.CONFIGS = global.CONFIGS === undefined ? {} : global.CONFIGS;
 
-const CONFIG_F = [];
+global.CONFIG_F = global.CONFIG_F === undefined ? [] : global.CONFIG_F;
 
-let HOMES = [];
+global.HOMES = global.HOMES === undefined ? [] : global.HOMES;
 
-let LOADED = false;
+global.LOADED = global.LOADED === undefined ? false : global.LOADED;
 
 export const conf = function(name, fallback = undefined, cast = null, ctx = null) {
-    const configs = ctx ? ctx.configs : CONFIGS;
+    const configs = ctx ? ctx.configs : global.CONFIGS;
     cast = _castR(cast);
     let value = configs[name] === undefined ? fallback : configs[name];
     if (cast && value !== undefined && value !== null) value = cast(value);
@@ -39,7 +39,7 @@ export const confP = async function(name, fallback = undefined, cast = null, ctx
 };
 
 export const confS = function(name, value, ctx = null) {
-    const configs = ctx ? ctx.configs : CONFIGS;
+    const configs = ctx ? ctx.configs : global.CONFIGS;
     configs[name] = value;
 };
 
@@ -50,7 +50,7 @@ export const load = async function(
     force = false,
     ctx = null
 ) {
-    if (LOADED && !force) return;
+    if (global.LOADED && !force) return;
     let paths = [];
     const homes = await getHomes();
     for (const home of homes) {
@@ -63,7 +63,7 @@ export const load = async function(
         }
     }
     await loadEnv(ctx);
-    LOADED = true;
+    global.LOADED = true;
 };
 
 export const loadFile = async function(
@@ -72,8 +72,8 @@ export const loadFile = async function(
     encoding = "utf-8",
     ctx = null
 ) {
-    const configs = ctx ? ctx.configs : CONFIGS;
-    const configF = ctx ? ctx.configF : CONFIG_F;
+    const configs = ctx ? ctx.configs : global.CONFIGS;
+    const configF = ctx ? ctx.configF : global.CONFIG_F;
 
     let key;
     let value;
@@ -107,7 +107,7 @@ export const loadFile = async function(
 };
 
 export const loadEnv = async function(ctx = null) {
-    const configs = ctx ? ctx.configs : CONFIGS;
+    const configs = ctx ? ctx.configs : global.CONFIGS;
     if (env === undefined || env === null) return;
     Object.entries(env).forEach(function([key, value]) {
         configs[key] = value;
@@ -120,22 +120,22 @@ export const getHomes = async function(
     encoding = "utf-8",
     forceDefault = false
 ) {
-    if (HOMES.length > 0) return HOMES;
+    if (global.HOMES.length > 0) return global.HOMES;
 
-    HOMES = env.HOMES === undefined ? null : env.HOMES;
-    HOMES = HOMES ? HOMES.split(";") : HOMES;
-    if (HOMES !== null) return HOMES;
+    global.HOMES = env.HOMES === undefined ? null : env.HOMES;
+    global.HOMES = global.HOMES ? global.HOMES.split(";") : global.HOMES;
+    if (global.HOMES !== null) return global.HOMES;
 
     fallback = expandUser(fallback);
     fallback = normalize(fallback);
-    HOMES = [fallback];
+    global.HOMES = [fallback];
 
     filePath = expandUser(filePath);
     filePath = normalize(filePath);
     const exists = await pathExists(filePath);
-    if (!exists) return HOMES;
+    if (!exists) return global.HOMES;
 
-    if (!forceDefault) HOMES.splice(0, HOMES.length);
+    if (!forceDefault) global.HOMES.splice(0, global.HOMES.length);
 
     let data = await fs.promises.readFile(filePath, { encoding: encoding });
     data = data.trim();
@@ -148,10 +148,10 @@ export const getHomes = async function(
         if (!path) continue;
         path = expandUser(path);
         path = normalize(path);
-        HOMES.push(path);
+        global.HOMES.push(path);
     }
 
-    return HOMES;
+    return global.HOMES;
 };
 
 export const _castR = function(cast) {
