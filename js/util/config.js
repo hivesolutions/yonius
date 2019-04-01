@@ -56,7 +56,7 @@ export const load = async function(
     for (const home of homes) {
         paths = paths.concat([join(home), join(home, ".config")]);
     }
-    paths.push(path);
+    if (path) paths.push(path);
     for (const path of paths) {
         for (const name of names) {
             await loadFile(name, path, encoding, ctx);
