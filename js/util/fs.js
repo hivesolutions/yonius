@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { join } from "path";
 import { env } from "process";
 
-const HOME_DIR = env[process.platform === "win32" ? "USERPROFILE" : "HOME"];
+const HOME_DIR = env[process.platform === "win32" ? "USERPROFILE" : "HOME"] || "/";
 
 export const pathExists = async function(path) {
     try {
