@@ -5,6 +5,24 @@ import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import pkg from "./package.json";
 
+const fsbuiltin = function() {
+    return {
+        name: "fs",
+        resolveId(importee) {
+            if (importee === "fs") {
+                return importee;
+            }
+            return null;
+        },
+        load(id) {
+            if (id === "fs") {
+                return "export const promises = {};";
+            }
+            return null;
+        }
+    };
+};
+
 const nodePath = process.env.NODE_PATH
     ? process.platform === "win32"
         ? process.env.NODE_PATH.split(/;/)
@@ -23,7 +41,7 @@ const banner =
 export default [
     {
         input: "js/index.js",
-        external: ["node-fetch", "fs"],
+        external: ["node-fetch"],
         output: {
             name: "yonius",
             file: pkg.browser,
@@ -32,12 +50,12 @@ export default [
             exports: "named",
             sourcemap: true,
             globals: {
-                "node-fetch": "fetch",
-                fs: "document"
+                "node-fetch": "fetch"
             }
         },
         plugins: [
             globals(),
+            fsbuiltin(),
             builtins(),
             resolve({
                 customResolveOptions: {
