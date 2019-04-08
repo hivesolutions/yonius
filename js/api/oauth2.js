@@ -7,6 +7,7 @@ export class OAuth2API extends OAuthAPI {
     }
 
     async build(method, url, options = {}) {
+        await super.build(method, url, options);
         const headers = options.headers !== undefined ? options.headers : {};
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const token = kwargs.token === undefined ? this.tokenDefault : kwargs.token;
