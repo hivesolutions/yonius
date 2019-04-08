@@ -8,12 +8,13 @@ export class OAuth2API extends OAuthAPI {
 
     async build(method, url, options = {}) {
         await super.build(method, url, options);
+        const params = options.params !== undefined ? options.params : {};
         const headers = options.headers !== undefined ? options.headers : {};
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const token = kwargs.token === undefined ? this.tokenDefault : kwargs.token;
         delete kwargs.token;
         if (token && this.oauthTypes.includes("param")) {
-            kwargs[this.oauthParam] = this.getAccessToken();
+            params[this.oauthParam] = this.getAccessToken();
         }
         if (token && this.oauthTypes.includes("header")) {
             headers.Authorization = `Bearer ${this.getAccessToken()}`;

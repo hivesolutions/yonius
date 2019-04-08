@@ -11,11 +11,11 @@ export class API extends Observable {
     async build(method, url, options = {}) {}
 
     async get(url, options = {}) {
-        let params = options.params !== undefined ? options.params : {};
-        let headers = options.headers !== undefined ? options.headers : {};
-        let kwargs = options.kwargs !== undefined ? options.kwargs : {};
-        let handle = options.handle !== undefined ? options.handle : true;
-        this.build("GET", url, {
+        const params = options.params !== undefined ? options.params : {};
+        const headers = options.headers !== undefined ? options.headers : {};
+        const kwargs = options.kwargs !== undefined ? options.kwargs : {};
+        const handle = options.handle !== undefined ? options.handle : true;
+        await this.build("GET", url, {
             params: params,
             headers: headers,
             kwargs: kwargs
@@ -31,16 +31,16 @@ export class API extends Observable {
     }
 
     async post(url, options = {}) {
-        let params = options.params !== undefined ? options.params : {};
+        const params = options.params !== undefined ? options.params : {};
         let headers = options.headers !== undefined ? options.headers : {};
         let data = options.data !== undefined ? options.data : null;
-        let dataJ = options.dataJ !== undefined ? options.dataJ : null;
-        let dataM = options.dataM !== undefined ? options.dataM : null;
+        const dataJ = options.dataJ !== undefined ? options.dataJ : null;
+        const dataM = options.dataM !== undefined ? options.dataM : null;
         let mime = options.mime !== undefined ? options.mime : null;
-        let kwargs = options.kwargs !== undefined ? options.kwargs : null;
-        let handle = options.handle !== undefined ? options.handle : true;
+        const kwargs = options.kwargs !== undefined ? options.kwargs : null;
+        const handle = options.handle !== undefined ? options.handle : true;
 
-        this.build("POST", url, {
+        await this.build("POST", url, {
             params: params,
             headers: headers,
             data: data,
