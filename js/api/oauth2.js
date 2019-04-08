@@ -12,10 +12,10 @@ export class OAuth2API extends OAuthAPI {
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const token = kwargs.token === undefined ? this.tokenDefault : kwargs.token;
         delete kwargs.token;
-        if (token && this.oauthType.includes("param")) {
+        if (token && this.oauthTypes.includes("param")) {
             kwargs[this.oauthParam] = this.getAccessToken();
         }
-        if (token && self.oauthTypes.includes("header")) {
+        if (token && this.oauthTypes.includes("header")) {
             headers.Authorization = `Bearer ${this.getAccessToken()}`;
         }
     }
