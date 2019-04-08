@@ -37,7 +37,7 @@ export class API extends Observable {
         const dataJ = options.dataJ !== undefined ? options.dataJ : null;
         const dataM = options.dataM !== undefined ? options.dataM : null;
         let mime = options.mime !== undefined ? options.mime : null;
-        const kwargs = options.kwargs !== undefined ? options.kwargs : null;
+        const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const handle = options.handle !== undefined ? options.handle : true;
 
         await this.build("POST", url, {
