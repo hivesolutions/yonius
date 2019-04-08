@@ -20,7 +20,7 @@ export class OAuth2API extends OAuthAPI {
     }
 
     getAccessToken() {
-        if (this.accessToken) return self.access_token;
+        if (this.accessToken) return this.accessToken;
         throw new Error("No access token found must re-authorize");
     }
 
@@ -29,7 +29,7 @@ export class OAuth2API extends OAuthAPI {
     }
 
     get oauthParam() {
-        return "accessToken";
+        return "access_token";
     }
 
     get tokenDefault() {
