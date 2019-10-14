@@ -2,13 +2,14 @@ sudo: false
 dist: trusty
 language: node_js
 node_js:
-  - "7"
   - "8"
   - "9"
   - "10"
   - "11"
 install:
   - npm install
+env:
+  - HTTPBIN=httpbin.bemisc.com
 script: npm run lint && npm run build && npm test
 before_deploy: npm run build
 deploy:
