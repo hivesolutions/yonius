@@ -5,7 +5,7 @@ const httpbinUrl = "https://httpbin.stage.hive.pt/";
 
 describe("API", function() {
     describe("#constructor()", function() {
-        it("should be able to contruct a new API instance", () => {
+        it("should be able to construct a new API instance", () => {
             const api = new yonius.API();
             assert.notStrictEqual(api, null);
             assert.notStrictEqual(api, undefined);
