@@ -5,6 +5,7 @@ const httpbinHost = process.env.HTTPBIN ? process.env.HTTPBIN : "httpbin.stage.h
 const httpbinUrl = `https://${httpbinHost}/`;
 
 describe("API", function() {
+    this.timeout(10000);
     describe("#constructor()", function() {
         it("should be able to construct a new API instance", () => {
             const api = new yonius.API();
