@@ -1,7 +1,8 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-const httpbinUrl = process.env.HTTPBIN ? process.env.HTTPBIN : "https://httpbin.stage.hive.pt/";
+const httpbinHost = process.env.HTTPBIN ? process.env.HTTPBIN : "httpbin.stage.hive.pt";
+const httpbinUrl = `https://${httpbinHost}/`;
 
 describe("API", function() {
     describe("#constructor()", function() {
