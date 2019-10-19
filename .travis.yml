@@ -13,7 +13,7 @@ node_js:
 jobs:
   include:
     - os: linux
-      env: BUILD_ARCH=amd64
+      env: HTTPBIN=httpbin.bemisc.com RUN_DEPLOY=1
 install:
   - npm install
 env:
@@ -30,4 +30,4 @@ deploy:
     tags: true
     arch: amd64
     node_js: "8"
-    condition: $BUILD_ARCH = amd64
+    condition: $RUN_DEPLOY = 1
