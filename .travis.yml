@@ -9,15 +9,23 @@ jobs:
     - os: linux
       arch: amd64
       env: BUILD_ARCH=amd64
+      language: node_js
+      node_js:
+        - "8"
+        - "9"
+        - "10"
+        - "11"
+        - "12"
     - os: linux
       arch: arm64
       env: BUILD_ARCH=arm64
-node_js:
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
+      language: node_js
+      node_js:
+        - "8"
+        - "9"
+        - "10"
+        - "11"
+        - "12"
 install:
   - npm install
 env:
