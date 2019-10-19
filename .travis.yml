@@ -3,22 +3,30 @@ dist: trusty
 language: node_js
 matrix:
   include:
-   - os: linux
-     arch: amd64
-     env: BUILD_ARCH=amd64
-   - os: linux
-     arch: arm64
-     env: BUILD_ARCH=arm64
-node_js:
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
+    - os: linux
+      arch: amd64
+      env:
+        - BUILD_ARCH=arm64
+        - HTTPBIN=httpbin.bemisc.com
+      node_js:
+        - "8"
+        - "9"
+        - "10"
+        - "11"
+        - "12"
+    - os: linux
+      arch: arm64
+      env:
+        - BUILD_ARCH=arm64
+        - HTTPBIN=httpbin.bemisc.com
+      node_js:
+        - "8"
+        - "9"
+        - "10"
+        - "11"
+        - "12"
 install:
   - npm install
-env:
-  - HTTPBIN=httpbin.bemisc.com
 script: npm run lint && npm run build && npm test
 before_deploy: npm run build
 deploy:
