@@ -4,28 +4,12 @@ language: node_js
 arch:
   - amd64
   - arm64
-jobs:
-  include:
-    - os: linux
-      arch: amd64
-      env: BUILD_ARCH=amd64
-      language: node_js
-      node_js:
-        - "8"
-        - "9"
-        - "10"
-        - "11"
-        - "12"
-    - os: linux
-      arch: arm64
-      env: BUILD_ARCH=arm64
-      language: node_js
-      node_js:
-        - "8"
-        - "9"
-        - "10"
-        - "11"
-        - "12"
+node_js:
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
 install:
   - npm install
 env:
@@ -42,4 +26,4 @@ deploy:
     tags: true
     arch: amd64
     node_js: "8"
-    condition: $ADAPTER = mongo
+    condition: arch = amd64
