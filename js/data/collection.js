@@ -1,4 +1,4 @@
-import { NotImplementedError } from "../base";
+import { NotImplementedError, request } from "../base";
 
 export class Collection {
     constructor(options) {
@@ -24,7 +24,7 @@ export class Collection {
 
 export class MongoCollection extends Collection {
     constructor(name, schema) {
-        const mongoose = require("mongoose");
+        const mongoose = request("mongoose");
         super(name, schema);
         this._mongoose = mongoose.model(
             this.options.name,

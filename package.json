@@ -44,9 +44,6 @@
     "dependencies": {
         "node-fetch": "^2.6.0"
     },
-    "optionalDependencies": {
-        "mongoose": "^5.7.5"
-    },
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",

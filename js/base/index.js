@@ -1,2 +1,2 @@
 export { YoniusError, OperationalError, NotFoundError, NotImplementedError } from "./error";
-export { load } from "./main";
+export { load, unload, register, unregister, request } from "./main";
