@@ -1,9 +1,14 @@
 sudo: false
 dist: trusty
 language: node_js
-arch:
-  - amd64
-  - arm64
+matrix:
+  include:
+   - os: linux
+     arch: amd64
+     env: BUILD_ARCH=amd64
+   - os: linux
+     arch: arm64
+     env: BUILD_ARCH=arm64
 node_js:
   - "8"
   - "9"
@@ -26,3 +31,4 @@ deploy:
     tags: true
     arch: amd64
     node_js: "8"
+    condition: $BUILD_ARCH = amd64
