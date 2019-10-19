@@ -10,7 +10,7 @@ node_js:
   - "10"
   - "11"
   - "12"
-jobs:
+matrix:
   include:
     - os: linux
       env: HTTPBIN=httpbin.bemisc.com RUN_DEPLOY=1
