@@ -1,26 +1,24 @@
 sudo: false
 dist: trusty
 language: node_js
+jobs:
+  include:
+    - os: linux
+      arch: amd64
+      env: BUILD_ARCH=amd64
+    - os: linux
+      arch: arm64
+      env: BUILD_ARCH=arm64
 node_js:
   - "8"
   - "9"
   - "10"
   - "11"
   - "12"
-matrix:
-  include:
-    - os: linux
-      arch: amd64
-      env:
-        - BUILD_ARCH=arm64
-        - HTTPBIN=httpbin.bemisc.com
-    - os: linux
-      arch: arm64
-      env:
-        - BUILD_ARCH=arm64
-        - HTTPBIN=httpbin.bemisc.com
 install:
   - npm install
+env:
+  - HTTPBIN=httpbin.bemisc.com
 script: npm run lint && npm run build && npm test
 before_deploy: npm run build
 deploy:
@@ -33,4 +31,4 @@ deploy:
     tags: true
     arch: amd64
     node_js: "8"
-    condition: $BUILD_ARCH = amd64
+    condition: $ADAPTER = mongo
