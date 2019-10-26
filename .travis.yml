@@ -1,19 +1,12 @@
 sudo: false
 dist: trusty
 language: node_js
-arch:
-  - amd64
-  - arm64
 node_js:
   - "8"
   - "9"
   - "10"
   - "11"
   - "12"
-matrix:
-  include:
-    - os: linux
-      env: HTTPBIN=httpbin.bemisc.com RUN_DEPLOY=1
 install:
   - npm install
 env:
@@ -28,6 +21,4 @@ deploy:
     secure: PdO/jHgYTVNRsVwtZ2lFzKPNNmD8Ni7D/ROKsgSdm3BPh9SPY0S6Mvf5w8hVcnxru/YcgfKTGHy0VDNKghCO09Dx82tLYp5tcqj5hNubBSXUIE2Jj+FKU/ByqcTZDI69D5wMDMrsNh4JRdpaENeFRl4E2EUGiGoKo4PkdM99D/ZCfdWVZIebOk8o0CdSpVZWNX1lgICxFYqIACckwDNzzmsG6IdpyPaYGrrIxCpqAyYbUIvcvVqLQgGGcwG7+fDvWoPrd3ZSBHntiSZB/L1tvo4Ik9rX0nqqwmjf6yA34aeo/5UudaKSYhti1JMc3BOOycrkjPSPMQPi1JeU8mM8GrzpJutBt7J/Ikf79Uw5WqBY53cTVdBvyuj0SDNphcPdlu8cFRghbYJsUypFFUv5BhD/6CJDTdVg8cfH9NSHzyXFrF94bmRjdRZTvc/+1+vXvZy9TxZW4mR/1P52vOMPtDcm9rYuqwS5CMcD0e9dOyNOZcFDEK8of/nWLe4jyJMX2LyxcwpU1mnGSNXkLDspUeatv3W+74PvD26dWbQt08UZCmz+1MN+wN92LtRplAijIFguktSxt7L/udhvTIcjHS9nHTSpUYKcqbHNcdU6Ck3Q4kGxhFvk4LiVs2ZhAX+VkjQNn6l8VSJqcKa4lMcR99ZieW9QnIg603swdCly03E=
   on:
     tags: true
-    arch: amd64
     node_js: "8"
-    condition: $RUN_DEPLOY = 1
