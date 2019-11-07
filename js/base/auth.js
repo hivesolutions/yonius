@@ -9,10 +9,7 @@ export const ensurePermissions = async (token, ctx) => {
     // in case the permission validation test is not positive
     // then an exception should be raised indicating the issue
     if (!_hasPermission(token, tokens)) {
-        throw new OperationalError(
-            "You don't have authorization to access this resource",
-            401
-        );
+        throw new OperationalError("You don't have authorization to access this resource", 401);
     }
 };
 

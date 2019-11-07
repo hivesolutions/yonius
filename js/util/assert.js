@@ -13,6 +13,10 @@ export const verify = function(
     if (code !== null && message !== undefined) kwargs.code = code;
     const throwable = new Exception(kwargs.message || undefined);
     throwable.kwargs = kwargs;
+    for (const [key, value] of Object.entries(kwargs)) {
+        if (throwable[key] !== undefined) continue;
+        throwable[key] = value;
+    }
     throw throwable;
 };
 
