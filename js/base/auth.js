@@ -3,7 +3,7 @@ import { OperationalError } from "./error";
 export const ensurePermissions = async (token, ctx) => {
     // retrieves the ACL values from the current context and
     // then uses the ACL to obtain the valid expanded tokens map
-    const acl = ctx.getAcl ? await ctx.getAcl() : {};
+    const acl = ctx.getAcl ? await ctx.getAcl(ctx) : {};
     const tokens = _toTokensM(acl);
 
     // in case the permission validation test is not positive

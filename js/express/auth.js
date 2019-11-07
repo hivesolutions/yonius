@@ -1,13 +1,8 @@
 import { ensurePermissions } from "../base";
 
 export const ensureExpress = token => {
-    return async (req, res, next) => {
-        try {
-            await ensurePermissions(token, req);
-            next();
-        } catch (err) {
-            next(err);
-        }
+    return (req, res, next) => {
+        ensurePermissions(token, req).catch(next).then(next);
     };
 };
 
