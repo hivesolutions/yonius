@@ -1,0 +1,66 @@
+import { OperationalError } from "./error";
+
+export const ensurePermissions = async (token, ctx) => {
+    // retrieves the ACL values from the current context and
+    // then uses the ACL to obtain the valid expanded tokens map
+    const acl = ctx.getAcl ? await ctx.getAcl() : {};
+    const tokens = _toTokensM(acl);
+
+    // in case the permission validation test is not positive
+    // then an exception should be raised indicating the issue
+    if (!_hasPermission(token, tokens)) {
+        throw new OperationalError(
+            "You don't have authorization to access this resource",
+            401
+        );
+    }
+};
+
+const _toTokensM = tokens => {
+    const tokensM = {};
+
+    if (tokens === undefined) return tokensM;
+    if (tokens === null) return tokensM;
+    if (!Array.isArray(tokens)) return tokensM;
+
+    for (const token of tokens) {
+        let tokensC = tokensM;
+        const tokenL = token.split(".");
+        const head = tokenL.slice(0, tokenL.length - 1);
+        const tail = tokenL[tokenL.length - 1];
+
+        for (const tokenP of head) {
+            let current = tokensC[tokenP] || {};
+            const isDict = typeof current === "object";
+            if (!isDict) current = { _: current };
+            tokensC[tokenP] = current;
+            tokensC = current;
+        }
+
+        const leaf = tokensC[tail] || null;
+        if (leaf && typeof leaf === "object") leaf._ = true;
+        else tokensC[tail] = true;
+    }
+
+    return tokensM;
+};
+
+const _hasPermission = (token, tokensM = null) => {
+    if (!token) return true;
+    if (tokensM === undefined || tokensM === null) return false;
+
+    const tokenL = token.split(".");
+    for (const tokenP of tokenL) {
+        if (typeof tokensM !== "object") return false;
+        if (tokensM["*"]) return true;
+        if (tokensM[tokenP] === undefined) return false;
+        tokensM = tokensM[tokenP];
+    }
+
+    const isDict = typeof tokensM === "object";
+    const result = isDict ? tokensM._ || false : tokensM;
+
+    return Boolean(result);
+};
+
+export default ensurePermissions;
