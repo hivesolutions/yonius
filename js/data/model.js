@@ -11,7 +11,7 @@ export class Model {
     async validate() {
         const errors = [...this._validate()];
         if (errors.length) {
-            throw new Error(`Invalid model: ${errors.map(err => String(err)).join(",")}`);
+            throw new Error(`Invalid model: ${errors.map(err => String(err)).join(", ")}`);
         }
     }
 
