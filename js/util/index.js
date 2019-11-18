@@ -11,4 +11,5 @@ export {
 } from "./config";
 export { pathExists, expandUser } from "./fs";
 export { MixinBuilder, mix } from "./mixins";
+export { equal, isPrimitive, typeof_ } from "./url";
 export { urlEncode } from "./url";
