@@ -120,6 +120,7 @@ const _findD = function(params) {
         if (result.length === 2) result.push(null);
 
         const [name, operator, value] = result;
+
         // determines if the current filter operation should be performed
         // using a case insensitive based approach to the search, by default
         // all of the operations are considered to be case sensitive
@@ -135,7 +136,7 @@ const _findD = function(params) {
         // or conversion based on the current operator and then converts
         // the operator into the domain specific operator
         const valueMethod = VALUE_METHODS[operator] || (v => v);
-        const _operator = OPERATORS[operator] || operator;
+        const _operator = OPERATORS[operator] === undefined ? operator : OPERATORS[operator];
 
         // in case there's a custom value mapped retrieved uses it to convert
         // the string based value into the target specific value for the query
