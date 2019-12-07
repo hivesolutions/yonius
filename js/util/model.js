@@ -254,14 +254,7 @@ const _filterMerge = function(name, filter, params, operator = null) {
         // then deletes the current name reference in the arguments
         // and updates the name value to the and value
         const filterA = params[_operator] || [];
-
-        let _filter;
-        if (filterP) {
-            _filter = filterA.concat([{ name: filter }, { name: filterP }]);
-        } else {
-            _filter = filterA.concat([{ name: filter }]);
-        }
-
+        const _filter = filterP ? filterA.concat([{ name: filter }, { name: filterP }]) : filterA.concat([{ name: filter }]);
         delete params[name];
         params[operator] = _filter;
     }
