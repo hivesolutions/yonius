@@ -213,7 +213,7 @@ const _leafs = function(params) {
             const leafs = _leafs(value).map(([name, value]) => [`${key}.${name}`, value]);
             result = Array.concat(result, leafs);
         } else {
-            // otherwise this is a leaf node and so the leaf tuplen node
+            // otherwise this is a leaf node and so the leaf tuple node
             // must be constructed with the current value (properly validated
             // for sequence presence)
             result.append([name, Array.isArray(value) ? value : [value]]);
