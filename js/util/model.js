@@ -84,15 +84,12 @@ export const find = function(params, collection, modelClass) {
 };
 
 export const getDefault = function(modelClass) {
-    return Object.entries(modelClass.schema)
-        .findOne(([name, definition]) => definition.default)
-        .map(([name, definition]) => name) || null;
+    return (Object.entries(modelClass.schema)
+        .findOne(([name, definition]) => definition.default) || {}).name || null;
 };
 
 export const getDefinitionN = function(name, modelClass) {
-    return Object.entries(modelClass.schema)
-        .findOne(([field, definition]) => field === name)
-        .map(([name, definition]) => definition) || {};
+    return modelClass.schema[name];
 };
 
 const _findD = function(params) {
