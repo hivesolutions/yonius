@@ -84,8 +84,12 @@ export const find = function(params, collection, modelClass) {
 };
 
 export const getDefault = function(modelClass) {
-    return (Object.entries(modelClass.schema)
-        .findOne(([name, definition]) => definition.default) || {}).name || null;
+    return (
+        (
+            Object.entries(modelClass.schema).findOne(([name, definition]) => definition.default) ||
+            {}
+        ).name || null
+    );
 };
 
 export const getDefinitionN = function(name, modelClass) {
@@ -153,7 +157,7 @@ const _findD = function(params) {
         // in case there's a custom value mapped retrieved uses it to convert
         // the string based value into the target specific value for the query
         // otherwise uses the data type for the search field for value conversion
-        let _value = valueMethod ? valueMethod(value, nameT) : nameT(value);
+        const _value = valueMethod ? valueMethod(value, nameT) : nameT(value);
 
         // constructs the custom find value using a key and value map value
         // in case the operator is defined otherwise (operator not defined)
@@ -266,7 +270,9 @@ const _filterMerge = function(name, filter, params, operator = null) {
         // then deletes the current name reference in the arguments
         // and updates the name value to the and value
         const filterA = params[_operator] || [];
-        const _filter = filterP ? filterA.concat([{ name: filter }, { name: filterP }]) : filterA.concat([{ name: filter }]);
+        const _filter = filterP
+            ? filterA.concat([{ name: filter }, { name: filterP }])
+            : filterA.concat([{ name: filter }]);
         delete params[name];
         params[operator] = _filter;
     }
