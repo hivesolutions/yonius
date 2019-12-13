@@ -128,6 +128,8 @@ const _findD = function(params) {
         const result = filter.split(":", 3);
         if (result.length === 2) result.push(null);
 
+        // unpacks the result into it's thee components name, operatior
+        // and value to be used in the parsing of the filter
         const [name, operator, value] = result;
 
         // retrieves the definition for the filter attribute and uses
@@ -136,7 +138,6 @@ const _findD = function(params) {
         // type resolution method exists it's used (recursive resolution)
         const nameDefinition = getDefinitionN(name);
         const nameT = nameDefinition._btype || nameDefinition.type || String;
-        // TODO: if name in ("_id",): name_t = cls._adapter().object_id
 
         // determines if the current filter operation should be performed
         // using a case insensitive based approach to the search, by default
