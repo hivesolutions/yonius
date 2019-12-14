@@ -92,7 +92,8 @@ export const getDefault = function(modelClass) {
     );
 };
 
-export const getDefinitionN = function(name, modelClass) {
+export const getDefinitionN = function(name, modelClass = null) {
+    if (modelClass === null) return {};
     return modelClass.schema[name];
 };
 
