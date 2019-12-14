@@ -11,7 +11,10 @@ describe("#urlEncode", function() {
         result = yonius.urlEncode([["hello", "world"]]);
         assert.strictEqual(result, "hello=world");
 
-        result = yonius.urlEncode([["hello", "world"], ["world", "hello"]]);
+        result = yonius.urlEncode([
+            ["hello", "world"],
+            ["world", "hello"]
+        ]);
         assert.strictEqual(result, "hello=world&world=hello");
     });
 
@@ -41,13 +44,19 @@ describe("#urlEncode", function() {
         result = yonius.urlEncode({ hello1: null, hello2: "world2" });
         assert.strictEqual(result, "hello2=world2");
 
-        result = yonius.urlEncode([["hello1", null], ["hello2", "world2"]]);
+        result = yonius.urlEncode([
+            ["hello1", null],
+            ["hello2", "world2"]
+        ]);
         assert.strictEqual(result, "hello2=world2");
 
         result = yonius.urlEncode({ hello1: undefined, hello2: "world2" });
         assert.strictEqual(result, "hello2=world2");
 
-        result = yonius.urlEncode([["hello1", undefined], ["hello2", "world2"]]);
+        result = yonius.urlEncode([
+            ["hello1", undefined],
+            ["hello2", "world2"]
+        ]);
         assert.strictEqual(result, "hello2=world2");
     });
 });

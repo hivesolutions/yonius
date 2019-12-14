@@ -71,7 +71,7 @@ export const VALUE_METHODS = {
 
 export const find = function(params, collection, modelClass) {
     _findS(params, modelClass);
-    _findD(params);
+    _findD(params, modelClass);
 
     const { skip = 0, limit = 0, sort = null } = params;
 
@@ -96,7 +96,7 @@ export const getDefinitionN = function(name, modelClass) {
     return modelClass.schema[name];
 };
 
-const _findD = function(params) {
+const _findD = function(params, modelClass) {
     // retrieves the find definition into a local variable, then
     // removes the find definition from the named arguments map
     // so that it's not going to be erroneously used by the
@@ -132,7 +132,7 @@ const _findD = function(params) {
         const result = filter.split(":", 3);
         if (result.length === 2) result.push(null);
 
-        // unpacks the result into it's thee components name, operatior
+        // unpacks the result into it's thee components name, operator
         // and value to be used in the parsing of the filter
         const [name, operator, value] = result;
 
@@ -140,7 +140,7 @@ const _findD = function(params) {
         // it to retrieve it's target data type that is going to be
         // used for the proper conversion, note that in case the base
         // type resolution method exists it's used (recursive resolution)
-        const nameDefinition = getDefinitionN(name);
+        const nameDefinition = getDefinitionN(name, modelClass);
         const nameT = nameDefinition._btype || nameDefinition.type || String;
 
         // determines if the current filter operation should be performed
