@@ -43,7 +43,10 @@ export class MongoCollection extends Collection {
             return model;
         } catch (err) {
             if (err && err.code === 11000) {
-                throw new OperationalError(`Unique field violation: ${JSON.stringify(err.keyValue)}`, 500);
+                throw new OperationalError(
+                    `Unique field violation: ${JSON.stringify(err.keyValue)}`,
+                    500
+                );
             } else {
                 throw err;
             }
