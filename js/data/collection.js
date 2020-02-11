@@ -1,8 +1,12 @@
-import { NotImplementedError, request } from "../base";
+import { OperationalError, NotImplementedError, request } from "../base";
 
 export class Collection {
     constructor(options) {
         this.options = options;
+    }
+
+    async create(data, options = {}) {
+        throw new NotImplementedError();
     }
 
     async find(conditions, projection = {}, options = {}) {
@@ -30,6 +34,20 @@ export class MongoCollection extends Collection {
             this.options.name,
             new mongoose.Schema(this.options.schema)
         );
+    }
+
+    async create(data, options = {}) {
+        const dataArray = Array.isArray(data) ? data : [data];
+        try {
+            const model = await this._mongoose.create(dataArray, options);
+            return model;
+        } catch (err) {
+            if (err && err.code === 11000) {
+                throw new OperationalError(`Unique field violation: ${JSON.stringify(err.keyValue)}`, 500);
+            } else {
+                throw err;
+            }
+        }
     }
 
     async find(conditions, projection = {}, options = {}) {

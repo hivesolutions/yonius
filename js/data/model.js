@@ -79,6 +79,12 @@ export class ModelStore extends Model {
         };
     }
 
+    async create(validate = true) {
+        if (validate) await this.validate();
+        await this.constructor.collection.create(this.model);
+        return this;
+    }
+
     async save(validate = true) {
         if (validate) await this.validate();
         const conditions = {};
