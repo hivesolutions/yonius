@@ -4,6 +4,10 @@ import { NotFoundError, NotImplementedError } from "../base";
 const MEMORY_STORAGE = {};
 
 export class Model {
+    static niw() {
+        return new this();
+    }
+
     static get adapter() {
         return process.env.ADAPTER || "mongo";
     }
@@ -13,6 +17,11 @@ export class Model {
         if (errors.length) {
             throw new Error(`Invalid model: ${errors.map(err => String(err)).join(", ")}`);
         }
+    }
+
+    async apply(model) {
+        await this.wrap(model);
+        return this;
     }
 
     async wrap(model) {
