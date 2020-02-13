@@ -1,5 +1,5 @@
 import { Observable } from "./observable";
-import { urlEncode } from "../util";
+import { verify, urlEncode } from "../util";
 import fetch from "node-fetch";
 
 export class API extends Observable {
@@ -77,13 +77,14 @@ export class API extends Observable {
         return result;
     }
 
-    async _handleResponse(response) {
+    async _handleResponse(response, errorMessage = "Problem in request") {
         let result = null;
-        if (response.headers.get("content-type").toLowerCase() === "application/json") {
+        if (response.headers.get("content-type").toLowerCase().startsWith("application/json")) {
             result = await response.json();
         } else {
             result = await response.blob();
         }
+        verify(response.ok, result.error || errorMessage, response.status || 500);
         return result;
     }
 }
