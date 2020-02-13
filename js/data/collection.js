@@ -20,6 +20,10 @@ export class Collection {
     async findOneAndDelete(conditions, options = {}) {
         throw new NotImplementedError();
     }
+
+    async create(data, options = {}) {
+        throw new NotImplementedError();
+    }
 }
 
 export class MongoCollection extends Collection {
@@ -53,6 +57,11 @@ export class MongoCollection extends Collection {
 
     async findOneAndDelete(conditions, options = {}) {
         const model = await this._mongoose.findOneAndDelete(conditions, options);
+        return model;
+    }
+
+    async create(data, options = {}) {
+        const model = await this._mongoose.create([data], options);
         return model;
     }
 }

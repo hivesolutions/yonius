@@ -1,5 +1,6 @@
 import * as collection from "./collection";
 import { NotFoundError, NotImplementedError } from "../base";
+import { verify } from "../util";
 
 const MEMORY_STORAGE = {};
 
@@ -30,7 +31,7 @@ export class Model {
     }
 
     get model() {
-        throw new NotImplementedError();
+        return this;
     }
 
     get jsonV() {
@@ -41,7 +42,13 @@ export class Model {
         return JSON.stringify(this.model);
     }
 
-    async _wrap(model) {}
+    async _wrap(model) {
+        for (const key of Object.keys(this.constructor.schema)) {
+            if (model[key] === undefined) continue;
+            this[key] = model[key];
+        }
+        if (model._id !== undefined) this._id = model._id;
+    }
 
     * _validate() {}
 }
@@ -90,9 +97,12 @@ export class ModelStore extends Model {
 
     async save(validate = true) {
         if (validate) await this.validate();
+        await this.verify();
+        const isNew = this._id === undefined;
         const conditions = {};
         conditions[this.constructor.idName] = this.identifier;
-        await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+        if (isNew) await this.constructor.collection.create(this.model);
+        else await this.constructor.collection.findOneAndUpdate(conditions, this.model);
         return this;
     }
 
@@ -101,6 +111,19 @@ export class ModelStore extends Model {
         conditions[this.constructor.idName] = this.identifier;
         await this.constructor.collection.findOneAndDelete(conditions);
         return this;
+    }
+
+    async verify() {
+        verify(
+            this.identifier !== undefined && this.identifier !== null,
+            "The identifier must be defined before saving"
+        );
+        for (const [name, field] of Object.entries(this.constructor.schema)) {
+            verify(
+                !field.required || ![undefined, null].includes(this[name]),
+                `No value provided for mandatory field '${name}'`
+            );
+        }
     }
 
     get identifier() {
