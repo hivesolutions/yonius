@@ -4,7 +4,7 @@ export const ensurePermissions = async (token, ctx) => {
     // retrieves the ACL values from the current context and
     // then uses the ACL to obtain the valid expanded tokens map
     const acl = ctx.getAcl ? await ctx.getAcl(ctx) : {};
-    const tokens = _toTokensM(acl);
+    const tokens = toTokensM(acl);
 
     // in case the permission validation test is not positive
     // then an exception should be raised indicating the issue
@@ -13,7 +13,16 @@ export const ensurePermissions = async (token, ctx) => {
     }
 };
 
-const _toTokensM = tokens => {
+/**
+ * Converts the provided list of token strings separated by dots
+ * into a map based representation on an hierarchical structure.
+ *
+ * @param {Array} tokens A linear array of tokens to convert into
+ * an hierarchical representation of ACL.
+ * @returns {Object} The map containing the hierarchy of tokens
+ * for the provided linear string based sequence of tokens.
+ */
+export const toTokensM = tokens => {
     const tokensM = {};
 
     if (tokens === undefined) return tokensM;
