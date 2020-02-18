@@ -18,7 +18,7 @@ export const ensurePermissions = async (token, ctx) => {
  * into a map based representation on an hierarchical structure.
  *
  * @param {Array} tokens A linear array of tokens to convert into
- * an hierarchical representation of ACL.
+ * an hierarchical representation.
  * @returns {Object} The map containing the hierarchy of tokens
  * for the provided linear string based sequence of tokens.
  */
