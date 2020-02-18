@@ -1,5 +1,18 @@
 import { OperationalError } from "./error";
 
+/**
+ * Ensures that the current "session" context contains the
+ * requested ACL token as valid.
+ *
+ * In case the validation fails an exception is raised
+ * indicating the auth validation error.
+ *
+ * @param {String} token The ACL token to ensure permission,
+ * the logged user should be allowed to id.
+ * @param {Object} ctx The context object to be used in
+ * the session basic ACL retrieval, should contain proper
+ * injected methods for retrieval (eg: `getAcl`).
+ */
 export const ensurePermissions = async (token, ctx) => {
     // retrieves the ACL values from the current context and
     // then uses the ACL to obtain the valid expanded tokens map
