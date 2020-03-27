@@ -61,8 +61,8 @@ export class MongoCollection extends Collection {
     }
 
     async create(data, options = {}) {
-        const model = await this._mongoose.create([data], options);
-        return model;
+        const models = await this._mongoose.create([data], options);
+        return models[0];
     }
 }
 
