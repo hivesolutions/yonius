@@ -96,17 +96,14 @@ export class ModelStore extends Model {
     }
 
     async save(validate = true) {
+        let model;
         if (validate) await this.validate();
         await this.verify();
         const isNew = this._id === undefined;
         const conditions = {};
         conditions[this.constructor.idName] = this.identifier;
-        let model;
-        if (isNew) {
-            model = await this.constructor.collection.create(this.model);
-        } else {
-            model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
-        }
+        if (isNew) model = await this.constructor.collection.create(this.model);
+        else model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
         this.wrap(model);
         return this;
     }
