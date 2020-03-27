@@ -101,8 +101,13 @@ export class ModelStore extends Model {
         const isNew = this._id === undefined;
         const conditions = {};
         conditions[this.constructor.idName] = this.identifier;
-        if (isNew) await this.constructor.collection.create(this.model);
-        else await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+        let model;
+        if (isNew) {
+            model = await this.constructor.collection.create(this.model);
+        } else {
+            model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+        }
+        this.wrap(model);
         return this;
     }
 
