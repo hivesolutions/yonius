@@ -15,4 +15,5 @@ export { MixinBuilder, mix } from "./mixins";
 export { INSENSITIVE, OPERATORS, VALUE_METHODS, find } from "./model";
 export { equal, isPrimitive, typeof_ } from "./object";
 export { escapeStringRegexp } from "./regex";
+export { camelToUnderscore } from "./string";
 export { urlEncode } from "./url";
