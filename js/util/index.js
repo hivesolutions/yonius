@@ -17,3 +17,4 @@ export { equal, isPrimitive, typeof_ } from "./object";
 export { escapeStringRegexp } from "./regex";
 export { camelToUnderscore } from "./string";
 export { urlEncode } from "./url";
+export { sizeRoundUnit } from "./util";
