@@ -54,7 +54,13 @@ export const SORT_MAP = {
     descending: -1
 };
 
-export const getDataObject = function(params, alias = true, page = true, find = true, norm = true) {
+export const getDataObject = function(
+    params,
+    alias = true,
+    page = true,
+    find = true,
+    norm = true
+) {
     let result = params;
 
     // in case the alias flag is set tries to resolve the attribute alias and
