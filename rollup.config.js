@@ -1,3 +1,4 @@
+import json from "rollup-plugin-json";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
@@ -54,6 +55,7 @@ export default [
             }
         },
         plugins: [
+            json(),
             globals(),
             fsbuiltin(),
             builtins(),
@@ -88,6 +90,7 @@ export default [
             }
         ],
         plugins: [
+            json(),
             resolve({
                 customResolveOptions: {
                     paths: nodePath
