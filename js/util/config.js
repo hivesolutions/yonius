@@ -17,7 +17,14 @@ const CASTS = {
     tuple: v => (Array.isArray(v) ? v : v.split(";"))
 };
 
-const globals = typeof global === "undefined" ? (typeof window === "undefined" ? {} : window) : global;
+export const globals =
+    typeof global === "undefined"
+        ? typeof window === "undefined"
+            ? typeof self === "undefined"
+                ? {}
+                : self
+            : window
+        : global;
 
 globals.CONFIGS = globals.CONFIGS === undefined ? {} : globals.CONFIGS;
 
