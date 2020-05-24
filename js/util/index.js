@@ -1,5 +1,6 @@
 export { verify, verifyEqual, verifyNotEqual, verifyMany } from "./assert";
 export {
+    globals,
     conf,
     confP,
     confS,
