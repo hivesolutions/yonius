@@ -17,16 +17,18 @@ const CASTS = {
     tuple: v => (Array.isArray(v) ? v : v.split(";"))
 };
 
-global.CONFIGS = global.CONFIGS === undefined ? {} : global.CONFIGS;
+const globals = typeof global === "undefined" ? (typeof window === "undefined" ? {} : window) : global;
 
-global.CONFIG_F = global.CONFIG_F === undefined ? [] : global.CONFIG_F;
+globals.CONFIGS = globals.CONFIGS === undefined ? {} : globals.CONFIGS;
 
-global.HOMES = global.HOMES === undefined ? [] : global.HOMES;
+globals.CONFIG_F = globals.CONFIG_F === undefined ? [] : globals.CONFIG_F;
 
-global.LOADED = global.LOADED === undefined ? false : global.LOADED;
+globals.HOMES = globals.HOMES === undefined ? [] : globals.HOMES;
+
+globals.LOADED = globals.LOADED === undefined ? false : globals.LOADED;
 
 export const conf = function(name, fallback = undefined, cast = null, ctx = null) {
-    const configs = ctx ? ctx.configs : global.CONFIGS;
+    const configs = ctx ? ctx.configs : globals.CONFIGS;
     cast = _castR(cast);
     let value = configs[name] === undefined ? fallback : configs[name];
     if (cast && value !== undefined && value !== null) value = cast(value);
@@ -39,7 +41,7 @@ export const confP = async function(name, fallback = undefined, cast = null, ctx
 };
 
 export const confS = function(name, value, ctx = null) {
-    const configs = ctx ? ctx.configs : global.CONFIGS;
+    const configs = ctx ? ctx.configs : globals.CONFIGS;
     configs[name] = value;
 };
 
@@ -50,7 +52,7 @@ export const load = async function(
     force = false,
     ctx = null
 ) {
-    if (global.LOADED && !force) return;
+    if (globals.LOADED && !force) return;
     let paths = [];
     const homes = await getHomes();
     for (const home of homes) {
@@ -63,7 +65,7 @@ export const load = async function(
         }
     }
     await loadEnv(ctx);
-    global.LOADED = true;
+    globals.LOADED = true;
 };
 
 export const loadFile = async function(
@@ -72,8 +74,8 @@ export const loadFile = async function(
     encoding = "utf-8",
     ctx = null
 ) {
-    const configs = ctx ? ctx.configs : global.CONFIGS;
-    const configF = ctx ? ctx.configF : global.CONFIG_F;
+    const configs = ctx ? ctx.configs : globals.CONFIGS;
+    const configF = ctx ? ctx.configF : globals.CONFIG_F;
 
     let key;
     let value;
@@ -107,7 +109,7 @@ export const loadFile = async function(
 };
 
 export const loadEnv = async function(ctx = null) {
-    const configs = ctx ? ctx.configs : global.CONFIGS;
+    const configs = ctx ? ctx.configs : globals.CONFIGS;
     if (env === undefined || env === null) return;
     Object.entries(env).forEach(function([key, value]) {
         configs[key] = value;
@@ -120,22 +122,22 @@ export const getHomes = async function(
     encoding = "utf-8",
     forceDefault = false
 ) {
-    if (global.HOMES.length > 0) return global.HOMES;
+    if (globals.HOMES.length > 0) return globals.HOMES;
 
-    global.HOMES = env.HOMES === undefined ? null : env.HOMES;
-    global.HOMES = global.HOMES ? global.HOMES.split(";") : global.HOMES;
-    if (global.HOMES !== null) return global.HOMES;
+    globals.HOMES = env.HOMES === undefined ? null : env.HOMES;
+    globals.HOMES = globals.HOMES ? globals.HOMES.split(";") : globals.HOMES;
+    if (globals.HOMES !== null) return globals.HOMES;
 
     fallback = expandUser(fallback);
     fallback = normalize(fallback);
-    global.HOMES = [fallback];
+    globals.HOMES = [fallback];
 
     filePath = expandUser(filePath);
     filePath = normalize(filePath);
     const exists = await pathExists(filePath);
-    if (!exists) return global.HOMES;
+    if (!exists) return globals.HOMES;
 
-    if (!forceDefault) global.HOMES.splice(0, global.HOMES.length);
+    if (!forceDefault) globals.HOMES.splice(0, globals.HOMES.length);
 
     let data = await fs.promises.readFile(filePath, { encoding: encoding });
     data = data.trim();
@@ -148,10 +150,10 @@ export const getHomes = async function(
         if (!path) continue;
         path = expandUser(path);
         path = normalize(path);
-        global.HOMES.push(path);
+        globals.HOMES.push(path);
     }
 
-    return global.HOMES;
+    return globals.HOMES;
 };
 
 export const _castR = function(cast) {
