@@ -28,6 +28,7 @@
         "dist/**/*",
         "res/**/*",
         "js/**/*.js",
+        "src/**/*.js",
         "test/**/*.js"
     ],
     "scripts": {
