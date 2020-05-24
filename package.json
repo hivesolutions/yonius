@@ -70,7 +70,7 @@
     },
     "@pika/pack": {
         "pipeline": [
-            "cp js/* src/",
+            "mkdir -p src && cp -r js/* src/",
             [
                 "@pika/plugin-standard-pkg",
                 {
