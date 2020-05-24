@@ -2,6 +2,7 @@
 
 package-lock.json
 
+/pkg
 /dist
 /coverage
 /node_modules
