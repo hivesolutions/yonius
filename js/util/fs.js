@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { join } from "path";
 import { env } from "process";
 
-const HOME_DIR = env[process.platform === "win32" ? "USERPROFILE" : "HOME"] || "/";
+let HOME_DIR = null;
 
 export const pathExists = async function(path) {
     try {
@@ -15,7 +15,13 @@ export const pathExists = async function(path) {
 
 export const expandUser = function(path) {
     if (!path) return path;
-    if (path === "~") return HOME_DIR;
+    if (path === "~") return _homeDir();
     if (path.slice(0, 2) !== "~/") return path;
     return join(HOME_DIR, path.slice(2));
+};
+
+const _homeDir = function() {
+    if (HOME_DIR !== null) return HOME_DIR;
+    HOME_DIR = env[process.platform === "win32" ? "USERPROFILE" : "HOME"] || "/";
+    return HOME_DIR;
 };
