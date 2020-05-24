@@ -62,10 +62,5 @@
         "rollup-plugin-node-globals": "^1.4.0",
         "rollup-plugin-node-resolve": "^5.2.0",
         "sort-package-json": "^1.42.2"
-    },
-    "jspm": {
-        "main": "dist/yonius.esm.js",
-        "unpkg": "dist/yonius.esm.js",
-        "browser": "dist/yonius.esm.js"
     }
 }
