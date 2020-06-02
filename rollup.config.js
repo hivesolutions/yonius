@@ -100,7 +100,7 @@ export default [
         ]
     },
     {
-        input: "js/index.d.ts",
+        input: "types/index.d.ts",
         output: [{ file: "dist/yonius.d.ts", format: "es" }],
         plugins: [dts()]
     }
