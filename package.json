@@ -23,14 +23,15 @@
     "unpkg": "dist/yonius.umd.js",
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
-    "types": "dist/yonius.d.ts",
-    "typings": "dist/yonius.d.ts",
+    "types": "types/index.d.ts",
+    "typings": "types/index.d.ts",
     "files": [
         "LICENSE",
         "dist/**/*",
         "res/**/*",
         "js/**/*.js",
-        "test/**/*.js"
+        "test/**/*.js",
+        "types/**/*.d.ts"
     ],
     "scripts": {
         "build": "rollup -c",
