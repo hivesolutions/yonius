@@ -34,7 +34,7 @@ export const getEnvObject = function() {
 
 const _homeDir = function() {
     if (HOME_DIR !== null) return HOME_DIR;
-    const isWindows = Boolean(process && process.platform === "win32");
+    const isWindows = Boolean(typeof process !== "undefined" && process.platform === "win32");
     HOME_DIR = getEnv(isWindows ? "USERPROFILE" : "HOME") || "/";
     return HOME_DIR;
 };
