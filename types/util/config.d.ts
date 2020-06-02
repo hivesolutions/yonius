@@ -1,1 +1,1 @@
-declare function conf(name: string, fallback?: any, cast?: string, ctx?: any): any;
+export declare function conf(name: string, fallback?: any, cast?: string, ctx?: any): any;
