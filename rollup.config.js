@@ -1,4 +1,5 @@
 import json from "@rollup/plugin-json";
+import dts from "rollup-plugin-dts";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
@@ -97,5 +98,10 @@ export default [
                 }
             })
         ]
+    },
+    {
+        input: "js/index.d.ts",
+        output: [{ file: "dist/yonius.d.ts", format: "es" }],
+        plugins: [dts()]
     }
 ];
