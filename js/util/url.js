@@ -36,6 +36,7 @@ export const urlEncode = function(values) {
 
 export const absoluteUrl = function(path, name = "BASE_URL", fallback = undefined) {
     const baseUrl = conf(name, fallback);
+    if (!baseUrl) return null;
     return `${baseUrl}/${path}`;
 };
 
