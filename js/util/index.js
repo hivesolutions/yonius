@@ -18,4 +18,4 @@ export { equal, isPrimitive, typeof_ } from "./object";
 export { escapeStringRegexp } from "./regex";
 export { sizeRoundUnit } from "./size";
 export { camelToUnderscore } from "./string";
-export { urlEncode } from "./url";
+export { urlEncode, absoluteUrl } from "./url";

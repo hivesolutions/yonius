@@ -1,3 +1,5 @@
+import { conf } from "./config";
+
 export const urlEncode = function(values) {
     // constructs the parts array that is going to
     // store the multiple and values
@@ -30,6 +32,11 @@ export const urlEncode = function(values) {
     // joins the complete set of parts with the and
     // separator and then returns the final string value
     return parts.join("&");
+};
+
+export const absoluteUrl = function(path, name = "BASE_URL", fallback = undefined) {
+    const baseUrl = conf(name, fallback);
+    return `${baseUrl}/${path}`;
 };
 
 export default urlEncode;
