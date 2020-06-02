@@ -22,6 +22,7 @@ export const expandUser = function(path) {
 
 const _homeDir = function() {
     if (HOME_DIR !== null) return HOME_DIR;
-    HOME_DIR = env[process.platform === "win32" ? "USERPROFILE" : "HOME"] || "/";
+    const isWindows = Boolean(process && process.platform === "win32");
+    HOME_DIR = env[isWindows ? "USERPROFILE" : "HOME"] || "/";
     return HOME_DIR;
 };
