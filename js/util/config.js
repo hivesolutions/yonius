@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import { resolve, join, normalize, dirname } from "path";
-import { env } from "process";
-import { pathExists, expandUser } from "./fs";
+import { pathExists, expandUser, getEnvObject } from "./fs";
 
 const FILE_NAME = "yonius.json";
 
@@ -116,6 +115,7 @@ export const loadFile = async function(
 };
 
 export const loadEnv = async function(ctx = null) {
+    const env = getEnvObject();
     const configs = ctx ? ctx.configs : globals.CONFIGS;
     if (env === undefined || env === null) return;
     Object.entries(env).forEach(function([key, value]) {
@@ -130,6 +130,8 @@ export const getHomes = async function(
     forceDefault = false
 ) {
     if (globals.HOMES.length > 0) return globals.HOMES;
+
+    const env = getEnvObject();
 
     globals.HOMES = env.HOMES === undefined ? null : env.HOMES;
     globals.HOMES = globals.HOMES ? globals.HOMES.split(";") : globals.HOMES;
