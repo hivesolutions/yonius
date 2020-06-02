@@ -23,7 +23,8 @@
     "unpkg": "dist/yonius.umd.js",
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
-    "types": "dis/yonius.d.ts",
+    "types": "dist/yonius.d.ts",
+    "typings": "dist/yonius.d.ts",
     "files": [
         "LICENSE",
         "dist/**/*",
