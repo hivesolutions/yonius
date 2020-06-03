@@ -1,25 +1,26 @@
-export const browserRollup = function() {
+export const yoniusRollup = function() {
     return {
-        name: "fs",
+        name: "yonius",
         resolveId: function(importee) {
-            if (importee === "fs") {
-                return importee;
+            switch (importee) {
+                case "fs":
+                case "node-fetch":
+                    return importee;
+                default:
+                    return null;
             }
-            if (importee === "node-fetch") {
-                return importee;
-            }
-            return null;
         },
         load: function(id) {
-            if (id === "fs") {
-                return "export const promises = {};";
+            switch (id) {
+                case "fs":
+                    return "export const promises = {};";
+                case "node-fetch":
+                    return "export default fetch;";
+                default:
+                    return null;
             }
-            if (id === "node-fetch") {
-                return "export default fetch;";
-            }
-            return null;
         }
     };
 };
 
-export default browserRollup;
+export default yoniusRollup;

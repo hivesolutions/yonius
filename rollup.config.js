@@ -6,7 +6,7 @@ import nodePolyfills from "rollup-plugin-node-polyfills";
 import dts from "rollup-plugin-dts";
 import pkg from "./package.json";
 
-import { browserRollup } from "./js/rollup/plugins";
+import { yoniusRollup } from "./js/rollup/plugins";
 
 const nodePath = process.env.NODE_PATH
     ? process.platform === "win32"
@@ -36,7 +36,7 @@ export default [
         },
         plugins: [
             json(),
-            browserRollup(),
+            yoniusRollup(),
             nodePolyfills(),
             resolve({
                 customResolveOptions: {
