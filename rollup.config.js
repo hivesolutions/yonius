@@ -46,6 +46,7 @@ export default [
             commonjs(),
             babel({
                 babelrc: false,
+                babelHelpers: "bundled",
                 presets: ["@babel/preset-env"]
             })
         ]
