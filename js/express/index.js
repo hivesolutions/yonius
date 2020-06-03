@@ -1,1 +1,1 @@
-export { ensureExpress } from "./auth";
+export * from "./auth";
