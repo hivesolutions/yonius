@@ -50,7 +50,10 @@
     "devDependencies": {
         "@babel/core": "^7.10.2",
         "@babel/preset-env": "^7.10.2",
+        "@rollup/plugin-babel": "^5.0.2",
+        "@rollup/plugin-commonjs": "^12.0.0",
         "@rollup/plugin-json": "^4.0.3",
+        "@rollup/plugin-node-resolve": "^8.0.0",
         "eslint": "^7.1.0",
         "eslint-config-hive": "^0.3.1",
         "mocha": "^7.2.0",
@@ -58,13 +61,9 @@
         "npm-check-updates": "^6.0.1",
         "prettier": "^2.0.5",
         "prettier-config-hive": "^0.1.7",
-        "rollup": "^2.12.0",
-        "rollup-plugin-babel": "^4.4.0",
-        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup": "^2.12.1",
         "rollup-plugin-dts": "^1.4.7",
-        "rollup-plugin-node-builtins": "^2.1.2",
-        "rollup-plugin-node-globals": "^1.4.0",
-        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-node-polyfills": "^0.2.1",
         "sort-package-json": "^1.44.0",
         "typescript": "^3.9.3"
     }

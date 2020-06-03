@@ -1,10 +1,9 @@
+import babel from "@rollup/plugin-babel";
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+import nodePolyfills from "rollup-plugin-node-polyfills";
 import dts from "rollup-plugin-dts";
-import babel from "rollup-plugin-babel";
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import globals from "rollup-plugin-node-globals";
-import builtins from "rollup-plugin-node-builtins";
 import pkg from "./package.json";
 
 const fsbuiltin = function() {
@@ -57,9 +56,8 @@ export default [
         },
         plugins: [
             json(),
-            globals(),
             fsbuiltin(),
-            builtins(),
+            nodePolyfills(),
             resolve({
                 customResolveOptions: {
                     paths: nodePath
