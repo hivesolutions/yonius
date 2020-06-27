@@ -28,6 +28,58 @@ describe("#ensurePermissions()", function() {
             }
         );
     });
+
+    it("should handle edge cases", async () => {
+        const ctx = {
+            getAcl: async () => ["admin", "admin.*"]
+        };
+
+        const result = await yonius.ensurePermissions(null, ctx);
+        assert.strictEqual(result, undefined);
+
+        ctx.getAcl = async () => null;
+
+        await assert.rejects(
+            async () => await yonius.ensurePermissions("admin", ctx),
+            err => {
+                assert.strictEqual(err.name, "OperationalError");
+                assert.strictEqual(
+                    err.message,
+                    "You don't have authorization to access this resource"
+                );
+                assert.strictEqual(err.code, 401);
+                return true;
+            }
+        );
+
+        ctx.getAcl = async () => "error";
+
+        await assert.rejects(
+            async () => await yonius.ensurePermissions("admin", ctx),
+            err => {
+                assert.strictEqual(err.name, "OperationalError");
+                assert.strictEqual(
+                    err.message,
+                    "You don't have authorization to access this resource"
+                );
+                assert.strictEqual(err.code, 401);
+                return true;
+            }
+        );
+
+        await assert.rejects(
+            async () => await yonius.ensurePermissions("admin", {}),
+            err => {
+                assert.strictEqual(err.name, "OperationalError");
+                assert.strictEqual(
+                    err.message,
+                    "You don't have authorization to access this resource"
+                );
+                assert.strictEqual(err.code, 401);
+                return true;
+            }
+        );
+    });
 });
 
 describe("#toTokensM()", function() {
