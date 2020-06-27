@@ -32,4 +32,17 @@ describe("#toTokensM()", function() {
             }
         });
     });
+
+    it("should handle edge cases", () => {
+        let result;
+
+        result = yonius.toTokensM(undefined);
+        assert.deepStrictEqual(result, {});
+
+        result = yonius.toTokensM(null);
+        assert.deepStrictEqual(result, {});
+
+        result = yonius.toTokensM("error");
+        assert.deepStrictEqual(result, {});
+    });
 });
