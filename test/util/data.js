@@ -1,7 +1,7 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#getDataObject", function() {
+describe("#getDataObject()", function() {
     it("should allow filter object", () => {
         assert.deepStrictEqual(
             yonius.getDataObject({

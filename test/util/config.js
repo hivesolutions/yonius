@@ -1,7 +1,7 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#conf", function() {
+describe("#conf()", function() {
     it("should be able to retrieve some values", () => {
         yonius.confS("HELLO", "world");
         const result = yonius.conf("HELLO");

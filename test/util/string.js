@@ -1,7 +1,7 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#camelToUnderscore", function() {
+describe("#camelToUnderscore()", function() {
     it("should be able to convert simple values", () => {
         let result;
 

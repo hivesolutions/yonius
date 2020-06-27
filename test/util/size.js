@@ -1,7 +1,7 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#sizeRoundUnit", function() {
+describe("#sizeRoundUnit()", function() {
     it("should be able to round size values", () => {
         let result;
 

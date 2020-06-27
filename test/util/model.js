@@ -7,7 +7,7 @@ class MockCollection {
     }
 }
 
-describe("#find", function() {
+describe("#find()", function() {
     it("should allow filter", () => {
         const mock = new MockCollection();
         yonius.find(

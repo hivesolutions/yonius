@@ -1,7 +1,7 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#urlEncode", function() {
+describe("#urlEncode()", function() {
     it("should be able to encode simple values", () => {
         let result;
 
