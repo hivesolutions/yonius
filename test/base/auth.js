@@ -17,8 +17,15 @@ describe("#ensurePermissions()", function() {
 
         await assert.rejects(
             async () => await yonius.ensurePermissions("user", ctx),
-            yonius.OperationalError,
-            "You don't have authorization to access this resource"
+            err => {
+                assert.strictEqual(err.name, "OperationalError");
+                assert.strictEqual(
+                    err.message,
+                    "You don't have authorization to access this resource"
+                );
+                assert.strictEqual(err.code, 401);
+                return true;
+            }
         );
     });
 });
