@@ -35,13 +35,14 @@
     ],
     "scripts": {
         "build": "rollup -c",
+        "coveralls": "npm coverage && nyc report --reporter=text-lcov | coveralls",
         "example": "node examples/simple.js",
         "lint": "eslint rollup.config.js \"./{js,test}/**/*.{js,json}\"",
         "lint-fix": "eslint rollup.config.js \"./{js,test}/**/*.{js,json}\" --fix",
         "prettier": "prettier rollup.config.js \"./*.{js,json}\" \"./{js,test}/**/*.{js,json}\" --write",
         "pretty": "npm run prettier && npm run lint-fix",
         "test": "mocha --recursive",
-        "test-coverage": "nyc mocha --recursive",
+        "test-coverage": "nyc npm test",
         "upgrade": "npx sort-package-json && ncu -u",
         "watch": "rollup -c -w"
     },
@@ -55,6 +56,7 @@
         "@rollup/plugin-commonjs": "^13.0.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^8.1.0",
+        "coveralls": "^3.1.0",
         "eslint": "^7.3.1",
         "eslint-config-hive": "^0.3.3",
         "mocha": "^8.0.1",
