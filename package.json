@@ -41,6 +41,7 @@
         "prettier": "prettier rollup.config.js \"./*.{js,json}\" \"./{js,test}/**/*.{js,json}\" --write",
         "pretty": "npm run prettier && npm run lint-fix",
         "test": "mocha --recursive",
+        "test-coverage": "nyc mocha --recursive",
         "upgrade": "npx sort-package-json && ncu -u",
         "watch": "rollup -c -w"
     },
@@ -59,6 +60,7 @@
         "mocha": "^8.0.1",
         "mocha-cli": "^1.0.1",
         "npm-check-updates": "^7.0.1",
+        "nyc": "15.1.0",
         "prettier": "^2.0.5",
         "prettier-config-hive": "^0.1.7",
         "rollup": "^2.18.1",
