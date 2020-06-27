@@ -20,6 +20,10 @@ describe("#register()", function() {
 
 describe("#unregister()", function() {
     it("should handle basic cases", async () => {
+        yonius.register("hello", "world");
+        const result = yonius.request("hello");
+        assert.strictEqual(result, "world");
+
         yonius.unregister("hello");
         assert.throws(() => yonius.request("hello"), Error);
     });
