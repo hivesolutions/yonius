@@ -35,7 +35,7 @@
     ],
     "scripts": {
         "build": "rollup -c",
-        "coveralls": "npm coverage && nyc report --reporter=text-lcov | coveralls",
+        "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
         "example": "node examples/simple.js",
         "lint": "eslint rollup.config.js \"./{js,test}/**/*.{js,json}\"",
         "lint-fix": "eslint rollup.config.js \"./{js,test}/**/*.{js,json}\" --fix",
