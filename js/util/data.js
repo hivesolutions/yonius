@@ -1,6 +1,6 @@
 /**
  * The map containing the various attribute alias between the normalized
- * manned and the appier manner.
+ * manned and the Yonius manner.
  */
 export const ALIAS = {
     context: "find_d",
