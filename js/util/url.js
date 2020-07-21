@@ -5,6 +5,10 @@ import { conf } from "./config";
  * values can be wither defined as an array (order is preserved)
  * or as an object (where sequence order is not preserved).
  *
+ * The value of each item can be either a primitive type or a sequence
+ * in case it's of sequence the values are going to be encoded as
+ * multiple parameters separated by the '&' character.
+ *
  * @param {(Array|Object[])} values The values to be encoded as an
  * URI component (like GET params).
  * @returns {String} A string with the query encoded values.

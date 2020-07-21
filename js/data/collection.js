@@ -1,5 +1,10 @@
 import { NotImplementedError, request } from "../base";
 
+/**
+ * Abstract class definition that defines the interface
+ * expected to be implemented by data driven collections
+ * in the Yonius context.
+ */
 export class Collection {
     constructor(options) {
         this.options = options;
@@ -26,6 +31,12 @@ export class Collection {
     }
 }
 
+/**
+ * Mongo based collection that implements the collection
+ * abstract interface applying it to a specific mongodb
+ * instance. Most of the interface is already "mongodb
+ * oriented", so only a thin layer of adaptation is required.
+ */
 export class MongoCollection extends Collection {
     constructor(name, schema) {
         const mongoose = request("mongoose");
