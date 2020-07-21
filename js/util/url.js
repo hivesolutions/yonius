@@ -1,5 +1,14 @@
 import { conf } from "./config";
 
+/**
+ * Encodes the multiple values as and encoded URI component, the
+ * values can be wither defined as an array (order is preserved)
+ * or as an object (where sequence order is not preserved).
+ *
+ * @param {(Array|Object[])} values The values to be encoded as an
+ * URI component (like GET params).
+ * @returns {String} A string with the query encoded values.
+ */
 export const urlEncode = function(values) {
     // constructs the parts array that is going to
     // store the multiple and values

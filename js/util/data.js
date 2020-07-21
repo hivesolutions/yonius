@@ -198,7 +198,6 @@ const _normParams = function(params) {
  *
  * @param {Object} params The object for which the leafs list structure is
  * meant to be retrieved.
- *
  * @returns {Array} The list of leaf node tuples for the provided object,
  * as requested for each of the sequences.
  */
