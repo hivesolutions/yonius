@@ -39,8 +39,14 @@ export class Collection {
  */
 export class MongoCollection extends Collection {
     constructor(name, schema) {
-        const mongoose = request("mongoose");
         super(name, schema);
+
+        // obtains a reference to the mongoose, that
+        // should have been registered by 3rd party
+        const mongoose = request("mongoose");
+
+        // creates the internal "mongoose" reference to the
+        // model by encapsulating its name and schema
         this._mongoose = mongoose.model(
             this.options.name,
             new mongoose.Schema(this.options.schema)
