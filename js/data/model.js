@@ -18,7 +18,7 @@ const TYPE_DEFAULTS = {
 export class Model {
     constructor(options = {}) {
         const fill = options.fill === undefined ? true : options.fill;
-        if (fill) this.fill(this);
+        if (fill) this.constructor.fill(this);
     }
 
     static niw() {

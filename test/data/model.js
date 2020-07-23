@@ -1,10 +1,14 @@
 const assert = require("assert");
 const yonius = require("../..");
+const mock = require("./mock");
 
 describe("Model", function() {
     this.timeout(30000);
     describe("#fill()", function() {
-        it("should be able to run simple fill operations", () => {});
+        it("should be able to run simple fill operations", () => {
+            const person = new mock.Person();
+            console.info(person);
+        });
     });
 });
 
