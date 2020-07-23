@@ -8,6 +8,15 @@ class Person extends yonius.ModelStore {
                 index: true,
                 increment: true,
                 default: true
+            },
+            identifierSafe: {
+                type: Number,
+                index: true,
+                increment: true,
+                safe: true
+            },
+            name: {
+                initial: "dummy"
             }
         };
     }
