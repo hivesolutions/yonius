@@ -6,12 +6,22 @@ describe("Model", function() {
     this.timeout(30000);
     describe("#fill()", function() {
         it("should be able to run simple fill operations", () => {
-            const person = new mock.Person();
+            const person = mock.Person.niw();
             assert.deepStrictEqual(person.identifier, undefined);
             assert.deepStrictEqual(person.identifierSafe, undefined);
             assert.deepStrictEqual(person.name, "dummy");
             assert.deepStrictEqual(person.age, null);
             assert.deepStrictEqual(person.info, null);
+        });
+    });
+});
+
+describe("ModelStore", function() {
+    this.timeout(30000);
+    describe("#save()", function() {
+        it("should be able to save simple entities", async () => {
+            const person = new mock.Person();
+            await person.save();
         });
     });
 });
