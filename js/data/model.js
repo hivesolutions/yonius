@@ -25,6 +25,39 @@ export class Model {
         return new this();
     }
 
+    /**
+     * Fills the current model with the proper values so that
+     * no values are unset as this would violate the model definition
+     * integrity. This is required when retrieving an object(s) from
+     * the data source (as some of them may be incomplete).
+     *
+     * @param {Object} model The model that is going to have its unset
+     * attributes filled with "default" data, in case none is provided
+     * all of the attributes will be filled with "default" data.
+     * @param {Boolean} safe If the safe mode should be used for the fill
+     * operation meaning that under some conditions no unit fill
+     * operation is going to be applied (eg: retrieval operations).
+     */
+    static async fill(model = {}, safe = false) {
+        for (const [name, field] of Object.entries(this.schema)) {
+            if (model.name !== undefined) continue;
+            if (["_id"].includes(model.name)) continue;
+            const _private = field.private === undefined ? false : field.private;
+            const increment = field.increment === undefined ? false : field.increment;
+            if (_private && safe) continue;
+            if (increment) continue;
+            if (field.initial !== undefined) {
+                const initial = field.initial;
+                model[name] = initial;
+            } else {
+                const type = field.type || null;
+                let _default = typeD(type, null);
+                _default = type._default === undefined ? _default : type._default();
+                model[name] = _default;
+            }
+        }
+    }
+
     static get adapter() {
         return process.env.ADAPTER || "mongo";
     }
@@ -120,39 +153,6 @@ export class ModelStore extends Model {
             name: this.name,
             schema: this.schema
         };
-    }
-
-    /**
-     * Fills the current model with the proper values so that
-     * no values are unset as this would violate the model definition
-     * integrity. This is required when retrieving an object(s) from
-     * the data source (as some of them may be incomplete).
-     *
-     * @param {Object} model The model that is going to have its unset
-     * attributes filled with "default" data, in case none is provided
-     * all of the attributes will be filled with "default" data.
-     * @param {Boolean} safe If the safe mode should be used for the fill
-     * operation meaning that under some conditions no unit fill
-     * operation is going to be applied (eg: retrieval operations).
-     */
-    static async fill(model = {}, safe = false) {
-        for (const [name, field] of Object.entries(this.schema)) {
-            if (model.name !== undefined) continue;
-            if (["_id"].includes(model.name)) continue;
-            const _private = field.private === undefined ? false : field.private;
-            const increment = field.increment === undefined ? false : field.increment;
-            if (_private && safe) continue;
-            if (increment) continue;
-            if (field.initial !== undefined) {
-                const initial = field.initial;
-                model[name] = initial;
-            } else {
-                const type = field.type || null;
-                let _default = typeD(type, null);
-                _default = type._default === undefined ? _default : type._default();
-                model[name] = _default;
-            }
-        }
     }
 
     async save(validate = true) {
