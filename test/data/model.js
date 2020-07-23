@@ -7,7 +7,11 @@ describe("Model", function() {
     describe("#fill()", function() {
         it("should be able to run simple fill operations", () => {
             const person = new mock.Person();
-            console.info(person);
+            assert.deepStrictEqual(person.identifier, undefined);
+            assert.deepStrictEqual(person.identifierSafe, undefined);
+            assert.deepStrictEqual(person.name, "dummy");
+            assert.deepStrictEqual(person.age, null);
+            assert.deepStrictEqual(person.info, null);
         });
     });
 });

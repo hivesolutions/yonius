@@ -40,8 +40,8 @@ export class Model {
      */
     static async fill(model = {}, safe = false) {
         for (const [name, field] of Object.entries(this.schema)) {
-            if (model.name !== undefined) continue;
-            if (["_id"].includes(model.name)) continue;
+            if (model[name] !== undefined) continue;
+            if (["_id"].includes(model[name])) continue;
             const _private = field.private === undefined ? false : field.private;
             const increment = field.increment === undefined ? false : field.increment;
             if (_private && safe) continue;

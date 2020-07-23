@@ -17,6 +17,12 @@ class Person extends yonius.ModelStore {
             },
             name: {
                 initial: "dummy"
+            },
+            age: {
+                type: Number
+            },
+            info: {
+                type: Object
             }
         };
     }
