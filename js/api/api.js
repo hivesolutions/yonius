@@ -48,11 +48,11 @@ export class API extends Observable {
         options.params = options.params !== undefined ? options.params : {};
         options.headers = options.headers !== undefined ? options.headers : {};
         try {
-            return this._methodBasic(method, url, options);
+            return await this._methodBasic(method, url, options);
         } catch (err) {
-            if (AUTH_ERRORS.includes(err.status)) {
-                this.authCallback(options.params, options.headers);
-                return this._methodBasic(method, url, options);
+            if (AUTH_ERRORS.includes(err.code)) {
+                await this.authCallback(options.params, options.headers);
+                return await this._methodBasic(method, url, options);
             } else {
                 throw err;
             }
@@ -63,11 +63,11 @@ export class API extends Observable {
         options.params = options.params !== undefined ? options.params : {};
         options.headers = options.headers !== undefined ? options.headers : {};
         try {
-            return this._methodPayload(method, url, options);
+            return await this._methodPayload(method, url, options);
         } catch (err) {
-            if (AUTH_ERRORS.includes(err.status)) {
-                this.authCallback(options.params, options.headers);
-                return this._methodPayload(method, url, options);
+            if (AUTH_ERRORS.includes(err.code)) {
+                await this.authCallback(options.params, options.headers);
+                return await this._methodPayload(method, url, options);
             } else {
                 throw err;
             }
