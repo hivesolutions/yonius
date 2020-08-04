@@ -2,6 +2,8 @@ import { Observable } from "./observable";
 import { verify, urlEncode } from "../util";
 import fetch from "node-fetch";
 
+const AUTH_ERRORS = [401, 403, 440, 499];
+
 export class API extends Observable {
     constructor(kwargs = {}) {
         super();
@@ -10,34 +12,66 @@ export class API extends Observable {
 
     async build(method, url, options = {}) {}
 
+    async authCallback(params, headers) {}
+
     async get(url, options = {}) {
-        const result = await this._methodBasic("GET", url, options);
+        const result = await this.methodBasic("GET", url, options);
         return result;
     }
 
     async post(url, options = {}) {
-        const result = await this._methodPayload("POST", url, options);
+        const result = await this.methodPayload("POST", url, options);
         return result;
     }
 
     async put(url, options = {}) {
-        const result = await this._methodPayload("PUT", url, options);
+        const result = await this.methodPayload("PUT", url, options);
         return result;
     }
 
     async delete(url, options = {}) {
-        const result = await this._methodBasic("DELETE", url, options);
+        const result = await this.methodBasic("DELETE", url, options);
         return result;
     }
 
     async patch(url, options = {}) {
-        const result = await this._methodPayload("PATCH", url, options);
+        const result = await this.methodPayload("PATCH", url, options);
         return result;
     }
 
     async options(url, options = {}) {
-        const result = await this._methodBasic("OPTIONS", url, options);
+        const result = await this.methodBasic("OPTIONS", url, options);
         return result;
+    }
+
+    async methodBasic(method, url, options = {}) {
+        options.params = options.params !== undefined ? options.params : {};
+        options.headers = options.headers !== undefined ? options.headers : {};
+        try {
+            return await this._methodBasic(method, url, options);
+        } catch (err) {
+            if (AUTH_ERRORS.includes(err.code)) {
+                await this.authCallback(options.params, options.headers);
+                return await this._methodBasic(method, url, options);
+            } else {
+                throw err;
+            }
+        }
+    }
+
+    async methodPayload(method, url, options = {}) {
+        options.params = options.params !== undefined ? options.params : {};
+        options.headers = options.headers !== undefined ? options.headers : {};
+        try {
+            return await this._methodPayload(method, url, options);
+        } catch (err) {
+            if (AUTH_ERRORS.includes(err.code)) {
+                await this.authCallback(options.params, options.headers);
+                return await this._methodPayload(method, url, options);
+            } else {
+                throw err;
+            }
+        }
     }
 
     async _methodBasic(method, url, options = {}) {
