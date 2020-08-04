@@ -11,8 +11,7 @@ services:
 install:
   - npm install
 env:
-  - HTTPBIN=httpbin.bemisc.com
-  - MONGO_URL=mongodb://localhost/test
+  - HTTPBIN=httpbin.bemisc.com MONGO_URL=mongodb://localhost/test
 script: npm run lint && npm run build && npm test
 after_success: npm run coveralls
 before_deploy: npm run build
