@@ -40,9 +40,16 @@ describe("ModelStore", function() {
             const person = new mock.Person();
             assert.strictEqual(person.id, undefined);
             assert.strictEqual(person.idSafe, undefined);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+
             await person.save();
             assert.strictEqual(person.id, 1);
             assert.strictEqual(person.idSafe, 1);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
         });
     });
 });
