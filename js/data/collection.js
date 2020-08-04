@@ -40,6 +40,14 @@ export class Collection {
 export class MongoCollection extends Collection {
     constructor(name, schema) {
         super(name, schema);
+        this._mongoose = this.constructor.getModel(this.options.name, this.options.schema);
+    }
+
+    static getModel(name, schema) {
+        // verifies if the model is already present in the global
+        // cache and if that the case re-uses it
+        this._models = this._models || {};
+        if (this._models[name]) return this._models[name];
 
         // obtains a reference to the mongoose, that
         // should have been registered by 3rd party
@@ -47,10 +55,11 @@ export class MongoCollection extends Collection {
 
         // creates the internal "mongoose" reference to the
         // model by encapsulating its name and schema
-        this._mongoose = mongoose.model(
-            this.options.name,
-            new mongoose.Schema(this.options.schema)
-        );
+        this._models[name] = mongoose.model(name, new mongoose.Schema(schema));
+
+        // returns the newly constructor mongoose model to
+        // the caller methods
+        return this._models[name];
     }
 
     async find(conditions, projection = {}, options = {}) {

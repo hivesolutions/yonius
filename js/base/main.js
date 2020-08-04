@@ -19,7 +19,7 @@ export const unregister = function(name) {
 
 export const request = function(name) {
     if (REGISTRY[name] === undefined) {
-        throw new OperationalError("Name not found in registry");
+        throw new OperationalError(`Name '${name}' not found in registry`);
     }
     return REGISTRY[name];
 };
