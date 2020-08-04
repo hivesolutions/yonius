@@ -2,6 +2,12 @@
 
 Foundation structure for Javascript (ES6).
 
+## Test
+
+```bash
+MONGO_URL=mongodb://localhost/test npm run test
+```
+
 ## License
 
 Yonius is currently licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/).

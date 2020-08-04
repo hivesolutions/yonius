@@ -25,6 +25,7 @@ describe("ModelStore", function() {
         const uri = await yonius.confP("MONGO_URL");
         if (!uri) return this.skip();
         await yonius.initMongo(mongoose, uri);
+        await mongoose.connection.db.dropDatabase();
     });
     afterEach(async function() {
         await yonius.destroyMongo(mongoose);
@@ -38,6 +39,8 @@ describe("ModelStore", function() {
         it("should be able to save simple entities", async () => {
             const person = new mock.Person();
             await person.save();
+            assert.strictEqual(person.id, 1);
+            assert.strictEqual(person.idSafe, 1);
         });
     });
 });
