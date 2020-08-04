@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: 4.0
       - run: node --version
       - run: npm install
       - run: npm install --only=dev
