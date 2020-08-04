@@ -58,6 +58,12 @@ export class Model {
         }
     }
 
+    /**
+     * The name of the data source adapter that is going
+     * to be used to handle this model instance.
+     *
+     * @type {String}
+     */
     static get adapter() {
         return process.env.ADAPTER || "mongo";
     }
@@ -155,16 +161,47 @@ export class ModelStore extends Model {
         };
     }
 
+    static get increments() {
+        if (this._increments !== undefined) return this.increments;
+        const increments = [];
+
+        for (const [name, value] of Object.entries(this.schema)) {
+            const isIncrement = value.increment || false;
+            if (!isIncrement) continue;
+            increments.push(name);
+        }
+
+        this._increments = increments;
+        return increments;
+    }
+
     async save(validate = true) {
         let model;
+
+        // in case the validate flag is set runs the model validation
+        // defined for the current model
         if (validate) await this.validate();
+
+        // runs the lower layer integrity verifications that should raise
+        // exception in case there's a failure
         await this.verify();
+
+        // verifies if the current model is a new one or if instead
+        // represents an update to a previously stored model and create
+        // or update data accordingly
         const isNew = this._id === undefined;
-        const conditions = {};
-        conditions[this.constructor.idName] = this.identifier;
-        if (isNew) model = await this.constructor.collection.create(this.model);
-        else model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+        if (isNew) {
+            model = await this.constructor.collection.create(this.model);
+        } else {
+            const conditions = {};
+            conditions[this.constructor.idName] = this.identifier;
+            model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+        }
+
+        // wraps the model object using the current instance
+        // effectively making the data available for consumers
         this.wrap(model);
+
         return this;
     }
 
@@ -175,6 +212,11 @@ export class ModelStore extends Model {
         return this;
     }
 
+    /**
+     * Runs a series of assertions on the current model
+     * definition raising assertion errors in case there
+     * are issues with the internal structure of it.
+     */
     async verify() {
         verify(
             this.identifier !== undefined && this.identifier !== null,

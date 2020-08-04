@@ -18,6 +18,11 @@ describe("Model", function() {
 
 describe("ModelStore", function() {
     this.timeout(30000);
+    describe("#increments", function() {
+        it("should be able to compute increments", async () => {
+            assert.deepStrictEqual(mock.Person.increments, ["identifier", "identifierSafe"]);
+        });
+    });
     describe("#save()", function() {
         it("should be able to save simple entities", async () => {
             const person = new mock.Person();
