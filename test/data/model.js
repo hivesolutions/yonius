@@ -21,6 +21,12 @@ describe("Model", function() {
 
 describe("ModelStore", function() {
     this.timeout(30000);
+    beforeEach(async function() {
+        await yonius.initMongo(mongoose, "mongodb://localhost/test");
+    });
+    afterEach(async function() {
+        await yonius.destroyMongo(mongoose);
+    });
     describe("#increments", function() {
         it("should be able to compute increments", async () => {
             assert.deepStrictEqual(mock.Person.increments, ["id", "idSafe"]);
@@ -28,7 +34,6 @@ describe("ModelStore", function() {
     });
     describe("#save()", function() {
         it("should be able to save simple entities", async () => {
-            await yonius.initMongo(mongoose, "mongodb://localhost/test"); // @todo change this
             const person = new mock.Person();
             await person.save();
         });
