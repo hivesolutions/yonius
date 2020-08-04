@@ -3,13 +3,13 @@ const yonius = require("../..");
 class Person extends yonius.ModelStore {
     static get schema() {
         return {
-            identifier: {
+            id: {
                 type: Number,
                 index: true,
                 increment: true,
                 default: true
             },
-            identifierSafe: {
+            idSafe: {
                 type: Number,
                 index: true,
                 increment: true,

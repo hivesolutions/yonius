@@ -144,10 +144,9 @@ export class ModelStore extends Model {
     }
 
     static get collection() {
-        if (this._collection) return this._collection;
-        const adapter = this.adapter[0].toUpperCase() + this.adapter.slice(1);
-        this._collection = new collection[adapter + "Collection"](this.dataOptions);
-        return this._collection;
+        if (this._collectionI) return this._collectionI;
+        this._collectionI = this._collection(this.dataOptions);
+        return this._collectionI;
     }
 
     static get idName() {
@@ -162,7 +161,7 @@ export class ModelStore extends Model {
     }
 
     static get increments() {
-        if (this._increments !== undefined) return this.increments;
+        if (this._increments !== undefined) return this._increments;
         const increments = [];
 
         for (const [name, value] of Object.entries(this.schema)) {
@@ -175,8 +174,79 @@ export class ModelStore extends Model {
         return increments;
     }
 
+    static _collection(options) {
+        const adapter = this.adapter[0].toUpperCase() + this.adapter.slice(1);
+        return new collection[adapter + "Collection"](options);
+    }
+
+    static async _increment(name) {
+        const _name = this.name + ":" + name;
+        const store = this._collection({
+            name: "counters",
+            schema: {
+                id: { type: String },
+                seq: { type: Number }
+            }
+        });
+        let result = await store.findOneAndUpdate(
+            {
+                id: _name
+            },
+            {
+                $inc: {
+                    seq: 1
+                }
+            },
+            {
+                new: true,
+                upsert: true
+            }
+        );
+        result = result || (await store.findOne({ id: _name }));
+        return result.seq;
+    }
+
+    static async _ensureMin(name, value) {
+        const _name = this.name + ":" + name;
+        const store = this._collection({
+            name: "counters",
+            schema: {
+                id: { type: String },
+                seq: { type: Number }
+            }
+        });
+        let result = await store.findOneAndUpdate(
+            {
+                id: _name
+            },
+            {
+                $max: {
+                    seq: value
+                }
+            },
+            {
+                new: true,
+                upsert: true
+            }
+        );
+        result = result || (await store.findOne({ id: _name }));
+        return result.seq;
+    }
+
     async save(validate = true) {
         let model;
+
+        // iterates over each of the fields that are meant to have its value
+        // increment and performs the appropriate operation takin into account
+        // if the value is already populated or not
+        for (const name of this.constructor.increments) {
+            const exists = this.model[name] !== undefined;
+            if (exists) {
+                this.model[name] = await this.constructor._ensureMin(name, self.model[name]);
+            } else {
+                this.model[name] = await this.constructor._increment(name);
+            }
+        }
 
         // in case the validate flag is set runs the model validation
         // defined for the current model
