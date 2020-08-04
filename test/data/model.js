@@ -22,7 +22,11 @@ describe("Model", function() {
 describe("ModelStore", function() {
     this.timeout(30000);
     beforeEach(async function() {
-        await yonius.initMongo(mongoose, "mongodb://localhost/test");
+        let uri = await yonius.confP("MONGOHQ_URL", null);
+        uri = await yonius.confP("MONGOLAB_URI", uri);
+        uri = await yonius.confP("MONGO_URL", uri);
+        if (!uri) return this.skip();
+        await yonius.initMongo(mongoose, uri);
     });
     afterEach(async function() {
         await yonius.destroyMongo(mongoose);
