@@ -38,6 +38,8 @@ describe("ModelStore", function() {
     describe("#save()", function() {
         it("should be able to save simple entities", async () => {
             const person = new mock.Person();
+            assert.strictEqual(person.id, undefined);
+            assert.strictEqual(person.idSafe, undefined);
             await person.save();
             assert.strictEqual(person.id, 1);
             assert.strictEqual(person.idSafe, 1);
