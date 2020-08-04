@@ -22,9 +22,7 @@ describe("Model", function() {
 describe("ModelStore", function() {
     this.timeout(30000);
     beforeEach(async function() {
-        let uri = await yonius.confP("MONGOHQ_URL", null);
-        uri = await yonius.confP("MONGOLAB_URI", uri);
-        uri = await yonius.confP("MONGO_URL", uri);
+        const uri = await yonius.confP("MONGO_URL");
         if (!uri) return this.skip();
         await yonius.initMongo(mongoose, uri);
     });
