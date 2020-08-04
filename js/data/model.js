@@ -143,6 +143,22 @@ export class ModelStore extends Model {
         throw new NotImplementedError();
     }
 
+    /**
+     * Safer version of the schema structure that filters
+     * some of the field attributes making it suitable to
+     * be used by some of the collection adapters.
+     */
+    static get schemaSafe() {
+        const schema = {};
+        for (const [key, value] of Object.entries(this.schema)) {
+            schema[key] = {
+                type: value.type || String,
+                index: value.index || false
+            };
+        }
+        return schema;
+    }
+
     static get collection() {
         if (this._collectionI) return this._collectionI;
         this._collectionI = this._collection(this.dataOptions);
@@ -156,7 +172,7 @@ export class ModelStore extends Model {
     static get dataOptions() {
         return {
             name: this.name,
-            schema: this.schema
+            schema: this.schemaSafe
         };
     }
 
@@ -184,7 +200,7 @@ export class ModelStore extends Model {
         const store = this._collection({
             name: "counters",
             schema: {
-                id: { type: String },
+                id: { type: String, index: true },
                 seq: { type: Number }
             }
         });
