@@ -21,3 +21,24 @@ describe("#eq()", function() {
         );
     });
 });
+
+describe("#gt()", function() {
+    it("should verify basic greater than operations", () => {
+        let result;
+
+        result = yonius.gt(2)(3);
+        assert.strictEqual(result, true);
+
+        result = yonius.gt(4)(5);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.gt(4)(4),
+            err => {
+                assert(err instanceof yonius.ValidationError);
+                assert(err.message === "Must be greater than 4");
+                return true;
+            }
+        );
+    });
+});
