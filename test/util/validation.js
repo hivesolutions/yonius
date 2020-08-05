@@ -17,8 +17,8 @@ describe("#eq()", function() {
         assert.throws(
             () => yonius.eq(4)(5),
             err => {
-                assert(err instanceof yonius.ValidationError);
-                assert(err.message === "Must be equal to 4");
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be equal to 4");
                 return true;
             }
         );
@@ -41,8 +41,8 @@ describe("#gt()", function() {
         assert.throws(
             () => yonius.gt(4)(4),
             err => {
-                assert(err instanceof yonius.ValidationError);
-                assert(err.message === "Must be greater than 4");
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be greater than 4");
                 return true;
             }
         );
@@ -65,8 +65,8 @@ describe("#notEmpty()", function() {
         assert.throws(
             () => yonius.notEmpty()(""),
             err => {
-                assert(err instanceof yonius.ValidationError);
-                assert(err.message === "Value is empty");
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value is empty");
                 return true;
             }
         );

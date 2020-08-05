@@ -1,5 +1,5 @@
 import * as collection from "./collection";
-import { NotFoundError, NotImplementedError } from "../base";
+import { NotFoundError, NotImplementedError, ValidationError } from "../base";
 import { verify } from "../util";
 
 const MEMORY_STORAGE = {};
@@ -71,7 +71,9 @@ export class Model {
     async validate() {
         const errors = [...this._validate()];
         if (errors.length) {
-            throw new Error(`Invalid model: ${errors.map(err => String(err)).join(", ")}`);
+            throw new ValidationError(
+                `Invalid model: ${errors.map(err => String(err)).join(", ")}`
+            );
         }
     }
 
@@ -116,7 +118,19 @@ export class Model {
         if (model._id !== undefined) this._id = model._id;
     }
 
-    * _validate() {}
+    * _validate() {
+        for (const [name, value] of Object.entries(this.constructor.schema)) {
+            const validation = value.validation || false;
+            if (!validation) continue;
+            for (const callable of validation) {
+                try {
+                    callable(this[name]);
+                } catch (err) {
+                    yield err;
+                }
+            }
+        }
+    }
 }
 
 export class ModelStore extends Model {
@@ -258,7 +272,7 @@ export class ModelStore extends Model {
         for (const name of this.constructor.increments) {
             const exists = this.model[name] !== undefined;
             if (exists) {
-                this.model[name] = await this.constructor._ensureMin(name, self.model[name]);
+                this.model[name] = await this.constructor._ensureMin(name, this.model[name]);
             } else {
                 this.model[name] = await this.constructor._increment(name);
             }

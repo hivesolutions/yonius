@@ -51,6 +51,25 @@ describe("ModelStore", function() {
             assert.strictEqual(person.age, null);
             assert.strictEqual(person.info, null);
         });
+
+        it("should be able to validate models", async () => {
+            const person = new mock.Person();
+            await person.save();
+
+            person.name = "";
+            await assert.rejects(
+                async () => await person.save(),
+                err => {
+                    console.info(err);
+                    assert.strictEqual(err instanceof yonius.ValidationError, true);
+                    assert.strictEqual(
+                        err.message,
+                        "Invalid model: ValidationError: Value is empty"
+                    );
+                    return true;
+                }
+            );
+        });
     });
 });
 
