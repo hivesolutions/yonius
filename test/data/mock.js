@@ -16,7 +16,8 @@ class Person extends yonius.ModelStore {
                 safe: true
             },
             name: {
-                initial: "dummy"
+                initial: "dummy",
+                validation: [yonius.notEmpty()]
             },
             age: {
                 type: Number

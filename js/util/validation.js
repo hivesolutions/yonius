@@ -17,3 +17,12 @@ export const gt = function(valueC, message = "Must be greater than %{1}") {
     };
     return validation;
 };
+
+export const notEmpty = function(valueC, message = "Value is empty") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value.length) return true;
+        throw new ValidationError(message);
+    };
+    return validation;
+};
