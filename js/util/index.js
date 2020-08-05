@@ -20,3 +20,4 @@ export * from "./regex";
 export * from "./size";
 export * from "./string";
 export * from "./url";
+export * from "./validation";

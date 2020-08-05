@@ -32,4 +32,10 @@ export class NotImplementedError extends OperationalError {
     }
 }
 
+export class ValidationError extends OperationalError {
+    constructor(message = "Validation of submitted data failed", code = 400) {
+        super(message, code);
+    }
+}
+
 export default YoniusError;
