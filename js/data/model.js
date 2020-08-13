@@ -267,7 +267,7 @@ export class ModelStore extends Model {
         let model;
 
         // iterates over each of the fields that are meant to have its value
-        // increment and performs the appropriate operation takin into account
+        // increment and performs the appropriate operation taking into account
         // if the value is already populated or not
         for (const name of this.constructor.increments) {
             const exists = this.model[name] !== undefined;
