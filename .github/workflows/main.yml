@@ -17,4 +17,4 @@ jobs:
       - run: npm install --only=dev
       - run: npm run build
       - run: npm run lint
-      - run: npm test
+      - run: MONGO_URL=mongodb://localhost/test npm test
