@@ -56,11 +56,14 @@ export const SORT_MAP = {
 
 export const getDataObject = function(
     params,
-    alias = true,
-    page = true,
-    find = true,
-    norm = true
+    options
 ) {
+    const {
+        alias = false,
+        page = false,
+        find = false,
+        norm = true
+    } = options;
     let result = params;
 
     // in case the alias flag is set tries to resolve the attribute alias and
@@ -70,7 +73,7 @@ export const getDataObject = function(
     if (page) result = _pageTypes(result);
     if (find) {
         result = _findTypes(result);
-        result = _findDefaults(result);
+        result = _findDefaults(result, options);
     }
 
     // in case the normalization flag is set runs the normalization of the
@@ -125,8 +128,13 @@ const _findTypes = function(params) {
     return result;
 };
 
-const _findDefaults = function(params) {
+const _findDefaults = function(params, options) {
     const result = Object.assign({}, params);
+    Object.entries(options)
+        .filter(([key, ]) => FIND_TYPES[key])
+        .forEach(([key, value]) => {
+            result[key] = params[key] || value;
+        });
     Object.entries(FIND_DEFAULTS).forEach(([key, value]) => {
         result[key] = params[key] || value;
     });

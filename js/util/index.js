@@ -13,7 +13,6 @@ export {
 export * from "./data";
 export * from "./fs";
 export * from "./mixins";
-export * from "./model";
 export * from "./mongo";
 export * from "./object";
 export * from "./regex";
