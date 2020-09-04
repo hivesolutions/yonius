@@ -260,7 +260,7 @@ export class ModelStore extends Model {
             {
                 skip: skip,
                 limit: limit,
-                sort: sort
+                sort: sort ? Object.fromEntries([sort]) : {}
             }
         );
         const models = await Promise.all(found.map(v => new this().wrap(v)));
@@ -283,6 +283,7 @@ export class ModelStore extends Model {
         // tries to retrieve the value of the operator that is going
         // to be used to "join" the multiple find parts (find values)
         const findO = params.find_o;
+        delete params.find_o;
     
         // verifies that the data type for the find definition is a
         // valid sequence and in case its not converts it into one
@@ -337,7 +338,7 @@ export class ModelStore extends Model {
             let findV;
             if (_operator) {
                 const obj = {};
-                obj[_operator] = value;
+                obj[_operator] = _value;
                 findV = obj;
             } else {
                 findV = _value;
@@ -458,13 +459,23 @@ export class ModelStore extends Model {
             // then deletes the current name reference in the arguments
             // and updates the name value to the and value
             const filterA = params[_operator] || [];
-            const _filter = filterP
-                ? filterA.concat([{ name: filter }, { name: filterP }])
-                : filterA.concat([{ name: filter }]);
+
+            const newFilter = {};
+            newFilter[name] = filter;
+            filterA.push(newFilter);
+
+            if (filterP) {
+                const newFilterP = {};
+                newFilterP[name] = filterP;
+                filterA.push(newFilterP);
+            }
+            filter = filterA;
             delete params[name];
-            params[operator] = _filter;
+            name = _operator;
         }
     
+        // sets the currently defined filter structures in the keyword
+        // based arguments map for the currently defined name
         params[name] = filter;
     };
 
