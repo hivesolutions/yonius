@@ -54,13 +54,8 @@ export const SORT_MAP = {
     descending: -1
 };
 
-export const getDataObject = function(
-    params,
-    alias = true,
-    page = true,
-    find = true,
-    norm = true
-) {
+export const getObject = function(params = {}, options = {}) {
+    const { alias = false, page = false, find = false, norm = true } = options;
     let result = params;
 
     // in case the alias flag is set tries to resolve the attribute alias and
@@ -70,7 +65,7 @@ export const getDataObject = function(
     if (page) result = _pageTypes(result);
     if (find) {
         result = _findTypes(result);
-        result = _findDefaults(result);
+        result = _findDefaults(result, options);
     }
 
     // in case the normalization flag is set runs the normalization of the
@@ -125,8 +120,13 @@ const _findTypes = function(params) {
     return result;
 };
 
-const _findDefaults = function(params) {
+const _findDefaults = function(params, options = {}) {
     const result = Object.assign({}, params);
+    Object.entries(options)
+        .filter(([key]) => FIND_TYPES[key])
+        .forEach(([key, value]) => {
+            result[key] = params[key] || value;
+        });
     Object.entries(FIND_DEFAULTS).forEach(([key, value]) => {
         result[key] = params[key] || value;
     });
@@ -221,7 +221,7 @@ const _leafs = function(params) {
             // otherwise this is a leaf node and so the leaf tuple node
             // must be constructed with the current value (properly validated
             // for sequence presence)
-            result.append([name, Array.isArray(value) ? value : [value]]);
+            result.push([key, Array.isArray(value) ? value : [value]]);
         }
     }
 
@@ -266,4 +266,4 @@ const _setObject = function(object, nameList, value) {
     }
 };
 
-export default getDataObject;
+export default getObject;
