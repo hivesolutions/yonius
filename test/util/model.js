@@ -8,6 +8,7 @@ class MockCollection {
             fields: fields,
             options: options
         };
+        return [];
     }
 }
 
@@ -79,7 +80,7 @@ describe("#find()", function() {
             filter_operator: "$or",
             skip: 5,
             limit: 10,
-            sort: ["name", 1]
+            sort: [["name", 1]]
         });
         assert.deepStrictEqual(MockModel.lastCall.params, {
             brand: {
