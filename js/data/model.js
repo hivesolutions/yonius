@@ -441,7 +441,6 @@ export class ModelStore extends Model {
         // that previous value in a join statement according to
         // the currently defined operator
         const filterP = params[name];
-
         if (filterP || operator) {
             // defaults the operator for the join of the names to the
             // value and then ensures that the value of the operator
@@ -455,15 +454,22 @@ export class ModelStore extends Model {
             // and updates the name value to the and value
             const filterA = params[_operator] || [];
 
-            const newFilter = {};
-            newFilter[name] = filter;
-            filterA.push(newFilter);
+            // builds the filter object assigned to the name of the
+            // variable and adds to the list of values
+            const _filter = {};
+            _filter[name] = filter;
+            filterA.push(_filter);
 
+            // in case there's a previous filter also adds it to the
+            // list of filter values
             if (filterP) {
-                const newFilterP = {};
-                newFilterP[name] = filterP;
-                filterA.push(newFilterP);
+                const _filterP = {};
+                _filterP[name] = filterP;
+                filterA.push(_filterP);
             }
+
+            // updates the filter reference and updates the operator
+            // name (as expected)
             filter = filterA;
             delete params[name];
             name = _operator;
