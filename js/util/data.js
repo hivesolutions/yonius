@@ -54,7 +54,7 @@ export const SORT_MAP = {
     descending: -1
 };
 
-export const getDataObject = function(params, options) {
+export const getDataObject = function(params = {}, options = {}) {
     const { alias = false, page = false, find = false, norm = true } = options;
     let result = params;
 
