@@ -255,10 +255,15 @@ export class ModelStore extends Model {
         this._findS(params);
         this._findD(params);
 
+        const sortObject = {};
+        if (sort) {
+            sortObject[sort[0]] = sort[1];
+        }
+
         const found = await this.collection.find(params, this.fields, {
             skip: skip,
             limit: limit,
-            sort: sort ? Object.fromEntries([sort]) : {}
+            sort: sortObject
         });
         const models = await Promise.all(found.map(v => new this().wrap(v)));
         return models;
