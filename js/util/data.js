@@ -54,7 +54,7 @@ export const SORT_MAP = {
     descending: -1
 };
 
-export const getDataObject = function(params = {}, options = {}) {
+export const getObject = function(params = {}, options = {}) {
     const { alias = false, page = false, find = false, norm = true } = options;
     let result = params;
 
@@ -120,7 +120,7 @@ const _findTypes = function(params) {
     return result;
 };
 
-const _findDefaults = function(params, options) {
+const _findDefaults = function(params, options = {}) {
     const result = Object.assign({}, params);
     Object.entries(options)
         .filter(([key]) => FIND_TYPES[key])
@@ -266,4 +266,4 @@ const _setObject = function(object, nameList, value) {
     }
 };
 
-export default getDataObject;
+export default getObject;

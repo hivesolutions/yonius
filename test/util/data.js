@@ -1,10 +1,10 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#getDataObject()", function() {
+describe("#getObject()", function() {
     it("should allow filter object", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 {
                     filters: ["brand:likei:swear"],
                     filter_operator: "$or"
@@ -26,7 +26,7 @@ describe("#getDataObject()", function() {
 
     it("should allow filter", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 {
                     "filters[]": "brand:likei:swear"
                 },
@@ -46,7 +46,7 @@ describe("#getDataObject()", function() {
 
     it("should allow multiple filters", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 {
                     "filters[]": ["brand:likei:swear", "model:likei:vyner", "owner:likei:myself"]
                 },
@@ -66,7 +66,7 @@ describe("#getDataObject()", function() {
 
     it("should allow ascending", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 { sort: "id:ascending" },
                 {
                     alias: true,
@@ -84,7 +84,7 @@ describe("#getDataObject()", function() {
 
     it("should allow descending", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 { sort: "id:descending" },
                 {
                     alias: true,
@@ -102,7 +102,7 @@ describe("#getDataObject()", function() {
 
     it("should allow page", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 { page: 2 },
                 {
                     alias: true,
@@ -120,7 +120,7 @@ describe("#getDataObject()", function() {
 
     it("should allow size", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 { size: 3 },
                 {
                     alias: true,
@@ -138,7 +138,7 @@ describe("#getDataObject()", function() {
 
     it("should allow page and size", () => {
         assert.deepStrictEqual(
-            yonius.getDataObject(
+            yonius.getObject(
                 { page: 4, size: 3 },
                 {
                     alias: true,
