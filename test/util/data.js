@@ -77,7 +77,7 @@ describe("#getObject()", function() {
             {
                 limit: 50,
                 skip: 0,
-                sort: ["id", 1]
+                sort: [["id", 1]]
             }
         );
     });
@@ -95,7 +95,7 @@ describe("#getObject()", function() {
             {
                 limit: 50,
                 skip: 0,
-                sort: ["id", -1]
+                sort: [["id", -1]]
             }
         );
     });

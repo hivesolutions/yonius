@@ -257,7 +257,7 @@ export class ModelStore extends Model {
 
         const sortObject = {};
         if (sort) {
-            sortObject[sort[0]] = sort[1];
+            sort.forEach(([key, value]) => (sortObject[key] = value));
         }
 
         const found = await this.collection.find(params, this.fields, {
