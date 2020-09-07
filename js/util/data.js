@@ -221,7 +221,7 @@ const _leafs = function(params) {
             // otherwise this is a leaf node and so the leaf tuple node
             // must be constructed with the current value (properly validated
             // for sequence presence)
-            result.append([name, Array.isArray(value) ? value : [value]]);
+            result.push([key, Array.isArray(value) ? value : [value]]);
         }
     }
 
