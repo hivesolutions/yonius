@@ -254,7 +254,7 @@ export class ModelStore extends Model {
 
         this._findS(params);
         this._findD(params);
-        
+
         const sortObject = {};
         if (sort) {
             sortObject[sort[0]] = sort[1];
