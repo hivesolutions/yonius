@@ -54,16 +54,8 @@ export const SORT_MAP = {
     descending: -1
 };
 
-export const getDataObject = function(
-    params,
-    options
-) {
-    const {
-        alias = false,
-        page = false,
-        find = false,
-        norm = true
-    } = options;
+export const getDataObject = function(params, options) {
+    const { alias = false, page = false, find = false, norm = true } = options;
     let result = params;
 
     // in case the alias flag is set tries to resolve the attribute alias and
@@ -131,7 +123,7 @@ const _findTypes = function(params) {
 const _findDefaults = function(params, options) {
     const result = Object.assign({}, params);
     Object.entries(options)
-        .filter(([key, ]) => FIND_TYPES[key])
+        .filter(([key]) => FIND_TYPES[key])
         .forEach(([key, value]) => {
             result[key] = params[key] || value;
         });
