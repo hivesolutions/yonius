@@ -107,7 +107,8 @@ const _toSort = function(value) {
     if (values.length === 1) values.push("descending");
     const [name, direction] = values;
     if (name === "default") return null;
-    return [name, SORT_MAP[direction] || 1];
+    values[1] = SORT_MAP[direction] || 1;
+    return [values];
 };
 
 const _findTypes = function(params) {
