@@ -80,7 +80,7 @@ describe("#find()", function() {
 
     it("should allow find_s", () => {
         MockModel.find({
-            find_s: "swear",
+            find_s: "swear"
         });
         assert.deepStrictEqual(MockModel.lastCall.params, {
             name: {
