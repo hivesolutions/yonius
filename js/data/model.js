@@ -430,10 +430,8 @@ export class ModelStore extends Model {
     }
 
     static get default() {
-        return (
-            (Object.entries(this.schema).findOne(([name, definition]) => definition.default) || {})
-                .name || null
-        );
+        const defaultEntry = Object.entries(this.schema).find(([name, definition]) => definition.default);
+        return defaultEntry ? defaultEntry[0] : null;
     }
 
     static definitionN(name) {

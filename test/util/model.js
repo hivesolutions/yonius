@@ -27,6 +27,10 @@ class MockModel extends yonius.ModelStore {
                 type: String,
                 unique: true,
                 required: true
+            },
+            name: {
+                type: String,
+                default: true
             }
         };
     }
@@ -71,6 +75,31 @@ describe("#find()", function() {
                 $regex: "^.*swear.*$"
             },
             filter_operator: "$or"
+        });
+    });
+
+    it("should allow find_s", () => {
+        MockModel.find({
+            find_s: "swear",
+        });
+        assert.deepStrictEqual(MockModel.lastCall.params, {
+            name: {
+                $options: "",
+                $regex: "swear"
+            }
+        });
+    });
+
+    it("should allow case-insentitive find_s", () => {
+        MockModel.find({
+            find_s: "swear",
+            find_i: 1
+        });
+        assert.deepStrictEqual(MockModel.lastCall.params, {
+            name: {
+                $options: "-i",
+                $regex: "swear"
+            }
         });
     });
 
