@@ -717,22 +717,6 @@ export class ModelStore extends Model {
         return this;
     }
 
-    async preSave() {}
-
-    async preCreate() {}
-
-    async preUpdate() {}
-
-    async preDelete() {}
-
-    async postSave() {}
-
-    async postCreate() {}
-
-    async postUpdate() {}
-
-    async postDelete() {}
-
     /**
      * Runs a series of assertions on the current model
      * definition raising assertion errors in case there
@@ -750,6 +734,22 @@ export class ModelStore extends Model {
             );
         }
     }
+
+    async preSave() {}
+
+    async preCreate() {}
+
+    async preUpdate() {}
+
+    async preDelete() {}
+
+    async postSave() {}
+
+    async postCreate() {}
+
+    async postUpdate() {}
+
+    async postDelete() {}
 
     get identifier() {
         return this[this.constructor.idName];
