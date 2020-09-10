@@ -608,7 +608,17 @@ export class ModelStore extends Model {
         return result.seq;
     }
 
-    async save(validate = true) {
+    async save({
+        validate = true,
+        preSave = true,
+        preCreate = true,
+        preUpdate = true,
+        postSave = true,
+        postCreate = true,
+        postUpdate = true,
+        beforeCallbacks = [],
+        afterCallbacks = []
+    } = {}) {
         let model;
 
         // iterates over each of the fields that are meant to have its value
@@ -631,6 +641,18 @@ export class ModelStore extends Model {
         // exception in case there's a failure
         await this.verify();
 
+        // calls the complete set of event handlers for the current
+        // save operation, this should trigger changes in the model
+        if (preSave) await this.preSave();
+        if (preCreate) await this.preCreate();
+        if (preUpdate) await this.preUpdate();
+
+        // calls the complete set of callbacks that should be called
+        // before the concrete data store save operation
+        for (callback of beforeCallbacks) {
+            await callback(this, this.model);
+        }
+
         // verifies if the current model is a new one or if instead
         // represents an update to a previously stored model and create
         // or update data accordingly
@@ -647,15 +669,69 @@ export class ModelStore extends Model {
         // effectively making the data available for consumers
         this.wrap(model);
 
+        // calls the complete set of callbacks that should be called
+        // after the concrete data store save operation
+        for (callback of afterCallbacks) {
+            await callback(this, this.model);
+        }
+
+        // calls the post save event handlers in order to be able to
+        // execute appropriate post operations
+        if (postSave) await this.postSave();
+        if (postCreate) await this.postCreate();
+        if (postUpdate) await this.postUpdate();
+
         return this;
     }
 
-    async delete() {
+    async delete({
+        preDelete = true,
+        postDelete = true,
+        beforeCallbacks = [],
+        afterCallbacks = []
+    } = {}) {
+        // calls the complete set of event handlers for the current
+        // delete operation, this should trigger changes in the model
+        if (preDelete) await this.preDelete();
+
+        // calls the complete set of callbacks that should be called
+        // before the concrete data store delete operation
+        for (callback of beforeCallbacks) {
+            await callback(this, this.model);
+        }
+
         const conditions = {};
         conditions[this.constructor.idName] = this.identifier;
         await this.constructor.collection.findOneAndDelete(conditions);
+
+        // calls the complete set of callbacks that should be called
+        // after the concrete data store delete operation
+        for (callback of afterCallbacks) {
+            await callback(this, this.model);
+        }
+
+        // calls the complete set of event handlers for the current
+        // delete operation, this should trigger changes in the model
+        if (postDelete) await this.postDelete();
+
         return this;
     }
+
+    async preSave() {}
+
+    async preCreate() {}
+
+    async preUpdate() {}
+
+    async preDelete() {}
+
+    async postSave() {}
+
+    async postCreate() {}
+
+    async postUpdate() {}
+
+    async postDelete() {}
 
     /**
      * Runs a series of assertions on the current model
