@@ -649,7 +649,7 @@ export class ModelStore extends Model {
 
         // calls the complete set of callbacks that should be called
         // before the concrete data store save operation
-        for (callback of beforeCallbacks) {
+        for (const callback of beforeCallbacks) {
             await callback(this, this.model);
         }
 
@@ -671,7 +671,7 @@ export class ModelStore extends Model {
 
         // calls the complete set of callbacks that should be called
         // after the concrete data store save operation
-        for (callback of afterCallbacks) {
+        for (const callback of afterCallbacks) {
             await callback(this, this.model);
         }
 
@@ -696,7 +696,7 @@ export class ModelStore extends Model {
 
         // calls the complete set of callbacks that should be called
         // before the concrete data store delete operation
-        for (callback of beforeCallbacks) {
+        for (const callback of beforeCallbacks) {
             await callback(this, this.model);
         }
 
@@ -706,7 +706,7 @@ export class ModelStore extends Model {
 
         // calls the complete set of callbacks that should be called
         // after the concrete data store delete operation
-        for (callback of afterCallbacks) {
+        for (const callback of afterCallbacks) {
             await callback(this, this.model);
         }
 
