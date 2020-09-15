@@ -26,3 +26,12 @@ export const notEmpty = function(valueC, message = "Value is empty") {
     };
     return validation;
 };
+
+export const isIn = function(valueC, message = "Value must be one of %{1}") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (valueC.includes(value)) return true;
+        throw new ValidationError(message.replace("%{1}", String(valueC)));
+    };
+    return validation;
+};
