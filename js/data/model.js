@@ -1,6 +1,6 @@
 import * as collection from "./collection";
 import { NotFoundError, NotImplementedError, ValidationError } from "../base";
-import { escapeStringRegexp, verify } from "../util";
+import { escapeStringRegexp, verify, _isDevel } from "../util";
 
 const MEMORY_STORAGE = {};
 
@@ -219,7 +219,7 @@ export class ModelStore extends Model {
         return _attrs;
     }
 
-    static async find(params = {}) {
+    static async get(params = {}) {
         /* eslint-disable no-unused-vars */
         const [
             fields,
@@ -252,6 +252,64 @@ export class ModelStore extends Model {
         ]);
         /* eslint-enable no-unused-vars */
 
+        const sortObject = {};
+        if (sort) {
+            sort.forEach(([key, value]) => (sortObject[key] = value));
+        }
+
+        const found = await this.collection.findOne(params, this.fields, {
+            skip: skip,
+            limit: limit,
+            sort: sortObject
+        });
+
+        if (!found && raiseE) {
+            let message;
+            if (_isDevel()) {
+                message = `${this.constructor.name} not found for ${JSON.stringify(params)}`;
+            } else {
+                message = `${this.constructor.name} not found`;
+            }
+            throw new NotFoundError(message);
+        }
+
+        const model = found ? await new this().wrap(found) : found;
+        return model;
+    }
+
+    static async find(params = {}) {
+        /* eslint-disable no-unused-vars */
+        const [
+            fields,
+            eager,
+            eagerL,
+            map,
+            rules,
+            meta,
+            build,
+            fill,
+            resolveA,
+            skip,
+            limit,
+            sort,
+            raiseE
+        ] = this._getAttrs(params, [
+            ["fields", null],
+            ["eager", null],
+            ["eagerL", null],
+            ["map", false],
+            ["rules", true],
+            ["meta", false],
+            ["build", true],
+            ["fill", true],
+            ["resolveA", null],
+            ["skip", 0],
+            ["limit", 0],
+            ["sort", null],
+            ["raiseE", false]
+        ]);
+        /* eslint-enable no-unused-vars */
+
         this._findS(params);
         this._findD(params);
 
@@ -265,6 +323,17 @@ export class ModelStore extends Model {
             limit: limit,
             sort: sortObject
         });
+
+        if (found.length === 0 && raiseE) {
+            let message;
+            if (_isDevel()) {
+                message = `${this.constructor.name} not found for ${JSON.stringify(params)}`;
+            } else {
+                message = `${this.constructor.name} not found`;
+            }
+            throw new NotFoundError(message);
+        }
+
         const models = await Promise.all(found.map(v => new this().wrap(v)));
         return models;
     }
@@ -483,19 +552,6 @@ export class ModelStore extends Model {
         // sets the currently defined filter structures in the keyword
         // based arguments map for the currently defined name
         params[name] = filter;
-    }
-
-    static async get(id) {
-        const options = {};
-        options[this.idName] = id;
-        const model = await this.collection.findOne(options);
-
-        if (!model) {
-            throw new NotFoundError();
-        }
-
-        const instance = new this();
-        return instance.wrap(model);
     }
 
     static get schema() {
