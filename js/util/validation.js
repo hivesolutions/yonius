@@ -85,11 +85,11 @@ export const isUrl = function(message = "Value is not a valid URL") {
     return validation;
 };
 
-export const isRegex = function(valueC, message = "Value has incorrect format") {
+export const isRegex = function(regex, message = "Value has incorrect format") {
     const validation = (value, ctx) => {
         if (value === null) return true;
         if (value === "") return true;
-        if (value.match(new RegExp(valueC))) return true;
+        if (value.match(new RegExp(regex))) return true;
         throw new ValidationError(message);
     };
     return validation;
