@@ -37,7 +37,7 @@ export const gt = function(valueC, message = "Must be greater than %{1}") {
     return validation;
 };
 
-export const notEmpty = function(valueC, message = "Value is empty") {
+export const notEmpty = function(message = "Value is empty") {
     const validation = (value, ctx) => {
         if (value === null) return true;
         if (value.length) return true;
@@ -55,7 +55,7 @@ export const isIn = function(valueC, message = "Value must be one of: %{1}") {
     return validation;
 };
 
-export const isSimple = function(valueC, message = "Value contains invalid characters") {
+export const isSimple = function(message = "Value contains invalid characters") {
     const validation = (value, ctx) => {
         if (value === null) return true;
         if (value === "") return true;
@@ -65,7 +65,7 @@ export const isSimple = function(valueC, message = "Value contains invalid chara
     return validation;
 };
 
-export const isEmail = function(valueC, message = "Value is not a valid email") {
+export const isEmail = function(message = "Value is not a valid email") {
     const validation = (value, ctx) => {
         if (value === null) return true;
         if (value === "") return true;
@@ -75,7 +75,7 @@ export const isEmail = function(valueC, message = "Value is not a valid email") 
     return validation;
 };
 
-export const isUrl = function(valueC, message = "Value is not a valid URL") {
+export const isUrl = function(message = "Value is not a valid URL") {
     const validation = (value, ctx) => {
         if (value === null) return true;
         if (value === "") return true;
