@@ -72,3 +72,117 @@ describe("#notEmpty()", function() {
         );
     });
 });
+
+describe("#isIn()", function() {
+    it("should verify basic is in conditions", () => {
+        let result;
+
+        result = yonius.isIn(["hello"])("hello");
+        assert.strictEqual(result, true);
+
+        result = yonius.isIn(["hello", "world"])("world");
+        assert.strictEqual(result, true);
+
+        result = yonius.isIn()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isIn(["hello", "other"])("world"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value must be one of: hello, other");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#isSimple()", function() {
+    it("should verify basic is simple conditions", () => {
+        let result;
+
+        result = yonius.isSimple()("hello");
+        assert.strictEqual(result, true);
+
+        result = yonius.isSimple()("hello.world");
+        assert.strictEqual(result, true);
+
+        result = yonius.isSimple()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isSimple()("illegal!"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value contains invalid characters");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#isEmail()", function() {
+    it("should verify basic is email conditions", () => {
+        let result;
+
+        result = yonius.isEmail()("platforme@platforme.com");
+        assert.strictEqual(result, true);
+
+        result = yonius.isEmail()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isEmail()("not_an_email"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value is not a valid email");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#isUrl()", function() {
+    it("should verify basic is URL conditions", () => {
+        let result;
+
+        result = yonius.isUrl()("https://www.platforme.com/");
+        assert.strictEqual(result, true);
+
+        result = yonius.isUrl()("ssh://git@github.com");
+        assert.strictEqual(result, true);
+
+        result = yonius.isUrl()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isUrl()("not_a_url"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value is not a valid URL");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#isRegex()", function() {
+    it("should verify basic is regex conditions", () => {
+        let result;
+
+        result = yonius.isRegex("^a.*$")("abc");
+        assert.strictEqual(result, true);
+
+        result = yonius.isRegex("something")(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isRegex("^a.*$")("ba"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value has incorrect format");
+                return true;
+            }
+        );
+    });
+});
