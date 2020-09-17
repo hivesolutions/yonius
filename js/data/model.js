@@ -266,9 +266,9 @@ export class ModelStore extends Model {
         if (!found && raiseE) {
             let message;
             if (_isDevel()) {
-                message = `${this.constructor.name} not found for ${JSON.stringify(params)}`;
+                message = `${this.name} not found for ${JSON.stringify(params)}`;
             } else {
-                message = `${this.constructor.name} not found`;
+                message = `${this.name} not found`;
             }
             throw new NotFoundError(message);
         }
@@ -327,9 +327,9 @@ export class ModelStore extends Model {
         if (found.length === 0 && raiseE) {
             let message;
             if (_isDevel()) {
-                message = `${this.constructor.name} not found for ${JSON.stringify(params)}`;
+                message = `${this.name} not found for ${JSON.stringify(params)}`;
             } else {
-                message = `${this.constructor.name} not found`;
+                message = `${this.name} not found`;
             }
             throw new NotFoundError(message);
         }
