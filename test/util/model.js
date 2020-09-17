@@ -192,33 +192,33 @@ describe("#find()", function() {
         });
     });
 
-    it("should raise exception", async () => {
+    it("should not raise exception", async () => {
         MockCollection.setResult([]);
 
-        await assert.rejects(
-            MockModel.find({
-                find_d: "brand:eq:swear",
-                filter_operator: "$or"
-            }),
-            err => {
-                assert.strictEqual(err instanceof yonius.NotFoundError, true);
-                return true;
-            }
-        );
+        await MockModel.find({
+            find_d: "brand:eq:swear",
+            filter_operator: "$or"
+        });
         assert.deepStrictEqual(await MockModel.lastCall.params, {
             brand: "swear",
             filter_operator: "$or"
         });
     });
 
-    it("should ignore exception", async () => {
+    it("should raise exception when asked", async () => {
         MockCollection.setResult([]);
 
-        await MockModel.find({
-            find_d: "brand:eq:swear",
-            filter_operator: "$or",
-            raiseE: false
-        });
+        await assert.rejects(
+            MockModel.find({
+                find_d: "brand:eq:swear",
+                filter_operator: "$or",
+                raiseE: true
+            }),
+            err => {
+                assert.strictEqual(err instanceof yonius.NotFoundError, true);
+                return true;
+            }
+        );
         assert.deepStrictEqual(await MockModel.lastCall.params, {
             brand: "swear",
             filter_operator: "$or"
