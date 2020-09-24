@@ -143,7 +143,7 @@ export class API extends Observable {
 
     async _handleResponse(response, errorMessage = "Problem in request") {
         let result = null;
-        if (response.headers.get("content-type").toLowerCase().startsWith("application/json")) {
+        if (response.headers.get("content-type") && response.headers.get("content-type").toLowerCase().startsWith("application/json")) {
             result = await response.json();
         } else {
             result = await response.blob();
