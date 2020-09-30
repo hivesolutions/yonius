@@ -33,6 +33,9 @@ describe("API", function() {
             });
             assert.deepStrictEqual(result.args, { hello: "world" });
             assert.strictEqual(result.headers.Hello, "world");
+
+            result = await api.get(httpbinUrl + "html");
+            assert.strictEqual(typeof result, "string");
         });
     });
     describe("#post()", function() {
