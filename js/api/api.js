@@ -148,6 +148,11 @@ export class API extends Observable {
             response.headers.get("content-type").toLowerCase().startsWith("application/json")
         ) {
             result = await response.json();
+        } else if (
+            response.headers.get("content-type") &&
+            response.headers.get("content-type").toLowerCase().startsWith("text/")
+        ) {
+            result = await response.text();
         } else {
             result = await response.blob();
         }
