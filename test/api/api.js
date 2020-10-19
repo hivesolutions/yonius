@@ -33,8 +33,11 @@ describe("API", function() {
             });
             assert.deepStrictEqual(result.args, { hello: "world" });
             assert.strictEqual(result.headers.Hello, "world");
+        });
 
-            result = await api.get(httpbinUrl + "html");
+        it("should be able to run an HTML get", async () => {
+            const api = new yonius.API();
+            const result = await api.get(httpbinUrl + "html");
             assert.strictEqual(typeof result, "string");
         });
     });
