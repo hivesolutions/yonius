@@ -58,7 +58,7 @@
         "@rollup/plugin-node-resolve": "^10.0.0",
         "coveralls": "^3.1.0",
         "eslint": "^7.13.0",
-        "eslint-config-hive": "^0.4.1",
+        "eslint-config-hive": "^0.4.2",
         "mocha": "^8.2.1",
         "mocha-cli": "^1.0.1",
         "mongoose": "^5.10.13",

@@ -168,7 +168,7 @@ const _normParams = function(params) {
         // value to pre-generate the complete set of dictionaries
         const leafs = _leafs(value);
         const [, values] = leafs[0] || [null, []];
-        const list = values.map(_ => {});
+        const list = values.map(_ => ({}));
 
         // sets the list of generates dictionaries in the object for
         // the newly normalized name of structure
