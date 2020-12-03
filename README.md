@@ -14,7 +14,7 @@ Yonius is currently licensed under the [Apache License, Version 2.0](http://www.
 
 ## Build Automation
 
-[![Build Status](https://travis-ci.org/hivesolutions/yonius.svg?branch=master)](https://travis-ci.org/hivesolutions/yonius)
+[![Build Status](https://travis-ci.com/hivesolutions/yonius.svg?branch=master)](https://travis-ci.com/hivesolutions/yonius)
 [![Build Status GitHub](https://github.com/hivesolutions/yonius/workflows/Main%20Workflow/badge.svg)](https://github.com/hivesolutions/yonius/actions)
 [![Coverage Status](https://coveralls.io/repos/hivesolutions/yonius/badge.svg?branch=master)](https://coveralls.io/r/hivesolutions/yonius?branch=master)
 [![npm Status](https://img.shields.io/npm/v/yonius.svg)](https://www.npmjs.com/package/yonius)
