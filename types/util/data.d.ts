@@ -1,9 +1,9 @@
 export declare function getObject(
-    params: object,
+    params: Record<string, any>,
     options: {
         alias?: boolean,
         page?: boolean,
         find?: boolean,
         norm?: boolean
     }
-): object;
+): Record<string, any>;

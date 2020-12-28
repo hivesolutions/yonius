@@ -56,8 +56,10 @@
         "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
+        "@typescript-eslint/eslint-plugin": "^4.11.0",
+        "@typescript-eslint/parser": "^4.11.0",
         "coveralls": "^3.1.0",
-        "eslint": "^7.13.0",
+        "eslint": "^7.16.0",
         "eslint-config-hive": "^0.4.2",
         "mocha": "^8.2.1",
         "mocha-cli": "^1.0.1",
@@ -70,6 +72,6 @@
         "rollup-plugin-dts": "^1.4.13",
         "rollup-plugin-node-polyfills": "^0.2.1",
         "sort-package-json": "^1.46.1",
-        "typescript": "^4.0.5"
+        "typescript": "^4.1.3"
     }
 }
