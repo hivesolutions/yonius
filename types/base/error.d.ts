@@ -1,7 +1,7 @@
 export declare class YoniusError {
     constructor(message: string, code?: number)
-    isClient() : boolean
-    isServer() : boolean
+    isClient(): boolean
+    isServer(): boolean
 }
 
 export declare class OperationalError extends YoniusError {

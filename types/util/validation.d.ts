@@ -1,21 +1,21 @@
-export declare function eq(
-    valueC: unknown,
+export declare function eq<T>(
+    valueC: T,
     message?: string
-): (value?: unknown, ctx?: any) => boolean;
+): (value?: T, ctx?: any) => boolean;
 
-export declare function gt(
-    valueC: unknown,
+export declare function gt<T>(
+    valueC: T,
     message?: string
-): (value?: unknown, ctx?: any) => boolean;
+): (value?: T, ctx?: any) => boolean;
 
 export declare function notEmpty(
     message?: string
 ): (value?: string | unknown[], ctx?: any) => boolean;
 
-export declare function isIn(
-    valueC: unknown[],
+export declare function isIn<T>(
+    valueC: T[],
     message?: string
-): (value?: unknown, ctx?: any) => boolean;
+): (value?: T, ctx?: any) => boolean;
 
 export declare function isSimple(
     message?: string
