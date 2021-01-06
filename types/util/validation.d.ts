@@ -1,44 +1,35 @@
 export declare function eq(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    valueC: unknown,
+    message?: string
+): (value?: unknown, ctx?: any) => boolean;
 
 export declare function gt(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    valueC: unknown,
+    message?: string
+): (value?: unknown, ctx?: any) => boolean;
 
 export declare function notEmpty(
-    value?: unknown,
-    ctx?: any
-): Boolean;
-
-export declare function notEmpty(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    message?: string
+): (value?: string | unknown[], ctx?: any) => boolean;
 
 export declare function isIn(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    valueC: unknown[],
+    message?: string
+): (value?: unknown, ctx?: any) => boolean;
 
 export declare function isSimple(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    message?: string
+): (value?: string, ctx?: any) => boolean;
 
 export declare function isEmail(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    message?: string
+): (value?: string, ctx?: any) => boolean;
 
 export declare function isUrl(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    message?: string
+): (value?: string, ctx?: any) => boolean;
 
 export declare function isRegex(
-    value?: unknown,
-    ctx?: any
-): Boolean;
+    regex: string,
+    message?: string
+): (value?: string, ctx?: any) => boolean;
