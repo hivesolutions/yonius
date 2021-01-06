@@ -1,44 +1,44 @@
 export declare function eq(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function gt(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function notEmpty(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function notEmpty(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function isIn(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function isSimple(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function isEmail(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function isUrl(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
 
 export declare function isRegex(
-    value: unknown,
+    value?: unknown,
     ctx?: any
 ): Boolean;
