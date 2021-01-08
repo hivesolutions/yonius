@@ -1,9 +1,9 @@
 export declare class API {
     constructor(kwargs?: Record<string, unknown>)
-    get(url: string, options?: Record<string, unknown>): any
-    post(url: string, options?: Record<string, unknown>): any
-    put(url: string, options?: Record<string, unknown>): any
-    delete(url: string, options?: Record<string, unknown>): any
-    patch(url: string, options?: Record<string, unknown>): any
-    options(url: string, options?: Record<string, unknown>): any
+    get(url: string, options?: Record<string, unknown>): unknown
+    post(url: string, options?: Record<string, unknown>): unknown
+    put(url: string, options?: Record<string, unknown>): unknown
+    delete(url: string, options?: Record<string, unknown>): unknown
+    patch(url: string, options?: Record<string, unknown>): unknown
+    options(url: string, options?: Record<string, unknown>): unknown
 }
