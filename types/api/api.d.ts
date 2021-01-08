@@ -10,10 +10,10 @@ export declare class API {
 
 type APIOptions = {
     params?: Record<string, unknown>,
-    headers?: Record<string, unknown>,
+    headers?: HeadersInit,
     kwargs?: Record<string, unknown>,
     handle?: boolean,
-    data?: unknown,
+    data?: BodyInit | JSON,
     dataJ?: JSON,
     dataM?: unknown,
 }
