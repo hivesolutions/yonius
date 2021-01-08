@@ -15,5 +15,5 @@ type APIOptions = {
     handle?: boolean,
     data?: BodyInit | JSON,
     dataJ?: JSON,
-    dataM?: unknown,
+    dataM?: Record<string, unknown>
 }
