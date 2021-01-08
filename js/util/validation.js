@@ -37,6 +37,15 @@ export const gt = function(valueC, message = "Must be greater than %{1}") {
     return validation;
 };
 
+export const gte = function(valueC, message = "Must be greater than or equal to %{1}") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value >= valueC) return true;
+        throw new ValidationError(message.replace("%{1}", String(valueC)));
+    };
+    return validation;
+};
+
 export const notEmpty = function(message = "Value is empty") {
     const validation = (value, ctx) => {
         if (value === null) return true;
