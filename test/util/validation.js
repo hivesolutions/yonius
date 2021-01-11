@@ -124,6 +124,54 @@ describe("#isIn()", function() {
     });
 });
 
+describe("#isUpper()", function() {
+    it("should verify basic is simple conditions", () => {
+        let result;
+
+        result = yonius.isUpper()("HELLO");
+        assert.strictEqual(result, true);
+
+        result = yonius.isUpper()("HELLO.WORLD");
+        assert.strictEqual(result, true);
+
+        result = yonius.isUpper()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isUpper()("illegal!"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value contains lower cased characters");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#isLower()", function() {
+    it("should verify basic is simple conditions", () => {
+        let result;
+
+        result = yonius.isLower()("hello");
+        assert.strictEqual(result, true);
+
+        result = yonius.isLower()("hello.hello");
+        assert.strictEqual(result, true);
+
+        result = yonius.isLower()(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.isLower()("ILLEGAL!"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value contains upper cased characters");
+                return true;
+            }
+        );
+    });
+});
+
 describe("#isSimple()", function() {
     it("should verify basic is simple conditions", () => {
         let result;
@@ -208,6 +256,75 @@ describe("#isRegex()", function() {
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Value has incorrect format");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#stringGt()", function() {
+    it("should verify basic greater than operations", () => {
+        let result;
+
+        result = yonius.stringGt(2)("xxx");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringGt(4)("xxxxx");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringGt(4)(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.stringGt(4)("xxxx"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be larger than 4 characters");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#stringLt()", function() {
+    it("should verify basic greater than operations", () => {
+        let result;
+
+        result = yonius.stringLt(2)("x");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringLt(4)("xxx");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringLt(4)(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.stringLt(4)("xxxx"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be smaller than 4 characters");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#stringEq()", function() {
+    it("should verify basic greater than operations", () => {
+        let result;
+
+        result = yonius.stringEq(2)("xx");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringEq(4)(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.stringEq(4)("xxx"),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be exactly 4 characters");
                 return true;
             }
         );

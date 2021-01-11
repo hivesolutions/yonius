@@ -64,6 +64,26 @@ export const isIn = function(valueC, message = "Value must be one of: %{1}") {
     return validation;
 };
 
+export const isUpper = function(message = "Value contains lower cased characters") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value === "") return true;
+        if (value === value.toUpperCase()) return true;
+        throw new ValidationError(message);
+    };
+    return validation;
+};
+
+export const isLower = function(message = "Value contains upper cased characters") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value === "") return true;
+        if (value === value.toLowerCase()) return true;
+        throw new ValidationError(message);
+    };
+    return validation;
+};
+
 export const isSimple = function(message = "Value contains invalid characters") {
     const validation = (value, ctx) => {
         if (value === null) return true;
@@ -100,6 +120,33 @@ export const isRegex = function(regex, message = "Value has incorrect format") {
         if (value === "") return true;
         if (value.match(new RegExp(regex))) return true;
         throw new ValidationError(message);
+    };
+    return validation;
+};
+
+export const stringGt = function(valueC, message = "Must be larger than %{1} characters") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value.length > valueC) return true;
+        throw new ValidationError(message.replace("%{1}", String(valueC)));
+    };
+    return validation;
+};
+
+export const stringLt = function(valueC, message = "Must be smaller than %{1} characters") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value.length < valueC) return true;
+        throw new ValidationError(message.replace("%{1}", String(valueC)));
+    };
+    return validation;
+};
+
+export const stringEq = function(valueC, message = "Must be exactly %{1} characters") {
+    const validation = (value, ctx) => {
+        if (value === null) return true;
+        if (value.length === valueC) return true;
+        throw new ValidationError(message.replace("%{1}", String(valueC)));
     };
     return validation;
 };
