@@ -49,6 +49,33 @@ describe("#gt()", function() {
     });
 });
 
+describe("#gte()", function() {
+    it("should verify basic greater than or equal operations", () => {
+        let result;
+
+        result = yonius.gte(2)(3);
+        assert.strictEqual(result, true);
+
+        result = yonius.gte(4)(5);
+        assert.strictEqual(result, true);
+
+        result = yonius.gte(4)(4);
+        assert.strictEqual(result, true);
+
+        result = yonius.gte(4)(null);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.gte(4)(3),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Must be greater than or equal to 4");
+                return true;
+            }
+        );
+    });
+});
+
 describe("#notEmpty()", function() {
     it("should verify basic not empty conditions", () => {
         let result;

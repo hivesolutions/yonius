@@ -8,6 +8,11 @@ export declare function gt<T>(
     message?: string
 ): (value?: T, ctx?: any) => boolean;
 
+export declare function gte<T>(
+    valueC: T,
+    message?: string
+): (value?: T, ctx?: any) => boolean;
+
 export declare function notEmpty(
     message?: string
 ): (value?: string | unknown[], ctx?: any) => boolean;
