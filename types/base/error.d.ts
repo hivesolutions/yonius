@@ -1,11 +1,11 @@
 export declare class YoniusError {
-    constructor(message: string, code?: number)
-    isClient(): boolean
-    isServer(): boolean
+    constructor(message: string, code?: number);
+    isClient(): boolean;
+    isServer(): boolean;
 }
 
 export declare class OperationalError extends YoniusError {
-    constructor(message?: string, code?: number)
+    constructor(message?: string, code?: number);
 }
 
 export declare class NotFoundError extends OperationalError {}
