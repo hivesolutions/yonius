@@ -1,3 +1,5 @@
+import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
+
 export declare function ensureFastify(
     token: string
-): (req: unknown, res: unknown, next: () => unknown) => void;
+): (req: FastifyRequest, res: FastifyReply, next: HookHandlerDoneFunction) => void;

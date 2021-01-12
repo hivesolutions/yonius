@@ -61,6 +61,7 @@
         "coveralls": "^3.1.0",
         "eslint": "^7.16.0",
         "eslint-config-hive": "^0.4.2",
+        "fastify": "^3.9.2",
         "mocha": "^8.2.1",
         "mocha-cli": "^1.0.1",
         "mongoose": "^5.10.13",
