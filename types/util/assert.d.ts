@@ -1,1 +1,1 @@
-export declare function verify(condition: boolean, message?: string, code?: number, exception?: any, kwargs?: any): void;
+export declare function verify(condition: boolean, message?: string, code?: number, exception?: unknown, kwargs?: unknown): void;
