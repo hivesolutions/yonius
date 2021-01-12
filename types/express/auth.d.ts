@@ -1,3 +1,3 @@
 export declare function ensureFastify(
     token: string
-): (req: unknown, res: unknown, next: Function) => void;
+): (req: unknown, res: unknown, next: () => unknown) => void;
