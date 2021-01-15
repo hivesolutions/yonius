@@ -1,9 +1,9 @@
 import { ensurePermissions } from "../base";
 
-export const ensureExpress = token => {
+export const ensureFastify = token => {
     return (req, res, next) => {
         ensurePermissions(token, req).catch(next).then(next);
     };
 };
 
-export default ensureExpress;
+export default ensureFastify;
