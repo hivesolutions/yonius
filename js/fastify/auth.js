@@ -1,8 +1,7 @@
 import { ensurePermissions } from "../base";
 
-export const ensureFastify = (token, { skipAuth = false } = {}) => {
+export const ensureFastify = token => {
     return (req, res, next) => {
-        if (skipAuth) return next();
         ensurePermissions(token, req).catch(next).then(next);
     };
 };
