@@ -16,6 +16,8 @@ export declare class Model {
         }
     ): Promise<T>;
 
+    reload<T = Model>(this: T, params?: Record<string, unknown>): Promise<T>;
+
     validate(): Promise<void>;
     _validate(): IterableIterator<Error>;
 }

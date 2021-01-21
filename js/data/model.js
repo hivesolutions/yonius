@@ -1,5 +1,5 @@
 import * as collection from "./collection";
-import { NotFoundError, NotImplementedError, ValidationError } from "../base";
+import { NotFoundError, NotImplementedError, ValidationError, OperationalError } from "../base";
 import { escapeStringRegexp, verify, _isDevel } from "../util";
 
 const MEMORY_STORAGE = {};
@@ -153,6 +153,10 @@ export class Model {
     async wrap(model) {
         await this._wrap(model);
         return this;
+    }
+
+    get isNew() {
+        return this._id === undefined;
     }
 
     get model() {
@@ -675,6 +679,8 @@ export class ModelStore extends Model {
         beforeCallbacks = [],
         afterCallbacks = []
     } = {}) {
+        // allocates space for the model variable to be used in the retrieval
+        // of information from the data source
         let model;
 
         // iterates over each of the fields that are meant to have its value
@@ -771,6 +777,14 @@ export class ModelStore extends Model {
         if (postDelete) await this.postDelete();
 
         return this;
+    }
+
+    async reload(params = {}) {
+        if (this.isNew) {
+            throw new OperationalError("Can't reload a new model entity", 412);
+        }
+        const model = await this.prototype.get({ ...params, _id: this._id });
+        return model;
     }
 
     /**
