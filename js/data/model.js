@@ -783,7 +783,7 @@ export class ModelStore extends Model {
         if (this.isNew) {
             throw new OperationalError("Can't reload a new model entity", 412);
         }
-        const model = await this.prototype.get({ ...params, _id: this._id });
+        const model = await this.constructor.get({ ...params, _id: this._id });
         return model;
     }
 
