@@ -124,6 +124,7 @@ export class API extends Observable {
             mime = mime || "application/json";
         } else if (dataM !== null) {
             if (query) url += url.includes("?") ? "&" + query : "?" + query;
+            [mime, data] = this._encodeMultipart(dataM, mime, true);
         } else if (query) {
             data = query;
             mime = mime || "application/x-www-form-urlencoded";
@@ -158,6 +159,81 @@ export class API extends Observable {
         }
         verify(response.ok, result.error || errorMessage, response.status || 500);
         return result;
+    }
+
+    _encodeMultipart(fields, mime = null, doseq = false) {
+        mime = mime || "multipart/form-data";
+
+        const boundary = this._createBoundary(fields, undefined, doseq);
+
+        const encoder = new TextEncoder("utf-8");
+
+        const buffer = [];
+
+        for (let [key, values] of Object.entries(fields)) {
+            const isList = doseq && Array.isArray(values);
+            values = isList ? values : [values];
+
+            for (let value of values) {
+                if (value === null) continue;
+
+                let header;
+
+                if (
+                    typeof value === "object" &&
+                    !Array.isArray(value) &&
+                    value.constructor !== Uint8Array
+                ) {
+                    const headerL = [];
+                    let data = null;
+                    for (const [key, item] of Object.entries(value)) {
+                        if (key === "data") data = item;
+                        else headerL.push(`${key}: ${item}`);
+                    }
+                    value = data;
+                    header = headerL.join("\r\n");
+                } else if (Array.isArray(value)) {
+                    let name = null;
+                    let contents = null;
+                    let contentTypeD = null;
+                    if (value.length === 2) [name, contents] = value;
+                    else [name, contentTypeD, contents] = value;
+                    header = `Content-Disposition: form-data; name="${key}"; filename="${name}"`;
+                    if (contentTypeD) header += `\r\nContent-Type: ${contentTypeD}`;
+                    value = contents;
+                } else {
+                    header = `Content-Disposition: form-data; name="${key}"`;
+                }
+
+                buffer.push(encoder.encode("--" + boundary + "\r\n"));
+                buffer.push(encoder.encode(header + "\r\n"));
+                buffer.push(encoder.encode("\r\n"));
+                buffer.push(value);
+                buffer.push(encoder.encode("\r\n"));
+            }
+        }
+
+        buffer.push(encoder.encode("--" + boundary + "--\r\n"));
+        buffer.push(encoder.encode("\r\n"));
+        const body = this._joinBuffer(buffer);
+        const contentType = `${mime}; boundary=${boundary}`;
+
+        return [contentType, body];
+    }
+
+    _createBoundary(fields, size = 32, doseq = false) {
+        return "Vq2xNWWHbmWYF644q9bC5T2ALtj5CynryArNQRXGYsfm37vwFKMNsqPBrpPeprFs";
+    }
+
+    _joinBuffer(bufferArray) {
+        const bufferSize = bufferArray.map(item => item.byteLength).reduce((a, v) => a + v, 0);
+        const buffer = new Uint8Array(bufferSize);
+        let offset = 0;
+        for (const item of bufferArray) {
+            buffer.set(item, offset);
+            offset += item.byteLength;
+        }
+        return buffer;
     }
 }
 
