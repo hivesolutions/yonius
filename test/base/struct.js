@@ -3,7 +3,7 @@ const yonius = require("../../");
 
 describe("FileTuple", function() {
     describe("#fromData()", async function() {
-        it("should be able to create a simple file tuple two objects", () => {
+        it("should be able to create a simple file tuple objects", () => {
             const fileTuple = yonius.FileTuple.fromData(
                 new Uint8Array(),
                 "hello.txt",
