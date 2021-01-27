@@ -92,7 +92,7 @@ describe("API", function() {
             );
 
             [contentType, body] = api._encodeMultipart({
-                file: ["hello.txt", "text/plain", new TextEncoder("utf-8").encode("Hello World")]
+                file: yonius.FileTuple.fromString("Hello World", "hello.txt", "text/plain")
             });
 
             assert.strictEqual(
@@ -111,7 +111,7 @@ describe("API", function() {
             );
 
             [contentType, body] = api._encodeMultipart({
-                file: ["hello.txt", "text/plain", new TextEncoder("utf-8").encode("Hello World")],
+                file: yonius.FileTuple.fromString("Hello World", "hello.txt", "text/plain"),
                 message: {
                     data: new TextEncoder("utf-8").encode("Hello Message"),
                     Header1: "header1-value",
