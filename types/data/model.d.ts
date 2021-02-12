@@ -12,6 +12,7 @@ export interface QueryParams {
     readonly limit?: number;
     readonly sort?: unknown[][];
     readonly raiseE?: boolean;
+    [x: string]: unknown;
 }
 
 export declare class Model {
