@@ -1,4 +1,4 @@
-export interface Options {
+export interface QueryParams {
     readonly fields?: string[];
     readonly eager?: boolean;
     readonly eagerL?: boolean;
@@ -16,8 +16,8 @@ export interface Options {
 
 export declare class Model {
     static niw<T = Model>(this: { new (): T }): T;
-    static find<T = Model>(this: { new (): T }, params?: Options): T[];
-    static get<T = Model>(this: { new (): T }, params?: Options): T;
+    static find<T = Model>(this: { new (): T }, params?: QueryParams): T[];
+    static get<T = Model>(this: { new (): T }, params?: QueryParams): T;
 
     constructor(options?: { fill?: boolean });
     apply<T = Model>(this: T, model: Record<string, unknown>): Promise<T>;
@@ -32,7 +32,7 @@ export declare class Model {
         }
     ): Promise<T>;
 
-    reload<T = Model>(this: T, params?: Options): Promise<T>;
+    reload<T = Model>(this: T, params?: QueryParams): Promise<T>;
 
     validate(): Promise<void>;
     _validate(): IterableIterator<Error>;
