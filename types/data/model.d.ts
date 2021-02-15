@@ -42,4 +42,12 @@ export declare class Model {
 export declare class ModelStore extends Model {
     static get schema(): Record<string, unknown>;
     static get idName(): string;
+    preSave(): Promise<void>;
+    preCreate(): Promise<void>;
+    preUpdate(): Promise<void>;
+    preDelete(): Promise<void>;
+    postSave(): Promise<void>;
+    postCreate(): Promise<void>;
+    postUpdate(): Promise<void>;
+    postDelete(): Promise<void>;
 }
