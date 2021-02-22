@@ -60,7 +60,6 @@ describe("ModelStore", function() {
             await assert.rejects(
                 async () => await person.save(),
                 err => {
-                    console.info(err);
                     assert.strictEqual(err instanceof yonius.ValidationError, true);
                     assert.strictEqual(
                         err.message,
