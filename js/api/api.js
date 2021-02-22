@@ -9,9 +9,19 @@ const AUTH_ERRORS = [401, 403, 440, 499];
 let getAgent = () => null;
 
 if (AgentHttp && AgentHttps) {
-    const httpAgent = new AgentHttp({ keepAlive: true });
-    const httpsAgent = new AgentHttps({ keepAlive: true });
-    getAgent = _parsedURL => (_parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
+    const httpAgent = new AgentHttp({
+        keepAlive: true,
+        keepAliveMsecs: 120000,
+        timeout: 60000,
+        scheduling: "fifo"
+    });
+    const httpsAgent = new AgentHttps({
+        keepAlive: true,
+        keepAliveMsecs: 120000,
+        timeout: 60000,
+        scheduling: "fifo"
+    });
+    getAgent = parsedURL => (parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
 }
 
 export class API extends Observable {
