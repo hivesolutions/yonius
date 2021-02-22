@@ -1,8 +1,18 @@
 import { Observable } from "./observable";
 import { verify, urlEncode } from "../util";
+import { Agent as AgentHttp } from "http";
+import { Agent as AgentHttps } from "https";
 import fetch from "node-fetch";
 
 const AUTH_ERRORS = [401, 403, 440, 499];
+
+let getAgent = () => null;
+
+if (AgentHttp && AgentHttps) {
+    const httpAgent = new AgentHttp({ keepAlive: true });
+    const httpsAgent = new AgentHttps({ keepAlive: true });
+    getAgent = _parsedURL => (_parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
+}
 
 export class API extends Observable {
     constructor(kwargs = {}) {
@@ -88,7 +98,8 @@ export class API extends Observable {
         if (query) url += url.includes("?") ? "&" + query : "?" + query;
         const response = await fetch(url, {
             method: method,
-            headers: headers || {}
+            headers: headers || {},
+            agent: getAgent
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
@@ -136,7 +147,8 @@ export class API extends Observable {
         const response = await fetch(url, {
             method: method,
             headers: headers || {},
-            body: data
+            body: data,
+            agent: getAgent
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
