@@ -17,8 +17,8 @@ export interface QueryParams {
 
 export declare class Model {
     static niw<T = Model>(this: { new (): T }): T;
-    static find<T = Model>(this: { new (): T }, params?: QueryParams): T[];
-    static get<T = Model>(this: { new (): T }, params?: QueryParams): T;
+    static find<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T[]>;
+    static get<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T>;
 
     constructor(options?: { fill?: boolean });
     apply<T = Model>(this: T, model: Record<string, unknown>): Promise<T>;
