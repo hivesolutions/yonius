@@ -277,6 +277,7 @@ export const patchAgent = () => {
         return;
     }
     if (!http || !https) return;
+    if (!http.Agent || !https.Agent) return;
     return buildGetAgent(http.Agent, https.Agent, true);
 };
 
