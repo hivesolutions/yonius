@@ -53,7 +53,7 @@ export default [
     },
     {
         input: "js/index.js",
-        external: ["node-fetch", "http", "https", "fs", "process", "path"],
+        external: ["node-fetch", "fs", "process", "path"],
         output: [
             {
                 file: pkg.main,

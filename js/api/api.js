@@ -1,28 +1,8 @@
 import { Observable } from "./observable";
-import { verify, urlEncode } from "../util";
-import { Agent as AgentHttp } from "http";
-import { Agent as AgentHttps } from "https";
+import { verify, urlEncode, globals } from "../util";
 import fetch from "node-fetch";
 
 const AUTH_ERRORS = [401, 403, 440, 499];
-
-let getAgent = () => null;
-
-if (AgentHttp && AgentHttps) {
-    const httpAgent = new AgentHttp({
-        keepAlive: true,
-        keepAliveMsecs: 120000,
-        timeout: 60000,
-        scheduling: "fifo"
-    });
-    const httpsAgent = new AgentHttps({
-        keepAlive: true,
-        keepAliveMsecs: 120000,
-        timeout: 60000,
-        scheduling: "fifo"
-    });
-    getAgent = parsedURL => (parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
-}
 
 export class API extends Observable {
     constructor(kwargs = {}) {
@@ -109,7 +89,7 @@ export class API extends Observable {
         const response = await fetch(url, {
             method: method,
             headers: headers || {},
-            agent: getAgent
+            agent: globals.getAgent || undefined
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
@@ -158,7 +138,7 @@ export class API extends Observable {
             method: method,
             headers: headers || {},
             body: data,
-            agent: getAgent
+            agent: global.getAgent || undefined
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
@@ -258,5 +238,49 @@ export class API extends Observable {
         return buffer;
     }
 }
+
+export const buildGetAgent = (AgentHttp, AgentHttps, set = true) => {
+    const httpAgent = new AgentHttp({
+        keepAlive: true,
+        keepAliveMsecs: 120000,
+        timeout: 60000,
+        scheduling: "fifo"
+    });
+    const httpsAgent = new AgentHttps({
+        keepAlive: true,
+        keepAliveMsecs: 120000,
+        timeout: 60000,
+        scheduling: "fifo"
+    });
+    const getAgent = parsedURL => (parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
+    if (set) globals.getAgent = getAgent;
+    return getAgent;
+};
+
+/**
+ * Tries to patch the global environment with a proper `getAgent`
+ * function that can handle HTTP and HTTP connection polling.
+ *
+ * This can only be performed in a node.js environment (uses `require`).
+ *
+ * @returns {Function} The `getAgent` function that has just been
+ * built and set in the globals.
+ */
+export const patchAgent = () => {
+    if (!globals.require) return;
+    let http, https;
+    try {
+        http = require("http");
+        https = require("https");
+    } catch (err) {
+        return;
+    }
+    if (!http || !https) return;
+    return buildGetAgent(http.Agent, https.Agent, true);
+};
+
+// patches the global agent if possible, using the
+// global dynamic require statements
+patchAgent();
 
 export default API;
