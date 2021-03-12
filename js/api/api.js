@@ -267,7 +267,8 @@ export const buildGetAgent = (AgentHttp, AgentHttps, set = true) => {
  * built and set in the globals.
  */
 export const patchAgent = () => {
-    if (!globals.require) return;
+    if (typeof require !== "function") return;
+    if (globals.getAgent) return;
     let http, https;
     try {
         http = require("http");
