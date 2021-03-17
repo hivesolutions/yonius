@@ -266,17 +266,17 @@ describe("#stringGt()", function() {
     it("should verify basic greater than operations", () => {
         let result;
 
-        result = yonius.stringGt(2)("xxx");
+        result = yonius.stringGt(2)("hel");
         assert.strictEqual(result, true);
 
-        result = yonius.stringGt(4)("xxxxx");
+        result = yonius.stringGt(4)("hello");
         assert.strictEqual(result, true);
 
         result = yonius.stringGt(4)(null);
         assert.strictEqual(result, true);
 
         assert.throws(
-            () => yonius.stringGt(4)("xxxx"),
+            () => yonius.stringGt(4)("hell"),
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Must be larger than 4 characters");
@@ -290,17 +290,17 @@ describe("#stringLt()", function() {
     it("should verify basic greater than operations", () => {
         let result;
 
-        result = yonius.stringLt(2)("x");
+        result = yonius.stringLt(2)("h");
         assert.strictEqual(result, true);
 
-        result = yonius.stringLt(4)("xxx");
+        result = yonius.stringLt(4)("hel");
         assert.strictEqual(result, true);
 
         result = yonius.stringLt(4)(null);
         assert.strictEqual(result, true);
 
         assert.throws(
-            () => yonius.stringLt(4)("xxxx"),
+            () => yonius.stringLt(4)("hell"),
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Must be smaller than 4 characters");
@@ -314,14 +314,14 @@ describe("#stringEq()", function() {
     it("should verify basic greater than operations", () => {
         let result;
 
-        result = yonius.stringEq(2)("xx");
+        result = yonius.stringEq(2)("he");
         assert.strictEqual(result, true);
 
         result = yonius.stringEq(4)(null);
         assert.strictEqual(result, true);
 
         assert.throws(
-            () => yonius.stringEq(4)("xxx"),
+            () => yonius.stringEq(4)("hel"),
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Must be exactly 4 characters");

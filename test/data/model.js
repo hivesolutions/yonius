@@ -60,7 +60,6 @@ describe("ModelStore", function() {
             await assert.rejects(
                 async () => await person.save(),
                 err => {
-                    console.info(err);
                     assert.strictEqual(err instanceof yonius.ValidationError, true);
                     assert.strictEqual(
                         err.message,
@@ -69,6 +68,31 @@ describe("ModelStore", function() {
                     return true;
                 }
             );
+        });
+    });
+
+    describe("#reload()", function() {
+        it("should be able to reload simple entities", async () => {
+            let person = new mock.Person();
+            assert.strictEqual(person.id, undefined);
+            assert.strictEqual(person.idSafe, undefined);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+
+            await person.save();
+            assert.strictEqual(person.id, 1);
+            assert.strictEqual(person.idSafe, 1);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+
+            person = await person.reload();
+            assert.strictEqual(person.id, 1);
+            assert.strictEqual(person.idSafe, 1);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
         });
     });
 });
