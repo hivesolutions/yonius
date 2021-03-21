@@ -1,5 +1,15 @@
 import { NotImplementedError, request } from "../base";
 
+import { Reference, References } from "./typesf";
+
+/**
+ * The various data types that are considered to be references
+ * so that they are lazy loaded from the data source, these kind
+ * of types should be compliant to a common interface so that they
+ * may be used "blindly" from an external entity
+ */
+const TYPE_REFERENCES = [Reference, References];
+
 /**
  * Abstract class definition that defines the interface
  * expected to be implemented by data driven collections
@@ -55,7 +65,13 @@ export class MongoCollection extends Collection {
 
         // creates the internal "mongoose" reference to the
         // model by encapsulating its name and schema
-        this._models[name] = mongoose.model(name, new mongoose.Schema(schema));
+        const filteredSchema = { ...schema };
+        Object.entries(filteredSchema).forEach(([name, value]) => {
+            const isRef = TYPE_REFERENCES.some(type => value.type.prototype instanceof type);
+            if (!isRef) return;
+            filteredSchema[name].type = Number;
+        });
+        this._models[name] = mongoose.model(name, new mongoose.Schema(filteredSchema));
 
         // returns the newly constructor mongoose model to
         // the caller methods

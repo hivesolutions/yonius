@@ -1,5 +1,22 @@
 const yonius = require("../..");
 
+class Pencil extends yonius.ModelStore {
+    static get schema() {
+        return {
+            id: {
+                type: Number,
+                index: true,
+                increment: true,
+                default: true
+            },
+            color: {
+                type: String,
+                initial: "blue"
+            }
+        };
+    }
+}
+
 class Person extends yonius.ModelStore {
     static get schema() {
         return {
@@ -24,11 +41,15 @@ class Person extends yonius.ModelStore {
             },
             info: {
                 type: Object
+            },
+            pencil: {
+                type: yonius.reference(Pencil, "id")
             }
         };
     }
 }
 
 module.exports = {
+    Pencil: Pencil,
     Person: Person
 };
