@@ -22,7 +22,7 @@ describe("Model", function() {
 describe("ModelStore", function() {
     this.timeout(30000);
     beforeEach(async function() {
-        const uri = await yonius.confP("MONGO_URL", "mongodb://localhost:27017");
+        const uri = await yonius.confP("MONGO_URL");
         if (!uri) return this.skip();
         await yonius.initMongo(mongoose, uri);
         await mongoose.connection.db.dropDatabase();
