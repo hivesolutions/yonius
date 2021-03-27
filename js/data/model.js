@@ -342,6 +342,17 @@ export class ModelStore extends Model {
         return models;
     }
 
+    static async count(params = {}) {
+        let result = null;
+        if (Object.keys(params).length > 0) {
+            result = await this.collection.find(params);
+            result = result.length;
+        } else {
+            result = await this.collection.count();
+        }
+        return result;
+    }
+
     static _findD(params) {
         // retrieves the find definition into a local variable, then
         // removes the find definition from the named arguments map
@@ -762,6 +773,8 @@ export class ModelStore extends Model {
             await callback(this, this.model);
         }
 
+        // builds the set of conditions that rare going to be used for
+        // the concrete delete operation to be performed
         const conditions = {};
         conditions[this.constructor.idName] = this.identifier;
         await this.constructor.collection.findOneAndDelete(conditions);
@@ -777,6 +790,26 @@ export class ModelStore extends Model {
         if (postDelete) await this.postDelete();
 
         return this;
+    }
+
+    async advance(name, delta = 1) {
+        const conditions = {};
+        conditions[this.constructor.idName] = this.identifier;
+        const increments = {};
+        increments[name] = delta;
+        let value = await this.constructor.collection.findOneAndUpdate(
+            conditions,
+            {
+                $inc: increments
+            },
+            {
+                new: true
+            }
+        );
+        value = value || (await this.constructor.collection.find_one(conditions));
+        const _value = value[name];
+        this[name] = _value;
+        return _value;
     }
 
     async reload(params = {}) {

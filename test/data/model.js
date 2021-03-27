@@ -22,7 +22,7 @@ describe("Model", function() {
 describe("ModelStore", function() {
     this.timeout(30000);
     beforeEach(async function() {
-        const uri = await yonius.confP("MONGO_URL");
+        const uri = await yonius.confP("MONGO_URL", "mongodb://localhost:27017");
         if (!uri) return this.skip();
         await yonius.initMongo(mongoose, uri);
         await mongoose.connection.db.dropDatabase();
@@ -68,6 +68,42 @@ describe("ModelStore", function() {
                     return true;
                 }
             );
+        });
+    });
+
+    describe("#advance()", function() {
+        it("should be able to advance values for entities", async () => {
+            let result = await mock.Person.count();
+            assert.strictEqual(result, 0);
+
+            let person = new mock.Person();
+            person.age = 1;
+            person.name = "Name";
+            await person.save();
+
+            result = await mock.Person.count();
+            assert.strictEqual(result, 1);
+
+            result = await person.advance("age");
+            assert.strictEqual(result, 2);
+            assert.strictEqual(person.age, 2);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 2);
+
+            result = await person.advance("age", 2);
+            assert.strictEqual(result, 4);
+            assert.strictEqual(person.age, 4);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 4);
+
+            result = await person.advance("age", -2);
+            assert.strictEqual(result, 2);
+            assert.strictEqual(person.age, 2);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 2);
         });
     });
 
