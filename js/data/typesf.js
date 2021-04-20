@@ -50,7 +50,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     // names for the reference underlying structure the object resolution
                     // is triggered to make sure the underlying object exists and is loaded
                     if (!reserved.includes(name)) {
-                        await target.resolve();
+                        // await target.resolve();
                     }
 
                     // verifies if the reference object exists in the current
