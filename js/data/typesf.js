@@ -34,7 +34,6 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     if (name === "then") return target.then;
 
                     if (name in target) return target[name];
-                    // await target.resolve();
 
                     const exists = Boolean(target._object && target._object[name]);
                     if (exists) return target._object[name];
@@ -51,7 +50,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     // names for the reference underlying structure the object resolution
                     // is triggered to make sure the underlying object exists and is loaded
                     if (!reserved.includes(name)) {
-                        // await target.resolve();
+                        await target.resolve();
                     }
 
                     // verifies if the reference object exists in the current
