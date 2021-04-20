@@ -36,7 +36,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     if (name in target) return target[name];
                     // await target.resolve();
 
-                    const exists = target._object[name];
+                    const exists = Boolean(target._object && target._object[name]);
                     if (exists) return target._object[name];
                     if (target.isResolved) throw new AttributeError(`'${name}' not found`);
                     return target.get(name);
