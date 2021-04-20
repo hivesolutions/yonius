@@ -36,6 +36,10 @@ export class Collection {
     async create(data, options = {}) {
         throw new NotImplementedError();
     }
+
+    async count(conditions, options = {}) {
+        throw new NotImplementedError();
+    }
 }
 
 /**
@@ -104,6 +108,11 @@ export class MongoCollection extends Collection {
     async create(data, options = {}) {
         const models = await this._mongoose.create([data], options);
         return models[0];
+    }
+
+    async count(conditions, options = {}) {
+        const count = await this._mongoose.countDocuments(conditions);
+        return count;
     }
 }
 
