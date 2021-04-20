@@ -2,6 +2,10 @@ import { NotImplementedError, request } from "../base";
 
 import { Reference, References } from "./typesf";
 
+/**
+ * A mapping from yonius types to the schema types to
+ * be used by the underlying Mongo collection.
+ */
 const MONGO_TYPES = [
     [Reference, Number],
     [References, Array]
