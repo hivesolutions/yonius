@@ -38,4 +38,10 @@ export class ValidationError extends OperationalError {
     }
 }
 
+export class AttributeError extends YoniusError {
+    constructor(message = "Attribute not found") {
+        super(message);
+    }
+}
+
 export default YoniusError;

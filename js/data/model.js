@@ -221,7 +221,7 @@ export class Model {
         return this;
     }
 
-    get jsonV() {
+    async jsonV() {
         return this.model;
     }
 
@@ -242,8 +242,12 @@ export class Model {
      */
     async _wrap(model) {
         for (const key of Object.keys(this.constructor.schema)) {
-            if (model[key] === undefined) continue;
-            this[key] = this.constructor.cast(key, model[key]);
+            const value = model[key];
+            if (value === undefined) continue;
+            // if (Array.isArray(value) && value.length === 0) {
+            //     continue;
+            // }
+            this[key] = this.constructor.cast(key, value);
         }
         if (model._id !== undefined) this._id = model._id;
     }
@@ -338,7 +342,7 @@ export class ModelStore extends Model {
         }
         let model = found ? await new this().wrap(found) : found;
         if (model) {
-            if (eager) model = await this._eager(model, eager, { map: true });
+            if (eager) model = await this._eager(model, eager, { map: map });
         }
         return model;
     }
@@ -513,9 +517,9 @@ export class ModelStore extends Model {
             let _model = model;
             for (const part of name.split(".")) {
                 const isSequence = Array.isArray(_model);
-                if (isSequence)
-                    { _model = Promise.all(_model.map(value => this._res(value, part, kwargs))); }
-                else _model = await this._res(_model, part, kwargs);
+                if (isSequence) {
+                    _model = await Promise.all(_model.map(value => this._res(value, part, kwargs)));
+                } else _model = await this._res(_model, part, kwargs);
                 if (!_model) break;
             }
         }
@@ -1013,11 +1017,13 @@ export class ModelStore extends Model {
 
         // iterates over all the model items to filter the ones
         // that are not valid for the current class context
-        Object.entries(this).forEach(([name, value]) => {
-            if (this.constructor.schema[name] === undefined) return;
-            // if (immutablesA && this.immutables[name] !== undefined) return;
-            model[name] = this._evaluate(name, value, evaluator);
-        });
+        await Promise.all(
+            Object.entries(this).map(async ([name, value]) => {
+                if (this.constructor.schema[name] === undefined) return;
+                // if (immutablesA && this.immutables[name] !== undefined) return;
+                model[name] = await this._evaluate(name, value, evaluator);
+            })
+        );
 
         // in case the normalize flag is set must iterate over all
         // items to try to normalize the values by calling the reference
@@ -1053,12 +1059,29 @@ export class ModelStore extends Model {
         return model;
     }
 
-    _evaluate(name, value, evaluator = "jsonV") {
-        const isModel = value instanceof Model;
+    async _evaluate(name, value, evaluator = "jsonV") {
+        // verifies if the current value is an iterable one in case
+        // it is runs the evaluate method for each of the values to
+        // try to resolve them into the proper representation, note
+        // that both base iterable values (lists and dictionaries) and
+        // objects that implement the evaluator method are not considered
+        // to be iterables and normal operation applies
+        let isIterable = Boolean((value && value.items) || Array.isArray(value));
+        const hasEvaluator = Boolean(
+            evaluator && (Array.isArray(value) ? value.length : value) && value[evaluator]
+        );
+        isIterable = isIterable && !hasEvaluator;
+        if (isIterable) {
+            const result = await Promise.all(
+                (value.items || value).map(item => this._evaluate(name, item, evaluator))
+            );
+            return result;
+        }
 
         // verifies the current value's class is sub class of the model
         // class and in case it's extracts the relation name from the
         // value and sets it as the value in iteration
+        const isModel = value instanceof Model;
         if (isModel) {
             const meta = this.constructor.definitionN(name);
             const type = meta.type || String;
@@ -1069,8 +1092,8 @@ export class ModelStore extends Model {
         // iterates over all the values and retrieves the map value for
         // each of them in case the value contains a map value retrieval
         // method otherwise uses the normal value returning it to the caller
-        const method = evaluator && value && value[evaluator] ? value[evaluator] : null;
-        value = method ? method(false) : value;
+        const method = hasEvaluator ? value[evaluator] : null;
+        value = method ? await method.bind(value)(false) : value;
         return value;
     }
 

@@ -1,19 +1,20 @@
-import { NotImplementedError } from "../base";
+import { AttributeError, NotImplementedError } from "../base";
 import { verify } from "../util";
 
 class AbstractType {
-    get jsonV() {
+    async jsonV() {
         return JSON.stringify(this);
     }
 
-    get mapV() {
-        return this.jsonV;
+    async mapV() {
+        const result = await this.jsonV();
+        return result;
     }
 }
 
 export class Reference extends AbstractType {}
 
-export const reference = function(target, name = null, dumpall = false) {
+export const reference = function(target, { name = null, dumpall = false } = {}) {
     name = name || "id";
     const targetT = target.constructor.name;
     const isReference = targetT === "string";
@@ -23,13 +24,22 @@ export const reference = function(target, name = null, dumpall = false) {
         constructor(id) {
             super(id);
 
+            this.__start__();
+
             const proxy = new Proxy(this, {
                 get(target, name) {
+                    // special case to avoid this Proxy
+                    // breaking when being accessed in
+                    // an async context
+                    if (name === "then") return target.then;
+
                     if (name in target) return target[name];
                     // await target.resolve();
+
                     const exists = target._object[name];
                     if (exists) return target._object[name];
-                    return undefined;
+                    if (target.isResolved) throw new AttributeError(`'${name}' not found`);
+                    throw new NotImplementedError("Accessing fields must be done with #get");
                 },
                 set(target, name, value) {
                     if (name in target) {
@@ -70,18 +80,18 @@ export const reference = function(target, name = null, dumpall = false) {
             return proxy;
         }
 
-        toString() {
-            // this.resolve();
-            // const hasStr = this._object.toString;
-            // if (hasStr) return this._object.toString();
-            // else return JSON.stringify(this._object) || "";
+        async get(name) {
+            await this.resolve();
+            const value = this._object[name];
+            if (value === undefined) throw new AttributeError(`'${name}' not found`);
+            return value;
         }
 
         __start__() {
-            if (isReference) this._target = this.constructor._target();
+            if (isReference) this._target = this.constructor._target;
             else this._target = target;
             verify(this._target);
-            const meta = this._target[name];
+            const meta = this._target.schema[name];
             this._type = meta.type || String;
         }
 
@@ -95,7 +105,7 @@ export const reference = function(target, name = null, dumpall = false) {
         }
 
         static get _default() {
-            return null;
+            return new this(null);
         }
 
         static get _target() {
@@ -109,7 +119,7 @@ export const reference = function(target, name = null, dumpall = false) {
             let _target;
             if (isReference) _target = this._target();
             else _target = target;
-            const meta = _target[name];
+            const meta = _target.schema[name];
             return meta.type || String;
         }
 
@@ -131,17 +141,19 @@ export const reference = function(target, name = null, dumpall = false) {
             this._object = object;
         }
 
-        get refV() {
+        async refV() {
             return this.val();
         }
 
-        get jsonV() {
-            if (dumpall)
-                { throw new NotImplementedError("jsonV not implemented because resolve is async."); }
+        async jsonV() {
+            if (dumpall) {
+                const result = await this.resolve();
+                return result;
+            }
             return this.val();
         }
 
-        get mapV() {
+        async mapV() {
             throw new NotImplementedError();
         }
 
@@ -188,12 +200,12 @@ export const reference = function(target, name = null, dumpall = false) {
 
         get isResolved() {
             const exists = this._object !== undefined;
-            return exists && this._object;
+            return Boolean(exists && this._object);
         }
 
         async isResolvable() {
             await this.resolve();
-            return this._object !== undefined;
+            return this._object !== null;
         }
     }
 
@@ -201,3 +213,148 @@ export const reference = function(target, name = null, dumpall = false) {
 };
 
 export class References extends AbstractType {}
+
+export const references = function(target, { name = undefined, dumpall = false } = {}) {
+    name = name || "id";
+    const targetT = target.constructor.name;
+    const isReference = targetT === "string";
+    const ReferenceC = reference(target, { name: name, dumpall: dumpall });
+
+    class _References extends References {
+        constructor(ids) {
+            super(ids);
+
+            this.__start__();
+
+            const proxy = new Proxy(this, {
+                get(target, name) {
+                    if (name in target) return target[name];
+                    return target.objects[name];
+                }
+            });
+
+            if (ids instanceof _References) return this.buildI(ids);
+            else this.build(ids);
+
+            return proxy;
+        }
+
+        __start__() {
+            if (isReference) this._target = this.constructor._target;
+            else this._target = target;
+            verify(this._target);
+        }
+
+        /**
+         * The name of the key (join) attribute for the
+         * reference that is going to be created, this
+         * name may latter be used to cast the value
+         */
+        static get _name() {
+            return name;
+        }
+
+        static get _default() {
+            return new this([]);
+        }
+
+        static get _target() {
+            return ReferenceC._target;
+        }
+
+        static _btype() {
+            return ReferenceC._btype;
+        }
+
+        get items() {
+            return this.objects;
+        }
+
+        // array overrides?
+
+        build(ids) {
+            const isValid = ![null, undefined].includes(ids);
+            if (isValid && !Array.isArray(ids)) ids = [ids];
+
+            this.ids = ids;
+            this.objects = [];
+            this.objectsM = {};
+
+            this.setIds(this.ids);
+        }
+
+        buildI(references) {
+            this.ids = references.ids;
+            this.objects = references.objects;
+            this.objectsM = references.objectsM;
+        }
+
+        setIds(ids = []) {
+            this.ids = [];
+            ids.forEach(id => {
+                if (["", null, undefined].includes(id)) return;
+                const object = new ReferenceC(id);
+                const objectId = object.id;
+                this.ids.push(objectId);
+                this.objects.push(object);
+                this.objectsM[objectId] = object;
+            });
+        }
+
+        async refV() {
+            const result = await Promise.all(this.objects.map(async object => await object.refV()));
+            return result;
+        }
+
+        async jsonV() {
+            const result = await Promise.all(
+                this.objects.map(async object => await object.jsonV())
+            );
+            return result;
+        }
+
+        async mapV() {
+            const result = await Promise.all(this.objects.map(async object => await object.mapV()));
+            return result;
+        }
+
+        get val() {
+            return this.objects.map(object => object.val);
+        }
+
+        get list() {
+            return this.objects.map(object => object.val);
+        }
+
+        async resolve(kwargs = {}) {
+            const result = await Promise.all(this.objects.map(object => object.resolve(kwargs)));
+            return result;
+        }
+
+        find(kwargs = {}) {
+            kwargs[name] = {
+                $in: this.ids.map(id => this._target.cast(name, id))
+            };
+            return this._target.find(kwargs);
+        }
+
+        paginate(kwargs = {}) {
+            kwargs[name] = {
+                $in: this.ids.map(id => this._target.cast(name, id))
+            };
+            return this._target.paginate(kwargs);
+        }
+
+        get isEmpty() {
+            const idsL = self.ids.length;
+            return idsL === 0;
+        }
+
+        get isResolved() {
+            if (this.objects.length === 0) return true;
+            return this.objects[0].isResolved;
+        }
+    }
+
+    return _References;
+};

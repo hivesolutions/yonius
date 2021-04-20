@@ -2,13 +2,10 @@ import { NotImplementedError, request } from "../base";
 
 import { Reference, References } from "./typesf";
 
-/**
- * The various data types that are considered to be references
- * so that they are lazy loaded from the data source, these kind
- * of types should be compliant to a common interface so that they
- * may be used "blindly" from an external entity
- */
-const TYPE_REFERENCES = [Reference, References];
+const MONGO_TYPES = [
+    [Reference, Number],
+    [References, Array]
+];
 
 /**
  * Abstract class definition that defines the interface
@@ -67,9 +64,11 @@ export class MongoCollection extends Collection {
         // model by encapsulating its name and schema
         const filteredSchema = { ...schema };
         Object.entries(filteredSchema).forEach(([name, value]) => {
-            const isRef = TYPE_REFERENCES.some(type => value.type.prototype instanceof type);
-            if (!isRef) return;
-            filteredSchema[name].type = Number;
+            const found = MONGO_TYPES.find(
+                ([type, mongoType]) => value.type.prototype instanceof type
+            );
+            if (!found) return;
+            filteredSchema[name].type = found[1];
         });
         this._models[name] = mongoose.model(name, new mongoose.Schema(filteredSchema));
 
