@@ -57,22 +57,22 @@ describe("ModelStore", function() {
             person = await mock.Person.get({ id: 1 });
             assert.strictEqual(person.cats.isResolved, false);
             assert.strictEqual(person.car, undefined);
-            assert.strictEqual(await person.cats[0].get("name"), "NameCat");
+            assert.strictEqual(await person.cats[0].name, "NameCat");
 
             person = await mock.Person.get({ id: 1, eager: ["cats"] });
             assert.strictEqual(person.cats.isResolved, true);
-            let personFriend = await person.cats[0].get("friend");
+            let personFriend = await person.cats[0].friend;
             assert.strictEqual(personFriend.isResolved, false);
             assert.strictEqual(person.cats.length, 1);
             assert.strictEqual(person.cats[0].name, "NameCat");
 
             person = await mock.Person.get({ id: 1, eager: ["cats.friend"] });
             assert.strictEqual(person.cats.isResolved, true);
-            personFriend = await person.cats[0].get("friend");
+            personFriend = await person.cats[0].friend;
             assert.strictEqual(personFriend.isResolved, true);
             assert.strictEqual(person.cats.length, 1);
-            assert.strictEqual(await person.cats[0].get("name"), "NameCat");
-            assert.strictEqual(await personFriend.get("name"), "NameCatFriend");
+            assert.strictEqual(await person.cats[0].name, "NameCat");
+            assert.strictEqual(await personFriend.name, "NameCatFriend");
 
             person = await mock.Person.get({ id: 1 });
             person.cats = [];
@@ -116,13 +116,13 @@ describe("ModelStore", function() {
 
             person = await mock.Person.get({ id: 1, eagerL: true });
             assert.strictEqual(person.car.isResolved, true);
-            assert.strictEqual(await person.car.get("name"), "Car");
-            const personGarage = await person.car.get("garage");
+            assert.strictEqual(await person.car.name, "Car");
+            const personGarage = await person.car.garage;
             assert.strictEqual(personGarage.isResolved, true);
-            assert.strictEqual(await personGarage.get("name"), "Garage");
-            const personAddress = await personGarage.get("address");
+            assert.strictEqual(await personGarage.name, "Garage");
+            const personAddress = await personGarage.address;
             assert.strictEqual(personAddress.isResolved, true);
-            assert.strictEqual(await personAddress.get("street"), "Address");
+            assert.strictEqual(await personAddress.street, "Address");
         });
 
         it("should be able to get with unresolved references", async () => {
@@ -141,7 +141,7 @@ describe("ModelStore", function() {
             person = await mock.Person.get({ id: 1 });
             assert.strictEqual(await person.car.isResolvable(), true);
             assert.strictEqual(person.car === null, false);
-            assert.strictEqual(await person.car.get("name"), "Car");
+            assert.strictEqual(await person.car.name, "Car");
 
             await car.delete();
             person = await mock.Person.get({ id: 1 });

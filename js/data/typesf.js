@@ -39,7 +39,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     const exists = target._object[name];
                     if (exists) return target._object[name];
                     if (target.isResolved) throw new AttributeError(`'${name}' not found`);
-                    throw new NotImplementedError("Accessing fields must be done with #get");
+                    return target.get(name);
                 },
                 set(target, name, value) {
                     if (name in target) {
