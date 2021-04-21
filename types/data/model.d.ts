@@ -17,8 +17,9 @@ export interface QueryParams {
 
 export declare class Model {
     static niw<T = Model>(this: { new (): T }): T;
-    static find<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T[]>;
     static get<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T>;
+    static find<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T[]>;
+    static count<T = Model>(this: { new (): T }, params?: QueryParams): Promise<number>;
 
     constructor(options?: { fill?: boolean });
     apply<T = Model>(this: T, model: Record<string, unknown>): Promise<T>;
@@ -33,6 +34,7 @@ export declare class Model {
         }
     ): Promise<T>;
 
+    advance<T = Model>(this: T, name: string, delta: number): Promise<number>;
     reload<T = Model>(this: T, params?: QueryParams): Promise<T>;
 
     validate(): Promise<void>;

@@ -71,6 +71,42 @@ describe("ModelStore", function() {
         });
     });
 
+    describe("#advance()", function() {
+        it("should be able to advance values for entities", async () => {
+            let result = await mock.Person.count();
+            assert.strictEqual(result, 0);
+
+            let person = new mock.Person();
+            person.age = 1;
+            person.name = "Name";
+            await person.save();
+
+            result = await mock.Person.count();
+            assert.strictEqual(result, 1);
+
+            result = await person.advance("age");
+            assert.strictEqual(result, 2);
+            assert.strictEqual(person.age, 2);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 2);
+
+            result = await person.advance("age", 2);
+            assert.strictEqual(result, 4);
+            assert.strictEqual(person.age, 4);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 4);
+
+            result = await person.advance("age", -2);
+            assert.strictEqual(result, 2);
+            assert.strictEqual(person.age, 2);
+
+            person = await person.reload();
+            assert.strictEqual(person.age, 2);
+        });
+    });
+
     describe("#reload()", function() {
         it("should be able to reload simple entities", async () => {
             let person = new mock.Person();
