@@ -80,6 +80,33 @@ describe("#ensurePermissions()", function() {
             }
         );
     });
+
+    it("should handle multiple tokens", async () => {
+        let result;
+
+        const ctx = {
+            getAcl: async () => ["admin", "driver"]
+        };
+
+        result = await yonius.ensurePermissions("admin", ctx);
+        assert.strictEqual(result, undefined);
+
+        result = await yonius.ensurePermissions(["admin", "driver"], ctx);
+        assert.strictEqual(result, undefined);
+
+        await assert.rejects(
+            async () => await yonius.ensurePermissions(["admin", "impossible"], ctx),
+            err => {
+                assert.strictEqual(err.name, "OperationalError");
+                assert.strictEqual(
+                    err.message,
+                    "You don't have authorization to access this resource"
+                );
+                assert.strictEqual(err.code, 401);
+                return true;
+            }
+        );
+    });
 });
 
 describe("#toTokensM()", function() {

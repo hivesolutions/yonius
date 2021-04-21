@@ -7,23 +7,27 @@ import { OperationalError } from "./error";
  * In case the validation fails an exception is raised
  * indicating the auth validation error.
  *
- * @param {String} token The ACL token to ensure permission,
+ * @param {String|Array} token The ACL token(s) to ensure permission,
  * the logged user should be allowed to id.
  * @param {Object} ctx The context object to be used in
  * the session basic ACL retrieval, should contain proper
  * injected methods for retrieval (eg: `getAcl`).
  */
 export const ensurePermissions = async (token, ctx) => {
+    const tokens = Array.isArray(token) ? token : [token];
+
     // retrieves the ACL values from the current context and
     // then uses the ACL to obtain the valid expanded tokens map
     const acl = ctx.getAcl ? await ctx.getAcl(ctx) : {};
-    const tokens = toTokensM(acl);
+    const tokensM = toTokensM(acl);
 
-    // in case the permission validation test is not positive
-    // then an exception should be raised indicating the issue
-    if (!_hasPermission(token, tokens)) {
-        throw new OperationalError("You don't have authorization to access this resource", 401);
-    }
+    tokens.forEach(token => {
+        // in case the permission validation test is not positive
+        // then an exception should be raised indicating the issue
+        if (!_hasPermission(token, tokensM)) {
+            throw new OperationalError("You don't have authorization to access this resource", 401);
+        }
+    });
 };
 
 /**
