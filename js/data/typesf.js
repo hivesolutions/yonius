@@ -46,13 +46,6 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                         return true;
                     }
 
-                    // in case the name that is being set is not part of the reserved
-                    // names for the reference underlying structure the object resolution
-                    // is triggered to make sure the underlying object exists and is loaded
-                    if (!reserved.includes(name)) {
-                        // await target.resolve();
-                    }
-
                     // verifies if the reference object exists in the current
                     // reference instance, that's the case if the object name is
                     // defined in the dictionary and the referenced object contains
@@ -84,6 +77,30 @@ export const reference = function(target, { name = null, dumpall = false } = {})
             const value = this._object[name];
             if (value === undefined) throw new AttributeError(`'${name}' not found`);
             return value;
+        }
+
+        async set(name, value) {
+            // in case the name that is being set is not part of the reserved
+            // names for the reference underlying structure the object resolution
+            // is triggered to make sure the underlying object exists and is loaded
+            if (!reserved.includes(name)) {
+                await target.resolve();
+            }
+
+            // verifies if the reference object exists in the current
+            // reference instance, that's the case if the object name is
+            // defined in the dictionary and the referenced object contains
+            // an attribute with the name referred, for those situations
+            // defers the setting of the attribute to the reference object
+            const exists = this._object !== undefined && this._object[name] !== undefined;
+            if (exists) {
+                this._object[name] = value;
+                return true;
+            }
+
+            // otherwise this is a normal attribute setting and the current
+            // object's dictionary must be changed so that the new value is set
+            this[name] = value;
         }
 
         __start__() {
