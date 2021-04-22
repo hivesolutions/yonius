@@ -1,30 +1,6 @@
 const assert = require("assert");
 const yonius = require("../..");
 
-describe("#all()", function() {
-    it("should verify a condition for all elements in a collection", () => {
-        let result;
-
-        result = yonius.all(yonius.isUrl())([
-            "https://www.platforme.com/",
-            "https://www.google.com/"
-        ]);
-        assert.strictEqual(result, true);
-
-        result = yonius.all(yonius.eq(2))([2, 2, 2, 2]);
-        assert.strictEqual(result, true);
-
-        assert.throws(
-            () => yonius.all(yonius.isUpper())(["LEGAL!", "illegal!"]),
-            err => {
-                assert.strictEqual(err instanceof yonius.ValidationError, true);
-                assert.strictEqual(err.message, "Value contains lower cased characters");
-                return true;
-            }
-        );
-    });
-});
-
 describe("#eq()", function() {
     it("should verify basic equal operations", () => {
         let result;
@@ -349,6 +325,27 @@ describe("#stringEq()", function() {
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Must be exactly 4 characters");
+                return true;
+            }
+        );
+    });
+});
+
+describe("#all()", function() {
+    it("should verify condition for all elements in a sequence", () => {
+        let result;
+
+        result = yonius.all(yonius.isUrl())(["https://www.hive.pt/", "https://www.google.com/"]);
+        assert.strictEqual(result, true);
+
+        result = yonius.all(yonius.eq(2))([2, 2, 2, 2]);
+        assert.strictEqual(result, true);
+
+        assert.throws(
+            () => yonius.all(yonius.isUpper())(["HELLO WORLD", "hello world"]),
+            err => {
+                assert.strictEqual(err instanceof yonius.ValidationError, true);
+                assert.strictEqual(err.message, "Value contains lower cased characters");
                 return true;
             }
         );
