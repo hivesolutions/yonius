@@ -15,7 +15,7 @@ describe("#all()", function() {
         assert.strictEqual(result, true);
 
         assert.throws(
-            () => yonius.all(yonius.isUpper())(["illegal!"]),
+            () => yonius.all(yonius.isUpper())(["LEGAL!", "illegal!"]),
             err => {
                 assert.strictEqual(err instanceof yonius.ValidationError, true);
                 assert.strictEqual(err.message, "Value contains lower cased characters");
