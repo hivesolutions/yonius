@@ -19,6 +19,18 @@ const EMAIL_REGEX = /^[\w\d\._%+-]+@[\w\d\.\-]+$/;
  */
 const URL_REGEX = /^\w+\:\/\/([^@]+\:[^@]+@)?[^\:\/\?#]+(\:\d+)?(\/[^\?#]+)*\/?(\?[^#]*)?(#.*)?$/;
 
+export const all = function(elementValidation, message = "Not all elements satisfy %{1}") {
+    const validation = (collection, ctx) => {
+        for (const element of collection) {
+            const valid = elementValidation(element);
+            if (!valid)
+                { throw new ValidationError(message.replace("%{1}", String(elementValidation.name))); }
+        }
+        return true;
+    };
+    return validation;
+};
+
 export const eq = function(valueC, message = "Must be equal to %{1}") {
     const validation = (value, ctx) => {
         if (value === null) return true;
