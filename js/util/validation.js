@@ -23,8 +23,9 @@ export const all = function(elementValidation, message = "Not all elements satis
     const validation = (collection, ctx) => {
         for (const element of collection) {
             const valid = elementValidation(element);
-            if (!valid)
-                { throw new ValidationError(message.replace("%{1}", String(elementValidation.name))); }
+            if (!valid) {
+                throw new ValidationError(message.replace("%{1}", String(elementValidation.name)));
+            }
         }
         return true;
     };
