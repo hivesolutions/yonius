@@ -72,6 +72,46 @@ export const reference = function(target, { name = null, dumpall = false } = {})
             return proxy;
         }
 
+        static get schema() {
+            return target.schema;
+        }
+
+        static get schemaSafe() {
+            return target.schemaSafe;
+        }
+
+        static get collection() {
+            return target.collection;
+        }
+
+        static get idName() {
+            return "id";
+        }
+
+        static get increments() {
+            return target.increments;
+        }
+
+        static get dataOptions() {
+            return target.dataOptions;
+        }
+
+        static _collection(options) {
+            return target._collection(options);
+        }
+
+        static async _increment(name) {
+            return target._increment(name);
+        }
+
+        static async _ensureMin(name, value) {
+            return target._ensureMin(name, value);
+        }
+
+        static _eagerB(eager) {
+            return target._eagerB(eager);
+        }
+
         async get(name) {
             await this.resolve();
             const value = this._object[name];
@@ -158,7 +198,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
         }
 
         async refV() {
-            return this.val();
+            return this.val;
         }
 
         async jsonV() {
@@ -166,7 +206,7 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                 const result = await this.resolve();
                 return result;
             }
-            return this.val();
+            return this.val;
         }
 
         async mapV() {

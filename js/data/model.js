@@ -1,7 +1,13 @@
 import * as collection from "./collection";
 import { Reference, References } from "./typesf";
 
-import { NotFoundError, NotImplementedError, ValidationError, OperationalError } from "../base";
+import {
+    NotFoundError,
+    NotImplementedError,
+    ValidationError,
+    OperationalError,
+    AttributeError
+} from "../base";
 import { escapeStringRegexp, verify, _isDevel } from "../util";
 
 const MEMORY_STORAGE = {};
@@ -1051,7 +1057,7 @@ export class ModelStore extends Model {
         // iterates over all the model items to filter the ones
         // that are not valid for the current class context
         await Promise.all(
-            Object.entries(this).map(async ([name, value]) => {
+            Object.entries(this.model).map(async ([name, value]) => {
                 if (this.constructor.schema[name] === undefined) return;
                 // if (immutablesA && this.immutables[name] !== undefined) return;
                 model[name] = await this._evaluate(name, value, evaluator);
@@ -1063,11 +1069,13 @@ export class ModelStore extends Model {
         // value this will returns the reference index value instead of
         // the normal value that would prevent normalization
         if (normalize) {
-            Object.entries(this).forEach(([name, value]) => {
-                if (this.constructor.schema[name] === undefined) return;
-                if (!value || !value.refV) return;
-                model[name] = value.refV();
-            });
+            await Promise.all(
+                Object.entries(this.model).map(async ([name, value]) => {
+                    if (this.constructor.schema[name] === undefined) return;
+                    if (!value || !value.refV) return;
+                    model[name] = await value.refV();
+                })
+            );
         }
 
         // in case the resolution flag is set, it means that a recursive
@@ -1099,7 +1107,17 @@ export class ModelStore extends Model {
         // that both base iterable values (lists and dictionaries) and
         // objects that implement the evaluator method are not considered
         // to be iterables and normal operation applies
-        let isIterable = Boolean((value && value.items) || Array.isArray(value));
+        let isIterable;
+        try {
+            isIterable = Boolean((value && value.items) || Array.isArray(value));
+        } catch (error) {
+            // AttributeErrors are tolerated since they might simply
+            // represent a missing "items" field when dealing with
+            // references
+            if (!(error instanceof AttributeError)) throw error;
+            isIterable = false;
+        }
+
         const hasEvaluator = Boolean(
             evaluator && (Array.isArray(value) ? value.length : value) && value[evaluator]
         );

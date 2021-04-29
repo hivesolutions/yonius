@@ -22,8 +22,7 @@ describe("Model", function() {
 describe("ModelStore", function() {
     this.timeout(30000);
     beforeEach(async function() {
-        const uri = await yonius.confP("MONGO_URL");
-        if (!uri) return this.skip();
+        const uri = "mongodb://localhost/enas";
         await yonius.initMongo(mongoose, uri);
         await mongoose.connection.db.dropDatabase();
     });
@@ -60,15 +59,19 @@ describe("ModelStore", function() {
             assert.strictEqual(await person.cats[0].name, "NameCat");
 
             person = await mock.Person.get({ id: 1, eager: ["cats"] });
+            assert.strictEqual(person.cats instanceof yonius.References, true);
             assert.strictEqual(person.cats.isResolved, true);
             let personFriend = await person.cats[0].friend;
+            assert.strictEqual(personFriend instanceof yonius.Reference, true);
             assert.strictEqual(personFriend.isResolved, false);
             assert.strictEqual(person.cats.length, 1);
             assert.strictEqual(person.cats[0].name, "NameCat");
 
             person = await mock.Person.get({ id: 1, eager: ["cats.friend"] });
+            assert.strictEqual(person.cats instanceof yonius.References, true);
             assert.strictEqual(person.cats.isResolved, true);
             personFriend = await person.cats[0].friend;
+            assert.strictEqual(personFriend instanceof yonius.Reference, true);
             assert.strictEqual(personFriend.isResolved, true);
             assert.strictEqual(person.cats.length, 1);
             assert.strictEqual(await person.cats[0].name, "NameCat");
@@ -115,14 +118,73 @@ describe("ModelStore", function() {
             await garage.save();
 
             person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
             assert.strictEqual(person.car.isResolved, true);
             assert.strictEqual(await person.car.name, "Car");
-            const personGarage = await person.car.garage;
+            let personGarage = await person.car.garage;
             assert.strictEqual(personGarage.isResolved, true);
             assert.strictEqual(await personGarage.name, "Garage");
-            const personAddress = await personGarage.address;
+            let personAddress = await personGarage.address;
             assert.strictEqual(personAddress.isResolved, true);
             assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1, eagerL: false });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(person.car.isResolved, false);
+            assert.strictEqual(await person.car.name, "Car");
+            personGarage = await person.car.garage;
+            assert.strictEqual(personGarage.isResolved, false);
+            assert.strictEqual(await personGarage.name, "Garage");
+            personAddress = await personGarage.address;
+            assert.strictEqual(personAddress.isResolved, false);
+            assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(person.car.isResolved, false);
+            assert.strictEqual(await person.car.name, "Car");
+            personGarage = await person.car.garage;
+            assert.strictEqual(personGarage.isResolved, false);
+            assert.strictEqual(await personGarage.name, "Garage");
+            personAddress = await personGarage.address;
+            assert.strictEqual(personAddress.isResolved, false);
+            assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            person.car.name = "CarChanged";
+            await person.car.save();
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(await person.car.name, "CarChanged");
+
+            const father = new mock.Person();
+            father.name = "Father";
+            await father.save();
+
+            const carFather = await mock.Car.get({ id: 1, eagerL: true });
+            carFather.name = "CarFather";
+            await carFather.save();
+
+            father.car = carFather;
+            await father.save();
+
+            person.father = father;
+            await person.save();
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(person.father instanceof yonius.Reference, true);
+            assert.strictEqual(person.father.isResolved, false);
+            assert.strictEqual(person.car.isResolved, true);
+
+            await person.father.resolve();
+            assert.strictEqual(person.car.isResolved, true);
+            assert.strictEqual(person.father.isResolved, true);
+            const fatherCar = await person.father.car;
+            assert.strictEqual(fatherCar.isResolved, false);
+            assert.strictEqual(await person.father.name, "Father");
+
+            await fatherCar.resolve();
+            assert.strictEqual(fatherCar.isResolved, true);
+            assert.strictEqual(fatherCar.name, "CarFather");
         });
 
         it("should be able to get with unresolved references", async () => {
@@ -137,14 +199,17 @@ describe("ModelStore", function() {
             person = await mock.Person.get({ id: 1 });
             person.car = car;
             await person.save();
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
 
             person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
             assert.strictEqual(await person.car.isResolvable(), true);
             assert.strictEqual(person.car === null, false);
             assert.strictEqual(await person.car.name, "Car");
 
             await car.delete();
             person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
             assert.strictEqual(await person.car.isResolvable(), false);
             assert.strictEqual(person.car === null, false);
         });

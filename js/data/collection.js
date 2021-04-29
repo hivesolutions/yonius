@@ -7,7 +7,7 @@ import { Reference, References } from "./typesf";
  * be used by the underlying Mongo collection.
  */
 const MONGO_TYPES = [
-    [Reference, Number],
+    [Reference, Object],
     [References, Array]
 ];
 
