@@ -326,8 +326,6 @@ export const references = function(target, { name = undefined, dumpall = false }
             return this.objects;
         }
 
-        // array overrides?
-
         build(ids) {
             const isValid = ![null, undefined].includes(ids);
             if (isValid && !Array.isArray(ids)) ids = [ids];

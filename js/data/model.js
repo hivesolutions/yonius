@@ -250,9 +250,6 @@ export class Model {
         for (const key of Object.keys(this.constructor.schema)) {
             const value = model[key];
             if (value === undefined) continue;
-            // if (Array.isArray(value) && value.length === 0) {
-            //     continue;
-            // }
             this[key] = this.constructor.cast(key, value);
         }
         if (model._id !== undefined) this._id = model._id;
