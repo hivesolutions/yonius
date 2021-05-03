@@ -1,9 +1,43 @@
 import * as collection from "./collection";
-import { NotFoundError, NotImplementedError, ValidationError, OperationalError } from "../base";
+import { Reference, References } from "./typesf";
+
+import {
+    NotFoundError,
+    NotImplementedError,
+    ValidationError,
+    OperationalError,
+    AttributeError
+} from "../base";
 import { escapeStringRegexp, verify, _isDevel } from "../util";
 
 const MEMORY_STORAGE = {};
 
+/**
+ * Simple lambda function that removes any
+ * empty element from the provided list values
+ */
+const RE = v => v.filter(i => i !== "");
+
+/**
+ * The map associating the various types with the
+ * custom builder functions to be used when applying
+ * the types function, this is relevant for the built-in
+ * types that are meant to avoid using the default constructor
+ */
+const BUILDERS = {
+    [Number]: v => v,
+    [String]: v => v,
+    [Array]: v => (Array.isArray(v) ? RE(v) : typeof v === "string" ? JSON.parse(v) : RE([v])),
+    [Boolean]: v => (typeof v === "boolean" ? v : !["", "0", "false", "False"].includes(v)),
+    [Object]: v => (typeof v === "string" ? JSON.parse(v) : v)
+};
+
+/**
+ * The default values to be set when a type
+ * conversion fails for the provided string value
+ * the resulting value may be returned when a validation
+ * fails an so it must be used carefully
+ */
 const TYPE_DEFAULTS = {
     bytes: null,
     unicode: null,
@@ -14,6 +48,14 @@ const TYPE_DEFAULTS = {
     dict: () => ({}),
     object: () => ({})
 };
+
+/**
+ * The various data types that are considered to be references
+ * so that they are lazy loaded from the data source, these kind
+ * of types should be compliant to a common interface so that they
+ * may be used "blindly" from an external entity
+ */
+const TYPE_REFERENCES = [Reference, References];
 
 /**
  * The map that associates the various operators with the boolean
@@ -126,6 +168,28 @@ export class Model {
         }
     }
 
+    static cast(name, value, safe = true) {
+        if (!this.schema[name]) return value;
+        if (value === null || value === undefined) return value;
+        const _definition = this.definitionN(name);
+        const _type = _definition.type || String;
+        const builder = BUILDERS[_type] || (v => new _type(v));
+        try {
+            return builder ? builder(value) : value;
+        } catch (err) {
+            if (!safe) throw err;
+            let _default = this.typeD[_type] || null;
+            _default = _type._default ? _type._default() : _default;
+            return _default;
+        }
+    }
+
+    static get eagers() {
+        return Object.entries(this.schema)
+            .filter(([name, field]) => field.eager)
+            .map(([name, field]) => name);
+    }
+
     /**
      * The name of the data source adapter that is going
      * to be used to handle this model instance.
@@ -163,7 +227,7 @@ export class Model {
         return this;
     }
 
-    get jsonV() {
+    async jsonV() {
         return this.model;
     }
 
@@ -184,8 +248,9 @@ export class Model {
      */
     async _wrap(model) {
         for (const key of Object.keys(this.constructor.schema)) {
-            if (model[key] === undefined) continue;
-            this[key] = model[key];
+            const value = model[key];
+            if (value === undefined) continue;
+            this[key] = this.constructor.cast(key, value);
         }
         if (model._id !== undefined) this._id = model._id;
     }
@@ -225,7 +290,7 @@ export class ModelStore extends Model {
 
     static async get(params = {}) {
         /* eslint-disable no-unused-vars */
-        const [
+        let [
             fields,
             eager,
             eagerL,
@@ -255,6 +320,8 @@ export class ModelStore extends Model {
             ["raiseE", true]
         ]);
         /* eslint-enable no-unused-vars */
+        if (eagerL === null) eagerL = map;
+        if (eagerL) eager = this._eagerB(eager);
 
         const sortObject = {};
         if (sort) {
@@ -276,8 +343,10 @@ export class ModelStore extends Model {
             }
             throw new NotFoundError(message);
         }
-
-        const model = found ? await new this().wrap(found) : found;
+        let model = found ? await new this().wrap(found) : found;
+        if (model) {
+            if (eager) model = await this._eager(model, eager, { map: map });
+        }
         return model;
     }
 
@@ -433,6 +502,90 @@ export class ModelStore extends Model {
             if (insensitive) findV.$options = "-i";
             this._filterMerge(name, findV, params, findO);
         }
+    }
+
+    /**
+     * Working at a model map/dictionary level tries to resolve the
+     * relations described by the sequence of `.` separated names paths.
+     *
+     * Should be able to handle both instance and map associated eager
+     * loading relations.
+     *
+     * @param {Object} model The model map to be used as reference for the eager
+     * loading of relations.
+     * @param {Array} names The list of dot separated name paths to "guide" the
+     * loading of relations (references).
+     * @returns {Object} The resulting model with the required relations loaded.
+     */
+    static async _eager(model, names, kwargs = {}) {
+        // verifies if the provided model instance is a sequence and if
+        // that's the case runs the recursive eager loading of names and
+        // returns the resulting sequence to the caller method
+        const isList = Array.isArray(model);
+        if (isList) return Promise.all(model.map(_model => this._eager(_model, names, kwargs)));
+
+        // iterates over the complete set of names that are meant to be
+        // eager loaded from the model and runs the "resolution" process
+        // for each of them so that they are properly eager loaded
+        for (const name of names) {
+            let _model = model;
+            for (const part of name.split(".")) {
+                const isSequence = Array.isArray(_model);
+                if (isSequence) {
+                    _model = await Promise.all(_model.map(value => this._res(value, part, kwargs)));
+                } else _model = await this._res(_model, part, kwargs);
+                if (!_model) break;
+            }
+        }
+
+        // returns the resulting model to the caller method, most of the
+        // times this model should have not been touched
+        return model;
+    }
+
+    /**
+     * Resolves a specific model part taking into account the multiple
+     * possible resolution strategies.
+     *
+     * Most of its logic will be associated with reference like types.
+     *
+     * This method will also (for map based resolution strategies) change
+     * the owner model, setting its references with the resolved maps, this
+     * is required as maps do not allow reference objects to exist.
+     *
+     * @param {Object} model The model map to be used in the resolution process.
+     * @param {String} part The name of the model's part to be resolved.
+     * @returns {Object} The resolved part that may be either a map or an object
+     * depending on the resolution strategy.
+     */
+    static async _res(model, part, kwargs = {}) {
+        // in case the provided is not valid returns it (no resolution is
+        // possible) otherwise gather the base value for resolution
+        if (!model) return model;
+        let value = model[part];
+
+        // check the data type of the requested name for resolution
+        // and in case it's not valid and not a reference returns it
+        // immediately, no resolution to be performed
+        const isReference = TYPE_REFERENCES.some(type => value instanceof type);
+        if (!value && !isReference) return value;
+
+        // in case the value is a reference type object then runs
+        // the resolve operation effectively resolving the values
+        // (this is considered a very expensive operation), notice
+        // that this operation is going to respect the map vs. instance
+        // kind of resolution process so the data type of the resulting
+        // value is going to depend on that
+        if (isReference) value = await value.resolve({ eagerL: true });
+
+        // in case the map resolution process was requested an explicit
+        // set of the resolved value is required (implicit resolution
+        // using `resolve()`) is not enough to ensure proper type structure
+        if (kwargs.map) model[part] = value;
+
+        // returns the "final" (possibly resolved) value to the caller method
+        // ready to be used for possible merging processes
+        return value;
     }
 
     static _findS(params) {
@@ -679,8 +832,32 @@ export class ModelStore extends Model {
         return result.seq;
     }
 
+    /**
+     * Builds the provided list of eager values, preparing them
+     * according to the current model rules.
+     *
+     * The composition process includes the extension of the provided
+     * sequence of eager values with the base ones defined in the
+     * model, if not handled correctly this is an expensive operation.
+     *
+     * @param {Array} eager The base sequence containing the various fields
+     * that should be eagerly loaded for the operation.
+     * @returns {Array} The "final" resolved array that may be used for the eager
+     * loaded operation performance.
+     */
+    static _eagerB(eager) {
+        eager = eager || [];
+        eager = Array.isArray(eager) ? eager : [eager];
+        eager.push(...this.eagers);
+        if (eager.length === 0) return eager;
+        eager = [...new Set(eager)];
+        return eager;
+    }
+
     async save({
         validate = true,
+        incrementA = undefined,
+        immutablesA = undefined,
         preSave = true,
         preCreate = true,
         preUpdate = true,
@@ -690,29 +867,26 @@ export class ModelStore extends Model {
         beforeCallbacks = [],
         afterCallbacks = []
     } = {}) {
-        // allocates space for the model variable to be used in the retrieval
-        // of information from the data source
-        let model;
-
-        // iterates over each of the fields that are meant to have its value
-        // increment and performs the appropriate operation taking into account
-        // if the value is already populated or not
-        for (const name of this.constructor.increments) {
-            const exists = this.model[name] !== undefined;
-            if (exists) {
-                this.model[name] = await this.constructor._ensureMin(name, this.model[name]);
-            } else {
-                this.model[name] = await this.constructor._increment(name);
-            }
-        }
-
         // in case the validate flag is set runs the model validation
         // defined for the current model
         if (validate) await this.validate();
 
+        // filters the values that are present in the current model
+        // so that only the valid ones are stored in, invalid values
+        // are going to be removed, note that if the operation is an
+        // update operation and the "immutable rules" also apply, the
+        // returned value is normalized meaning that for instance if
+        // any relation is loaded the reference value is returned instead
+        // of the loaded relation values (required for persistence)
+        let model = await this._filter({
+            incrementA: incrementA,
+            immutablesA: immutablesA,
+            normalize: true
+        });
+
         // runs the lower layer integrity verifications that should raise
         // exception in case there's a failure
-        await this.verify();
+        await this.verify(model);
 
         // calls the complete set of event handlers for the current
         // save operation, this should trigger changes in the model
@@ -731,11 +905,11 @@ export class ModelStore extends Model {
         // or update data accordingly
         const isNew = this._id === undefined;
         if (isNew) {
-            model = await this.constructor.collection.create(this.model);
+            model = await this.constructor.collection.create(model);
         } else {
             const conditions = {};
             conditions[this.constructor.idName] = this.identifier;
-            model = await this.constructor.collection.findOneAndUpdate(conditions, this.model);
+            model = await this.constructor.collection.findOneAndUpdate(conditions, model);
         }
 
         // wraps the model object using the current instance
@@ -825,14 +999,14 @@ export class ModelStore extends Model {
      * definition raising assertion errors in case there
      * are issues with the internal structure of it.
      */
-    async verify() {
+    async verify(model) {
         verify(
-            this.identifier !== undefined && this.identifier !== null,
+            this.getIdentifier(model) !== undefined && this.getIdentifier(model) !== null,
             "The identifier must be defined before saving"
         );
         for (const [name, field] of Object.entries(this.constructor.schema)) {
             verify(
-                !field.required || ![undefined, null].includes(this[name]),
+                !field.required || ![undefined, null].includes(model[name]),
                 `No value provided for mandatory field '${name}'`
             );
         }
@@ -854,8 +1028,129 @@ export class ModelStore extends Model {
 
     async postDelete() {}
 
+    async _filter({
+        incrementA = true,
+        immutablesA = true,
+        normalize = false,
+        resolve = false,
+        all = false,
+        evaluator = "jsonV"
+    } = {}) {
+        const model = {};
+
+        // iterates over each of the fields that are meant to have its value
+        // increment and performs the appropriate operation taking into account
+        // if the value is already populated or not
+        for (const name of this.constructor.increments) {
+            if (incrementA === false) continue;
+            const exists = this.model[name] !== undefined;
+            if (exists) {
+                model[name] = await this.constructor._ensureMin(name, this.model[name]);
+            } else {
+                model[name] = await this.constructor._increment(name);
+            }
+        }
+
+        // iterates over all the model items to filter the ones
+        // that are not valid for the current class context
+        await Promise.all(
+            Object.entries(this.model).map(async ([name, value]) => {
+                if (this.constructor.schema[name] === undefined) return;
+                // if (immutablesA && this.immutables[name] !== undefined) return;
+                model[name] = await this._evaluate(name, value, evaluator);
+            })
+        );
+
+        // in case the normalize flag is set must iterate over all
+        // items to try to normalize the values by calling the reference
+        // value this will returns the reference index value instead of
+        // the normal value that would prevent normalization
+        if (normalize) {
+            await Promise.all(
+                Object.entries(this.model).map(async ([name, value]) => {
+                    if (this.constructor.schema[name] === undefined) return;
+                    if (!value || !value.refV) return;
+                    model[name] = await value.refV();
+                })
+            );
+        }
+
+        // in case the resolution flag is set, it means that a recursive
+        // approach must be performed for the resolution of values that
+        // implement the map value (recursive resolution) method, this is
+        // a complex (and possible computational expensive) process that
+        // may imply access to the base data source
+        if (resolve) {
+            throw new NotImplementedError("'resolve' not implemented");
+        }
+
+        // in case the all flag is set the extra fields (not present
+        // in definition) must also be used to populate the resulting
+        // (filtered) map so that it contains the complete set of values
+        // present in the base map of the current instance
+        if (all) {
+            throw new NotImplementedError("'all' not implemented");
+        }
+
+        // returns the model containing the "filtered" items resulting
+        // from the validation of the items against the model class
+        return model;
+    }
+
+    async _evaluate(name, value, evaluator = "jsonV") {
+        // verifies if the current value is an iterable one in case
+        // it is runs the evaluate method for each of the values to
+        // try to resolve them into the proper representation, note
+        // that both base iterable values (lists and dictionaries) and
+        // objects that implement the evaluator method are not considered
+        // to be iterables and normal operation applies
+        let isIterable;
+        try {
+            isIterable = Boolean((value && value.items) || Array.isArray(value));
+        } catch (error) {
+            // AttributeErrors are tolerated since they might simply
+            // represent a missing "items" field when dealing with
+            // references
+            if (!(error instanceof AttributeError)) throw error;
+            isIterable = false;
+        }
+
+        const hasEvaluator = Boolean(
+            evaluator && (Array.isArray(value) ? value.length : value) && value[evaluator]
+        );
+        isIterable = isIterable && !hasEvaluator;
+        if (isIterable) {
+            const result = await Promise.all(
+                (value.items || value).map(item => this._evaluate(name, item, evaluator))
+            );
+            return result;
+        }
+
+        // verifies the current value's class is sub class of the model
+        // class and in case it's extracts the relation name from the
+        // value and sets it as the value in iteration
+        const isModel = value instanceof Model;
+        if (isModel) {
+            const meta = this.constructor.definitionN(name);
+            const type = meta.type || String;
+            const _name = type._name;
+            value = value[_name];
+        }
+
+        // iterates over all the values and retrieves the map value for
+        // each of them in case the value contains a map value retrieval
+        // method otherwise uses the normal value returning it to the caller
+        const method = hasEvaluator ? value[evaluator] : null;
+        value = method ? await method.bind(value)(false) : value;
+        return value;
+    }
+
+    getIdentifier(model) {
+        return model[this.constructor.idName];
+    }
+
     get identifier() {
-        return this[this.constructor.idName];
+        return this.getIdentifier(this.model);
     }
 }
 

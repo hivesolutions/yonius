@@ -1,5 +1,16 @@
 import { NotImplementedError, request } from "../base";
 
+import { Reference, References } from "./typesf";
+
+/**
+ * A mapping from yonius types to the schema types to
+ * be used by the underlying Mongo collection.
+ */
+const MONGO_TYPES = [
+    [Reference, Object],
+    [References, Array]
+];
+
 /**
  * Abstract class definition that defines the interface
  * expected to be implemented by data driven collections
@@ -59,7 +70,15 @@ export class MongoCollection extends Collection {
 
         // creates the internal "mongoose" reference to the
         // model by encapsulating its name and schema
-        this._models[name] = mongoose.model(name, new mongoose.Schema(schema));
+        const filteredSchema = { ...schema };
+        Object.entries(filteredSchema).forEach(([name, value]) => {
+            const found = MONGO_TYPES.find(
+                ([type, mongoType]) => value.type.prototype instanceof type
+            );
+            if (!found) return;
+            filteredSchema[name].type = found[1];
+        });
+        this._models[name] = mongoose.model(name, new mongoose.Schema(filteredSchema));
 
         // returns the newly constructor mongoose model to
         // the caller methods

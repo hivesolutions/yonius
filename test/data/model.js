@@ -35,6 +35,186 @@ describe("ModelStore", function() {
             assert.deepStrictEqual(mock.Person.increments, ["id", "idSafe"]);
         });
     });
+    describe("#get()", function() {
+        it("should be able to resolve references", async () => {
+            let person = new mock.Person();
+            person.name = "Name";
+
+            const cat = new mock.Cat();
+            cat.name = "NameCat";
+            await cat.save();
+
+            const catFriend = new mock.Cat();
+            catFriend.name = "NameCatFriend";
+            await catFriend.save();
+
+            cat.friend = catFriend;
+            await cat.save();
+
+            person.cats = [cat];
+            await person.save();
+
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.cats.isResolved, false);
+            assert.strictEqual(person.car, undefined);
+            assert.strictEqual(await person.cats[0].name, "NameCat");
+
+            person = await mock.Person.get({ id: 1, eager: ["cats"] });
+            assert.strictEqual(person.cats instanceof yonius.References, true);
+            assert.strictEqual(person.cats.isResolved, true);
+            let personFriend = await person.cats[0].friend;
+            assert.strictEqual(personFriend instanceof yonius.Reference, true);
+            assert.strictEqual(personFriend.isResolved, false);
+            assert.strictEqual(person.cats.length, 1);
+            assert.strictEqual(person.cats[0].name, "NameCat");
+
+            person = await mock.Person.get({ id: 1, eager: ["cats.friend"] });
+            assert.strictEqual(person.cats instanceof yonius.References, true);
+            assert.strictEqual(person.cats.isResolved, true);
+            personFriend = await person.cats[0].friend;
+            assert.strictEqual(personFriend instanceof yonius.Reference, true);
+            assert.strictEqual(personFriend.isResolved, true);
+            assert.strictEqual(person.cats.length, 1);
+            assert.strictEqual(await person.cats[0].name, "NameCat");
+            assert.strictEqual(await personFriend.name, "NameCatFriend");
+
+            person = await mock.Person.get({ id: 1 });
+            person.cats = [];
+            await person.save();
+
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.cats.length, 0);
+
+            person = await mock.Person.get({ id: 1, eager: ["cats"] });
+            assert.strictEqual(person.cats.length, 0);
+        });
+
+        it("should be able to get eagerly", async () => {
+            let person = new mock.Person();
+            person.name = "Name";
+            await person.save();
+
+            let car = new mock.Car();
+            car.name = "Car";
+            await car.save();
+
+            let garage = new mock.Garage();
+            garage.name = "Garage";
+            await garage.save();
+
+            const address = new mock.Address();
+            address.street = "Address";
+            await address.save();
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            person.car = car;
+            await person.save();
+
+            car = await mock.Car.get({ id: 1, eagerL: true });
+            car.garage = garage;
+            await car.save();
+
+            garage = await mock.Garage.get({ id: 1, eagerL: true });
+            garage.address = address;
+            await garage.save();
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(person.car.isResolved, true);
+            assert.strictEqual(await person.car.name, "Car");
+            let personGarage = await person.car.garage;
+            assert.strictEqual(personGarage.isResolved, true);
+            assert.strictEqual(await personGarage.name, "Garage");
+            let personAddress = await personGarage.address;
+            assert.strictEqual(personAddress.isResolved, true);
+            assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1, eagerL: false });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(person.car.isResolved, false);
+            assert.strictEqual(await person.car.name, "Car");
+            personGarage = await person.car.garage;
+            assert.strictEqual(personGarage.isResolved, false);
+            assert.strictEqual(await personGarage.name, "Garage");
+            personAddress = await personGarage.address;
+            assert.strictEqual(personAddress.isResolved, false);
+            assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(person.car.isResolved, false);
+            assert.strictEqual(await person.car.name, "Car");
+            personGarage = await person.car.garage;
+            assert.strictEqual(personGarage.isResolved, false);
+            assert.strictEqual(await personGarage.name, "Garage");
+            personAddress = await personGarage.address;
+            assert.strictEqual(personAddress.isResolved, false);
+            assert.strictEqual(await personAddress.street, "Address");
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            person.car.name = "CarChanged";
+            await person.car.save();
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(await person.car.name, "CarChanged");
+
+            const father = new mock.Person();
+            father.name = "Father";
+            await father.save();
+
+            const carFather = await mock.Car.get({ id: 1, eagerL: true });
+            carFather.name = "CarFather";
+            await carFather.save();
+
+            father.car = carFather;
+            await father.save();
+
+            person.father = father;
+            await person.save();
+
+            person = await mock.Person.get({ id: 1, eagerL: true });
+            assert.strictEqual(person.father instanceof yonius.Reference, true);
+            assert.strictEqual(person.father.isResolved, false);
+            assert.strictEqual(person.car.isResolved, true);
+
+            await person.father.resolve();
+            assert.strictEqual(person.car.isResolved, true);
+            assert.strictEqual(person.father.isResolved, true);
+            const fatherCar = await person.father.car;
+            assert.strictEqual(fatherCar.isResolved, false);
+            assert.strictEqual(await person.father.name, "Father");
+
+            await fatherCar.resolve();
+            assert.strictEqual(fatherCar.isResolved, true);
+            assert.strictEqual(fatherCar.name, "CarFather");
+        });
+
+        it("should be able to get with unresolved references", async () => {
+            let person = new mock.Person();
+            person.name = "Name";
+            await person.save();
+
+            const car = new mock.Car();
+            car.name = "Car";
+            await car.save();
+
+            person = await mock.Person.get({ id: 1 });
+            person.car = car;
+            await person.save();
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(await person.car.isResolvable(), true);
+            assert.strictEqual(person.car === null, false);
+            assert.strictEqual(await person.car.name, "Car");
+
+            await car.delete();
+            person = await mock.Person.get({ id: 1 });
+            assert.strictEqual(person.car instanceof yonius.Reference, true);
+            assert.strictEqual(await person.car.isResolvable(), false);
+            assert.strictEqual(person.car === null, false);
+        });
+    });
     describe("#save()", function() {
         it("should be able to save simple entities", async () => {
             const person = new mock.Person();
