@@ -21,7 +21,7 @@ export const ensurePermissions = async (token, ctx) => {
 
     // in case the permission validation test is not positive
     // then an exception should be raised indicating the issue
-    if (!_hasPermission(token, tokens)) {
+    if (!hasPermission(token, tokens)) {
         throw new OperationalError("You don't have authorization to access this resource", 401);
     }
 };
@@ -64,7 +64,7 @@ export const toTokensM = tokens => {
     return tokensM;
 };
 
-const _hasPermission = (token, tokensM = null) => {
+export const hasPermission = (token, tokensM = null) => {
     if (!token) return true;
     if (tokensM === undefined || tokensM === null) return false;
 
