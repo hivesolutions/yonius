@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for custom `getAgent` options
-* Support for `options` in `buildGetAgent`
+*
 
 ### Changed
 
@@ -19,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [0.8.0] - 2021-07-09
+
+### Added
+
+* Support for custom `getAgent` options
+* Support for `options` in `buildGetAgent`
 
 ## [0.7.7] - 2021-05-18
 
