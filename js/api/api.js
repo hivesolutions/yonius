@@ -79,6 +79,7 @@ export class API extends Observable {
         const headers = options.headers !== undefined ? options.headers : {};
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const handle = options.handle !== undefined ? options.handle : true;
+        const getAgent = options.getAgent !== undefined ? options.getAgent : undefined;
         await this.build(method, url, {
             params: params,
             headers: headers,
@@ -89,7 +90,7 @@ export class API extends Observable {
         const response = await fetch(url, {
             method: method,
             headers: headers || {},
-            agent: globals.getAgent || undefined
+            agent: getAgent || globals.getAgent || undefined
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
@@ -104,6 +105,7 @@ export class API extends Observable {
         let mime = options.mime !== undefined ? options.mime : null;
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const handle = options.handle !== undefined ? options.handle : true;
+        const getAgent = options.getAgent !== undefined ? options.getAgent : undefined;
 
         await this.build(method, url, {
             params: params,
@@ -138,7 +140,7 @@ export class API extends Observable {
             method: method,
             headers: headers || {},
             body: data,
-            agent: global.getAgent || undefined
+            agent: getAgent || global.getAgent || undefined
         });
         const result = handle ? await this._handleResponse(response) : response;
         return result;
