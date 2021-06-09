@@ -241,18 +241,18 @@ export class API extends Observable {
     }
 }
 
-export const buildGetAgent = (AgentHttp, AgentHttps, set = true) => {
+export const buildGetAgent = (AgentHttp, AgentHttps, set = true, options = {}) => {
     const httpAgent = new AgentHttp({
-        keepAlive: true,
-        keepAliveMsecs: 120000,
-        timeout: 60000,
-        scheduling: "fifo"
+        keepAlive: options.keepAlive === undefined ? true : options.keepAlive,
+        keepAliveMsecs: options.keepAliveMsecs || 120000,
+        timeout: options.timeout || 60000,
+        scheduling: options.scheduling || "fifo"
     });
     const httpsAgent = new AgentHttps({
-        keepAlive: true,
-        keepAliveMsecs: 120000,
-        timeout: 60000,
-        scheduling: "fifo"
+        keepAlive: options.keepAlive === undefined ? true : options.keepAlive,
+        keepAliveMsecs: options.keepAliveMsecs || 120000,
+        timeout: options.timeout || 60000,
+        scheduling: options.scheduling || "fifo"
     });
     const getAgent = parsedURL => (parsedURL.protocol === "http:" ? httpAgent : httpsAgent);
     if (set) globals.getAgent = getAgent;
