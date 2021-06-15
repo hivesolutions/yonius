@@ -153,7 +153,7 @@ export const stringEq = function(valueC, message = "Must be exactly %{1} charact
 
 export const all = function(validation) {
     const _validation = (sequence, ctx) => {
-        if (!Array.isArray(sequence)) return true;
+        if (sequence === null) return true;
         for (const value of sequence) {
             validation(value, ctx);
         }
