@@ -207,6 +207,7 @@ export class API extends Observable {
                     value = contents;
                 } else {
                     header = `Content-Disposition: form-data; name="${key}"`;
+                    value = encoder.encode(value);
                 }
 
                 buffer.push(encoder.encode("--" + boundary + "\r\n"));

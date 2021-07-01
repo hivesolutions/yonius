@@ -74,7 +74,7 @@ describe("API", function() {
             const api = new yonius.API();
 
             [contentType, body] = api._encodeMultipart({
-                file: new TextEncoder("utf-8").encode("Hello World")
+                file: "Hello World"
             });
 
             assert.strictEqual(
