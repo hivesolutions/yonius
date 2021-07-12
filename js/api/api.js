@@ -185,7 +185,7 @@ export class API extends Observable {
 
                 if (
                     typeof value === "object" &&
-                    !Array.isArray(value) &&
+                    !(value instanceof Array) &&
                     value.constructor !== Uint8Array
                 ) {
                     const headerL = [];
@@ -196,7 +196,7 @@ export class API extends Observable {
                     }
                     value = data;
                     header = headerL.join("\r\n");
-                } else if (Array.isArray(value)) {
+                } else if (value instanceof Array) {
                     let name = null;
                     let contents = null;
                     let contentTypeD = null;
