@@ -13,12 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Encoding of multipart form data directly using a string value
-* Made encoding of string multipart backwards compatible with `Uint8Array`
+*
 
 ### Fixed
 
 *
+
+## [0.8.1] - 2021-07-15
+
+### Changed
+
+* Encoding of multipart form data directly using a string value
+* Made encoding of string multipart backwards compatible with `Uint8Array`
 
 ## [0.8.0] - 2021-07-09
 
