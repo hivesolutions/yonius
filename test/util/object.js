@@ -31,10 +31,14 @@ describe("#equal()", function() {
     });
 
     it("should be able to verify that object values are equal", () => {
-        const object = { id: 1, name: "name" };
         let result;
 
+        const object = { id: 1, name: "name" };
+
         result = yonius.equal(object, object);
+        assert.strictEqual(result, true);
+
+        result = yonius.equal(object, { id: 1, name: "name" });
         assert.strictEqual(result, true);
 
         result = yonius.equal(object, { id: 1 });
