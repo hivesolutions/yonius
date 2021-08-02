@@ -11,6 +11,10 @@ export const equal = function(first, second) {
         return first === second;
     }
 
+    if (first instanceof Date && second instanceof Date) {
+        return first === second;
+    }
+
     if (Object.keys(first).length !== Object.keys(second).length) {
         return false;
     }
