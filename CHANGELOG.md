@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Date comparison support to `equal()` method
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [0.8.2] - 2021-08-03
+
+### Added
+
+* Date comparison support to `equal()` method
 
 ## [0.8.1] - 2021-07-15
 
