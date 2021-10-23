@@ -11,3 +11,9 @@ export declare function conf(
     cast?: string,
     ctx?: unknown
 ): unknown;
+export declare function confP(
+    name: string,
+    fallback?: unknown,
+    cast?: string,
+    ctx?: unknown
+): Promise<unknown>;
