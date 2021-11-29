@@ -122,7 +122,7 @@ export const VALUE_METHODS = {
     is_null: (v, t) => null,
     not_null: (v, t) => null,
     is_not_null: (v, t) => null,
-    contains: (v, t) => v.split(";")
+    contains: (v, t) => v.split(";").map(t)
 };
 
 export class Model {
