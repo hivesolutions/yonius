@@ -871,6 +871,12 @@ export class ModelStore extends Model {
         // defined for the current model
         if (validate) await this.validate();
 
+        // calls the complete set of event handlers for the current
+        // save operation, this should trigger changes in the model
+        if (preSave) await this.preSave();
+        if (preCreate) await this.preCreate();
+        if (preUpdate) await this.preUpdate();
+
         // filters the values that are present in the current model
         // so that only the valid ones are stored in, invalid values
         // are going to be removed, note that if the operation is an
@@ -887,12 +893,6 @@ export class ModelStore extends Model {
         // runs the lower layer integrity verifications that should raise
         // exception in case there's a failure
         await this.verify(model);
-
-        // calls the complete set of event handlers for the current
-        // save operation, this should trigger changes in the model
-        if (preSave) await this.preSave();
-        if (preCreate) await this.preCreate();
-        if (preUpdate) await this.preUpdate();
 
         // calls the complete set of callbacks that should be called
         // before the concrete data store save operation
