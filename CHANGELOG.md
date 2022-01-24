@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for the `underscoreToCamel` function
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [0.9.0] - 2022-01-24
+
+### Added
+
+* Support for the `underscoreToCamel` function
 
 ## [0.8.3] - 2021-12-05
 
