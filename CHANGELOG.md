@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [0.9.2] - 2022-02-06
+
+### Fixed
+
 * `YoniusError` extending `Error`
 
 ## [0.9.1] - 2022-02-06
