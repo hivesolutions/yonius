@@ -1,4 +1,6 @@
 export declare class YoniusError {
+    message: string;
+    code: number;
     constructor(message: string, code?: number);
     isClient(): boolean;
     isServer(): boolean;
