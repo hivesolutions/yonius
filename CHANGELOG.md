@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [0.9.1] - 2022-02-06
+
+### Fixed
+
 * Error type definition
 
 ## [0.9.0] - 2022-01-24
