@@ -998,16 +998,23 @@ export class ModelStore extends Model {
      * Runs a series of assertions on the current model
      * definition raising assertion errors in case there
      * are issues with the internal structure of it.
+     *
+     * @param {Object} model The model that is going to
+     * be verified for a series of elements.
      */
     async verify(model) {
         verify(
             this.getIdentifier(model) !== undefined && this.getIdentifier(model) !== null,
-            "The identifier must be defined before saving"
+            "The identifier must be defined before saving",
+            400,
+            OperationalError
         );
         for (const [name, field] of Object.entries(this.constructor.schema)) {
             verify(
                 !field.required || ![undefined, null].includes(model[name]),
-                `No value provided for mandatory field '${name}'`
+                `No value provided for mandatory field '${name}'`,
+                400,
+                OperationalError
             );
         }
     }
