@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Made fastify types optional, avoid required dependency
+*
 
 ### Fixed
 
 *
+
+## [0.11.0] - 2022-02-07
+
+### Changed
+
+* Made fastify types optional, avoid required dependency
 
 ## [0.10.0] - 2022-02-07
 
