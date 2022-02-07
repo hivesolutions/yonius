@@ -24,6 +24,20 @@
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
     "types": "types/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/yonius.esm.js",
+            "require": "./dist/yonius.cjs.js",
+            "types": "./types/index.d.ts",
+            "typings": "./types/index.d.ts"
+        },
+        "./fastify": {
+            "import": "./dist/yonius.fastify.esm.js",
+            "require": "./dist/yonius.fastify.cjs.js",
+            "types": "./types/fastify/index.d.ts",
+            "typings": "./types/fastify/index.d.ts"
+        }
+    },
     "typesVersions": {
         "*": {
             "*": [
