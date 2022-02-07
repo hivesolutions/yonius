@@ -13,12 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Added better validation exception on save
-* Made safe keys support to allow verify
+*
 
 ### Fixed
 
 *
+
+## [0.11.3] - 2022-02-07
+
+### Changed
+
+* Made safe keys support to allow verify
 
 ## [0.11.2] - 2022-02-07
 
