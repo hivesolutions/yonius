@@ -11,6 +11,9 @@ describe("#eq()", function() {
         result = yonius.eq(4)(4);
         assert.strictEqual(result, true);
 
+        result = yonius.eq(4)(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.eq(4)(null);
         assert.strictEqual(result, true);
 
@@ -33,6 +36,9 @@ describe("#gt()", function() {
         assert.strictEqual(result, true);
 
         result = yonius.gt(4)(5);
+        assert.strictEqual(result, true);
+
+        result = yonius.gt(4)(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.gt(4)(null);
@@ -62,6 +68,9 @@ describe("#gte()", function() {
         result = yonius.gte(4)(4);
         assert.strictEqual(result, true);
 
+        result = yonius.gte(4)(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.gte(4)(null);
         assert.strictEqual(result, true);
 
@@ -84,6 +93,9 @@ describe("#notEmpty()", function() {
         assert.strictEqual(result, true);
 
         result = yonius.notEmpty()("hello world");
+        assert.strictEqual(result, true);
+
+        result = yonius.notEmpty()(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.notEmpty()(null);
@@ -110,6 +122,9 @@ describe("#isIn()", function() {
         result = yonius.isIn(["hello", "world"])("world");
         assert.strictEqual(result, true);
 
+        result = yonius.isIn()(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.isIn()(null);
         assert.strictEqual(result, true);
 
@@ -132,6 +147,9 @@ describe("#isUpper()", function() {
         assert.strictEqual(result, true);
 
         result = yonius.isUpper()("HELLO.WORLD");
+        assert.strictEqual(result, true);
+
+        result = yonius.isUpper()(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.isUpper()(null);
@@ -158,6 +176,9 @@ describe("#isLower()", function() {
         result = yonius.isLower()("hello.hello");
         assert.strictEqual(result, true);
 
+        result = yonius.isLower()(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.isLower()(null);
         assert.strictEqual(result, true);
 
@@ -182,6 +203,9 @@ describe("#isSimple()", function() {
         result = yonius.isSimple()("hello.world");
         assert.strictEqual(result, true);
 
+        result = yonius.isSimple()(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.isSimple()(null);
         assert.strictEqual(result, true);
 
@@ -201,6 +225,9 @@ describe("#isEmail()", function() {
         let result;
 
         result = yonius.isEmail()("platforme@platforme.com");
+        assert.strictEqual(result, true);
+
+        result = yonius.isEmail()(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.isEmail()(null);
@@ -227,6 +254,9 @@ describe("#isUrl()", function() {
         result = yonius.isUrl()("ssh://git@github.com");
         assert.strictEqual(result, true);
 
+        result = yonius.isUrl()(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.isUrl()(null);
         assert.strictEqual(result, true);
 
@@ -246,6 +276,9 @@ describe("#isRegex()", function() {
         let result;
 
         result = yonius.isRegex("^a.*$")("abc");
+        assert.strictEqual(result, true);
+
+        result = yonius.isRegex("something")(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.isRegex("something")(null);
@@ -272,6 +305,9 @@ describe("#stringGt()", function() {
         result = yonius.stringGt(4)("hello");
         assert.strictEqual(result, true);
 
+        result = yonius.stringGt(4)(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.stringGt(4)(null);
         assert.strictEqual(result, true);
 
@@ -296,6 +332,9 @@ describe("#stringLt()", function() {
         result = yonius.stringLt(4)("hel");
         assert.strictEqual(result, true);
 
+        result = yonius.stringLt(4)(undefined);
+        assert.strictEqual(result, true);
+
         result = yonius.stringLt(4)(null);
         assert.strictEqual(result, true);
 
@@ -315,6 +354,9 @@ describe("#stringEq()", function() {
         let result;
 
         result = yonius.stringEq(2)("he");
+        assert.strictEqual(result, true);
+
+        result = yonius.stringEq(4)(undefined);
         assert.strictEqual(result, true);
 
         result = yonius.stringEq(4)(null);
@@ -339,6 +381,12 @@ describe("#all()", function() {
         assert.strictEqual(result, true);
 
         result = yonius.all(yonius.eq(2))([2, 2, 2, 2]);
+        assert.strictEqual(result, true);
+
+        result = yonius.all(yonius.eq(2))(undefined);
+        assert.strictEqual(result, true);
+
+        result = yonius.all(yonius.eq(2))(null);
         assert.strictEqual(result, true);
 
         assert.throws(
