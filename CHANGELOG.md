@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* New undefined validation behavior
+*
 
 ### Fixed
 
 *
+
+## [0.10.0] - 2022-02-07
+
+### Changed
+
+* New undefined validation behavior
 
 ## [0.9.2] - 2022-02-06
 
