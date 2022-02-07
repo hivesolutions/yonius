@@ -24,6 +24,16 @@
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
     "types": "types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "*": [
+                "types/index.d.ts"
+            ],
+            "fastify": [
+                "types/fastify/index.d.ts"
+            ]
+        }
+    },
     "typings": "types/index.d.ts",
     "files": [
         "LICENSE",
