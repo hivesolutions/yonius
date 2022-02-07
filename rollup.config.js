@@ -80,6 +80,34 @@ export default [
         ]
     },
     {
+        input: "js/fastify/index.js",
+        external: ["node-fetch", "fs", "process", "path"],
+        output: [
+            {
+                file: "dist/yonius.fastify.cjs.js",
+                banner: banner,
+                format: "cjs",
+                exports: "named",
+                sourcemap: true
+            },
+            {
+                file: "dist/yonius.fastify.esm.js",
+                banner: banner,
+                format: "es",
+                sourcemap: true
+            }
+        ],
+        plugins: [
+            json(),
+            commonjs(),
+            resolve({
+                customResolveOptions: {
+                    paths: nodePath
+                }
+            })
+        ]
+    },
+    {
         input: "types/index.d.ts",
         output: [{ file: "dist/yonius.d.ts", format: "es" }],
         plugins: [dts()]

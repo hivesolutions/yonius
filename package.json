@@ -19,11 +19,6 @@
     },
     "license": "Apache-2.0",
     "author": "Hive Solutions",
-    "main": "dist/yonius.cjs.js",
-    "unpkg": "dist/yonius.umd.js",
-    "module": "dist/yonius.esm.js",
-    "browser": "dist/yonius.umd.js",
-    "types": "types/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/yonius.esm.js",
@@ -38,6 +33,11 @@
             "typings": "./types/fastify/index.d.ts"
         }
     },
+    "main": "dist/yonius.cjs.js",
+    "unpkg": "dist/yonius.umd.js",
+    "module": "dist/yonius.esm.js",
+    "browser": "dist/yonius.umd.js",
+    "types": "types/index.d.ts",
     "typesVersions": {
         "*": {
             "*": [
