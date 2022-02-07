@@ -3,7 +3,8 @@ export const verify = function(
     message = null,
     code = null,
     exception = null,
-    kwargs = {}
+    kwargs = {},
+    safeKeys = ["message"]
 ) {
     if (condition) return;
     message = message || "Verification failed";
@@ -14,7 +15,9 @@ export const verify = function(
     const throwable = new Exception(kwargs.message || undefined);
     throwable.kwargs = kwargs;
     for (const [key, value] of Object.entries(kwargs)) {
-        if (throwable[key] !== undefined) continue;
+        if (safeKeys.includes(key) && throwable[key] !== undefined) {
+            continue;
+        }
         throwable[key] = value;
     }
     throw throwable;
