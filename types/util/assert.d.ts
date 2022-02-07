@@ -3,6 +3,6 @@ export declare function verify(
     message?: string,
     code?: number,
     exception?: Error,
-    kwargs?: unknown,
+    kwargs?: Record<string, unknown>,
     safeKeys?: Array<string>
 ): void;
