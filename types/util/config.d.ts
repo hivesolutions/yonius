@@ -1,5 +1,5 @@
 export declare function load(
-    names?: Array<string>,
+    names?: string[],
     path?: string,
     encoding?: string,
     force?: boolean,

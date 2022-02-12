@@ -4,5 +4,5 @@ export declare function verify(
     code?: number,
     exception?: Error,
     kwargs?: Record<string, unknown>,
-    safeKeys?: Array<string>
+    safeKeys?: string[]
 ): void;
