@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [0.11.4] - 2022-02-13
+
+### Changed
+
+* Improved `import` compatibility for ESM
+
 ## [0.11.3] - 2022-02-07
 
 ### Changed
