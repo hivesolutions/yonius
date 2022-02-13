@@ -67,6 +67,12 @@ export default [
                 banner: banner,
                 format: "es",
                 sourcemap: true
+            },
+            {
+                file: pkg.import,
+                banner: banner,
+                format: "es",
+                sourcemap: true
             }
         ],
         plugins: [
@@ -92,6 +98,12 @@ export default [
             },
             {
                 file: "dist/yonius.fastify.esm.js",
+                banner: banner,
+                format: "es",
+                sourcemap: true
+            },
+            {
+                file: "dist/yonius.fastify.esm.mjs",
                 banner: banner,
                 format: "es",
                 sourcemap: true
