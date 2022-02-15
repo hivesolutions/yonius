@@ -21,12 +21,20 @@
     "author": "Hive Solutions",
     "exports": {
         ".": {
+            "main": "./dist/yonius.cjs.js",
+            "unpkg": "./dist/yonius.umd.js",
+            "module": "./dist/yonius.esm.js",
+            "browser": "./dist/yonius.umd.js",
             "import": "./dist/yonius.esm.mjs",
             "require": "./dist/yonius.cjs.js",
             "types": "./types/index.d.ts",
             "typings": "./types/index.d.ts"
         },
         "./fastify": {
+            "main": "./dist/yonius.fastify.cjs.js",
+            "unpkg": "./dist/yonius.fastify.umd.js",
+            "module": "./dist/yonius.fastify.esm.js",
+            "browser": "./dist/yonius.fastify.umd.js",
             "import": "./dist/yonius.fastify.esm.mjs",
             "require": "./dist/yonius.fastify.cjs.js",
             "types": "./types/fastify/index.d.ts",
@@ -37,9 +45,10 @@
     "unpkg": "dist/yonius.umd.js",
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
-    "types": "types/index.d.ts",
     "import": "dist/yonius.esm.mjs",
     "require": "dist/yonius.cjs.js",
+    "types": "types/index.d.ts",
+    "typings": "types/index.d.ts",
     "typesVersions": {
         "*": {
             "*": [
@@ -50,7 +59,6 @@
             ]
         }
     },
-    "typings": "types/index.d.ts",
     "files": [
         "LICENSE",
         "dist/**/*",

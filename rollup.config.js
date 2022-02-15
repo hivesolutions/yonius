@@ -90,20 +90,20 @@ export default [
         external: ["node-fetch", "fs", "process", "path"],
         output: [
             {
-                file: "dist/yonius.fastify.cjs.js",
+                file: pkg.exports["./fastify"].main,
                 banner: banner,
                 format: "cjs",
                 exports: "named",
                 sourcemap: true
             },
             {
-                file: "dist/yonius.fastify.esm.js",
+                file: pkg.exports["./fastify"].module,
                 banner: banner,
                 format: "es",
                 sourcemap: true
             },
             {
-                file: "dist/yonius.fastify.esm.mjs",
+                file: pkg.exports["./fastify"].import,
                 banner: banner,
                 format: "es",
                 sourcemap: true
@@ -120,7 +120,7 @@ export default [
         ]
     },
     {
-        input: "types/index.d.ts",
+        input: pkg.types,
         output: [{ file: "dist/yonius.d.ts", format: "es" }],
         plugins: [dts()]
     }
