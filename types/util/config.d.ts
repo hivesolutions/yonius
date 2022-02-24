@@ -1,3 +1,10 @@
+export enum Cast {
+    int = "int",
+    float = "float",
+    bool = "bool",
+    list = "list",
+    tuple = "tuple"
+}
 export declare function load(
     names?: string[],
     path?: string,
@@ -14,6 +21,6 @@ export declare function conf(
 export declare function confP(
     name: string,
     fallback?: unknown,
-    cast?: string,
+    cast?: Cast | string,
     ctx?: unknown
 ): Promise<unknown>;
