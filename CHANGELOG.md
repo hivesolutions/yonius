@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add `fromArrayBuffer` and `fromBlob` to `FileTuple`
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [0.11.6] - 2022-05-13
+
+### Added
+
+* Add `fromArrayBuffer` and `fromBlob` to `FileTuple`
 
 ## [0.11.5] - 2022-02-15
 
