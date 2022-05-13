@@ -23,6 +23,12 @@ describe("FileTuple", function() {
     });
 
     describe("#fromString()", async function() {
+        beforeEach(function() {
+            if (typeof TextEncoder === "undefined") {
+                this.skip();
+            }
+        });
+
         it("should be able to create a simple file tuple objects", () => {
             const fileTuple = yonius.FileTuple.fromString("hello", "hello.txt", "text/plain");
             assert.notStrictEqual(fileTuple, null);
@@ -55,6 +61,12 @@ describe("FileTuple", function() {
     });
 
     describe("#fromBlob()", async function() {
+        beforeEach(function() {
+            if (typeof Blob === "undefined") {
+                this.skip();
+            }
+        });
+
         it("should be able to create a simple file tuple objects", async () => {
             const fileTuple = await yonius.FileTuple.fromBlob(
                 new Blob(),
