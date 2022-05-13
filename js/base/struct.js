@@ -9,6 +9,16 @@ export class FileTuple extends Array {
         return this.fromData(data, name, mime);
     }
 
+    static fromArrayBuffer(arrayBuffer, name = null, mime = null) {
+        const buffer = Buffer.from(arrayBuffer);
+        return this.fromData(buffer, name, mime);
+    }
+
+    static async fromBlob(blob, name = null, mime = null) {
+        const arrayBuffer = await blob.arrayBuffer();
+        return this.fromArrayBuffer(arrayBuffer, name, mime);
+    }
+
     get name() {
         return this[0];
     }
