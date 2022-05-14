@@ -4,8 +4,8 @@ export class FileTuple extends Array {
         return fileTuple;
     }
 
-    static fromString(dataString, name = null, mime = null) {
-        const data = new TextEncoder("utf-8").encode(dataString);
+    static fromString(dataString, name = null, mime = null, encoding = "utf-8") {
+        const data = new TextEncoder(encoding).encode(dataString);
         return this.fromData(data, name, mime);
     }
 
