@@ -2,7 +2,6 @@ const assert = require("assert");
 const buffer = require("buffer");
 const yonius = require("../../");
 
-
 describe("FileTuple", function() {
     describe("#fromData()", async function() {
         it("should be able to create a simple file tuple objects", () => {
