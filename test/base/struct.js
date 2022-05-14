@@ -1,7 +1,7 @@
 const assert = require("assert");
+const buffer = require("buffer");
 const yonius = require("../../");
 
-const { Blob } = require("buffer");
 
 describe("FileTuple", function() {
     describe("#fromData()", async function() {
@@ -62,14 +62,14 @@ describe("FileTuple", function() {
 
     describe("#fromBlob()", async function() {
         beforeEach(function() {
-            if (typeof Blob === "undefined") {
+            if (typeof buffer.Blob === "undefined") {
                 this.skip();
             }
         });
 
         it("should be able to create a simple file tuple objects", async () => {
             const fileTuple = await yonius.FileTuple.fromBlob(
-                new Blob(),
+                new buffer.Blob(),
                 "hello.txt",
                 "text/plain"
             );
