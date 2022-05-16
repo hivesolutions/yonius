@@ -36,7 +36,6 @@ export declare class Model {
 
     advance<T = Model>(this: T, name: string, delta: number): Promise<number>;
     reload<T = Model>(this: T, params?: QueryParams): Promise<T>;
-
     validate(): Promise<void>;
     _validate(): IterableIterator<Error>;
 }
