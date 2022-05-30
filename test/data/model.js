@@ -21,20 +21,24 @@ describe("Model", function() {
 
 describe("ModelStore", function() {
     this.timeout(30000);
+
     beforeEach(async function() {
         const uri = await yonius.confP("MONGO_URL");
         if (!uri) return this.skip();
         await yonius.initMongo(mongoose, uri);
         await mongoose.connection.db.dropDatabase();
     });
+
     afterEach(async function() {
         await yonius.destroyMongo(mongoose);
     });
+
     describe("#increments", function() {
         it("should be able to compute increments", async () => {
             assert.deepStrictEqual(mock.Person.increments, ["id", "idSafe"]);
         });
     });
+
     describe("#get()", function() {
         it("should be able to resolve references", async () => {
             let person = new mock.Person();
@@ -215,6 +219,7 @@ describe("ModelStore", function() {
             assert.strictEqual(person.car === null, false);
         });
     });
+
     describe("#save()", function() {
         it("should be able to save simple entities", async () => {
             const person = new mock.Person();
