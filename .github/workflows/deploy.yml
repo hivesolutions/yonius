@@ -22,7 +22,7 @@ jobs:
         run: node --version
       - name: Install package
         run: npm install
-        - name: Install package (development)
+      - name: Install package (development)
         run: npm install --only=dev
       - name: Build package
         run: npm run build
