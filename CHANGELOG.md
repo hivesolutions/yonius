@@ -13,12 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Bumped most of the packages, making Node.js<14 versions incompatible with the build system
-* Made ESM modules the default import system for Yonius 🙌
+*
 
 ### Fixed
 
 *
+
+## [0.12.0] - 2023-01-14
+
+### Changed
+
+* Bumped most of the packages, making Node.js<14 versions incompatible with the build system
+* Made ESM modules the default import system for Yonius 🙌
 
 ## [0.11.7] - 2022-05-16
 
