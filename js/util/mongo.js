@@ -1,7 +1,8 @@
 export const initMongo = async (mongoose, uri) => {
-    mongoose.set("useFindAndModify", false);
-    mongoose.set("useCreateIndex", true);
-    mongoose.set("useUnifiedTopology", true);
+    _setSafe(mongoose, "useNewUrlParser", true);
+    _setSafe(mongoose, "useFindAndModify", false);
+    _setSafe(mongoose, "useCreateIndex", true);
+    _setSafe(mongoose, "useUnifiedTopology", true);
     await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -10,4 +11,10 @@ export const initMongo = async (mongoose, uri) => {
 
 export const destroyMongo = mongoose => {
     mongoose.disconnect();
+};
+
+const _setSafe = (mongoose, key, value) => {
+    try {
+        mongoose.set(key, value);
+    } catch (err) {}
 };
