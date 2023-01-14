@@ -19,6 +19,7 @@
     },
     "license": "Apache-2.0",
     "author": "Hive Solutions",
+    "type": "module",
     "exports": {
         ".": {
             "main": "./dist/yonius.cjs.js",
@@ -41,15 +42,11 @@
             "typings": "./types/fastify/index.d.ts"
         }
     },
-    "type": "module",
     "main": "dist/yonius.cjs.js",
     "unpkg": "dist/yonius.umd.js",
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
-    "import": "dist/yonius.esm.mjs",
-    "require": "dist/yonius.cjs.js",
     "types": "types/index.d.ts",
-    "typings": "types/index.d.ts",
     "typesVersions": {
         "*": {
             "*": [
@@ -60,6 +57,7 @@
             ]
         }
     },
+    "typings": "types/index.d.ts",
     "files": [
         "LICENSE",
         "dist/**/*",
@@ -82,7 +80,7 @@
         "watch": "rollup -c -w"
     },
     "dependencies": {
-        "node-fetch": "^2.6.8"
+        "node-fetch": "^3.3.0"
     },
     "devDependencies": {
         "@babel/core": "^7.20.12",
@@ -113,5 +111,7 @@
     },
     "engines": {
         "node": ">=12"
-    }
+    },
+    "import": "dist/yonius.esm.mjs",
+    "require": "dist/yonius.cjs.js"
 }
