@@ -1,6 +1,8 @@
 # [Yonius](http://yonius.hive.pt)
 
-Foundation structure for Javascript (ES6).
+Building blocks for JavaScript (ES6) and TypeScript.
+
+Making it easier and faster to build simple JS scripts.
 
 ## Test
 
