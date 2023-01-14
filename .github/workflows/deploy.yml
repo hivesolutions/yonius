@@ -8,19 +8,34 @@ jobs:
     name: Deploy
     strategy:
       matrix:
-        node-version: [10]
+        node-version: [14]
     runs-on: ubuntu-latest
     container: node:${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v1
-      - run: apt-get update && apt-get install -y mongodb && mkdir -p /data/db
-      - run: mongod &
-      - run: node --version
-      - run: npm install
-      - run: npm install --only=dev
-      - run: npm run build
-      - run: npm run lint
-      - run: |
+      - name: Checkout code from repository
+        uses: actions/checkout@v3
+      - name: Instal MongoDB
+        run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+          echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+          apt-get update && apt-get install -y mongodb-org mongodb-org-server mongodb-org-database\
+            mongodb-org-mongos mongodb-org-shell mongodb-org-tools && mkdir -p /data/db
+      - name: Start MongoDB instance
+        run: mongod &
+      - name: Print Node.js information
+        run: node --version
+      - name: Install package
+        run: npm install
+      - name: Install package (development)
+        run: npm install --only=dev
+      - name: Build package
+        run: npm run build
+      - name: Verify Javascript code linting
+        run: npm run lint
+      - name: Run unit tests
+        run: MONGO_URL=mongodb://localhost/test npm test
+      - name: Deploy package to NPM
+        run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           npm publish
         env:

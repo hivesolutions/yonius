@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Bumped most of the packages, making Node.js<14 versions incompatible with the build system
 
 ### Fixed
 
