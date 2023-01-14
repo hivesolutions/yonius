@@ -6,7 +6,7 @@ import json from "@rollup/plugin-json";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import dts from "rollup-plugin-dts";
 
-import { yoniusRollup } from "./js/rollup/plugins.mjs";
+import { yoniusRollup } from "./js/rollup/plugins.js";
 
 const pkgData = readFileSync("./package.json");
 const pkg = JSON.parse(pkgData);
