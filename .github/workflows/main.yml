@@ -10,15 +10,9 @@ jobs:
     container: node:${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v3
-      - run: apt-get update && apt-get install -y mongodb && mkdir -p /data/db
-        if: ${{ matrix.node-version != 16 && matrix.node-version != 17 }}
-      - run: |
-          wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
-          echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-          apt-get update && apt-get install -y mongodb-org mongodb-org-server mongodb-org-database\
-            mongodb-org-mongos mongodb-org-shell mongodb-org-tools && mkdir -p /data/db
-        if: ${{ matrix.node-version == 16 || matrix.node-version == 17 }}
-      - run: mongod &
+      - uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: 5.0
       - run: node --version
       - run: npm install
       - run: npm install --only=dev
