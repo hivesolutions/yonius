@@ -63,7 +63,7 @@
         "dist/**/*",
         "res/**/*",
         "js/**/*.js",
-        "test/**/*.js",
+        "test/**/*.{js,cjs,mjs}",
         "types/**/*.d.ts"
     ],
     "scripts": {
