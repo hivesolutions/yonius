@@ -31,7 +31,7 @@ jobs:
       - name: Run unit tests
         run: MONGO_URL=mongodb://localhost/test npm test
       - name: Deploy package to NPM
-      - run: |
+        run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           npm publish
         env:
