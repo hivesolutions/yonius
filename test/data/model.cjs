@@ -1,7 +1,7 @@
 const assert = require("assert");
 const mongoose = require("mongoose");
 const yonius = require("../..");
-const mock = require("./mock");
+const mock = require("./mock.cjs");
 
 yonius.register("mongoose", mongoose);
 

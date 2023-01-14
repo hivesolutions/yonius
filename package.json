@@ -22,27 +22,27 @@
     "type": "module",
     "exports": {
         ".": {
-            "main": "./dist/yonius.cjs.js",
+            "main": "./dist/yonius.cjs.cjs",
             "unpkg": "./dist/yonius.umd.js",
             "module": "./dist/yonius.esm.js",
             "browser": "./dist/yonius.umd.js",
             "import": "./dist/yonius.esm.mjs",
-            "require": "./dist/yonius.cjs.js",
+            "require": "./dist/yonius.cjs.cjs",
             "types": "./types/index.d.ts",
             "typings": "./types/index.d.ts"
         },
         "./fastify": {
-            "main": "./dist/yonius.fastify.cjs.js",
+            "main": "./dist/yonius.fastify.cjs.cjs",
             "unpkg": "./dist/yonius.fastify.umd.js",
             "module": "./dist/yonius.fastify.esm.js",
             "browser": "./dist/yonius.fastify.umd.js",
             "import": "./dist/yonius.fastify.esm.mjs",
-            "require": "./dist/yonius.fastify.cjs.js",
+            "require": "./dist/yonius.fastify.cjs.cjs",
             "types": "./types/fastify/index.d.ts",
             "typings": "./types/fastify/index.d.ts"
         }
     },
-    "main": "dist/yonius.cjs.js",
+    "main": "dist/yonius.cjs.cjs",
     "unpkg": "dist/yonius.umd.js",
     "module": "dist/yonius.esm.js",
     "browser": "dist/yonius.umd.js",
@@ -113,5 +113,5 @@
         "node": ">=12"
     },
     "import": "dist/yonius.esm.mjs",
-    "require": "dist/yonius.cjs.js"
+    "require": "dist/yonius.cjs.cjs"
 }
