@@ -76,6 +76,12 @@ export default [
                 banner: banner,
                 format: "es",
                 sourcemap: true
+            },
+            {
+                file: pkg.base,
+                banner: banner,
+                format: "es",
+                sourcemap: true
             }
         ],
         plugins: [

@@ -112,6 +112,7 @@
     "engines": {
         "node": ">=12"
     },
+    "base": "dist/yonius.js",
     "import": "dist/yonius.esm.mjs",
     "require": "dist/yonius.cjs"
 }
