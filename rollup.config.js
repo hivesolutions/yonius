@@ -3,7 +3,7 @@ import babel from "@rollup/plugin-babel";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
-import nodePolyfills from "rollup-plugin-node-polyfills";
+import nodePolyfills from "rollup-plugin-polyfill-node";
 import dts from "rollup-plugin-dts";
 
 import { yoniusRollup } from "./js/rollup/plugins.js";
