@@ -5,8 +5,6 @@ export const initMongo = async (mongoose, uri) => {
     _setSafe(mongoose, "useUnifiedTopology", true);
     await mongoose.connect(uri, {
         useNewUrlParser: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
         useUnifiedTopology: true
     });
 };
