@@ -8,14 +8,18 @@ jobs:
     name: Deploy
     strategy:
       matrix:
-        node-version: [10]
+        node-version: [14]
     runs-on: ubuntu-latest
     container: node:${{ matrix.node-version }}
     steps:
       - name: Checkout code from repository
         uses: actions/checkout@v3
-      - name: Install MongoDB
-        run: apt-get update && apt-get install -y mongodb && mkdir -p /data/db
+      - name: Instal MongoDB
+      - run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+          echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+          apt-get update && apt-get install -y mongodb-org mongodb-org-server mongodb-org-database\
+            mongodb-org-mongos mongodb-org-shell mongodb-org-tools && mkdir -p /data/db
       - name: Start MongoDB instance
         run: mongod &
       - name: Print Node.js information
