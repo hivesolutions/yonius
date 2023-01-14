@@ -9,13 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     container: node:${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code from repository
+        uses: actions/checkout@v3
       - uses: supercharge/mongodb-github-action@1.8.0
         with:
           mongodb-version: 5.0
-      - run: node --version
-      - run: npm install
-      - run: npm install --only=dev
-      - run: npm run build
-      - run: npm run lint
-      - run: MONGO_URL=mongodb://localhost/test npm test
+      - run: mongod &
+      - name: Print Node.js information
+        run: node --version
+      - name: Install package
+        run: npm install
+        - name: Install package (development)
+        run: npm install --only=dev
+      - name: Build package
+        run: npm run build
+      - name: Verify Javascript code linting
+        run: npm run lint
+      - name: Run unit tests
+        run: MONGO_URL=mongodb://localhost/test npm test

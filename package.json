@@ -71,9 +71,9 @@
         "build": "rollup -c",
         "coveralls": "npm run test-coverage && nyc report --reporter=text-lcov | coveralls",
         "example": "node examples/simple.js",
-        "lint": "eslint rollup.config.js \"./{js,types,test}/**/*.{js,ts,json}\"",
-        "lint-fix": "eslint rollup.config.js \"./{js,types,test}/**/*.{js,ts,json}\" --fix",
-        "prettier": "prettier rollup.config.js \"./*.{js,ts,json}\" \"./{js,types,test}/**/*.{js,ts,json}\" --write",
+        "lint": "eslint rollup.config.mjs \"./{js,mjs,types,test}/**/*.{js,mjs,ts,json}\"",
+        "lint-fix": "eslint rollup.config.mjs \"./{js,mjs,types,test}/**/*.{js,mjs,ts,json}\" --fix",
+        "prettier": "prettier rollup.config.mjs \"./*.{js,mjs,ts,json}\" \"./{js,mjs,types,test}/**/*.{js,mjs,ts,json}\" --write",
         "pretty": "npm run prettier && npm run lint-fix",
         "test": "mocha --recursive",
         "test-coverage": "nyc npm test",
@@ -95,6 +95,7 @@
         "coveralls": "^3.1.1",
         "eslint": "^8.31.0",
         "eslint-config-hive": "^0.6.0",
+        "eslint-plugin-n": "^15.6.1",
         "fastify": "^4.11.0",
         "mocha": "^10.2.0",
         "mocha-cli": "^1.0.1",
@@ -108,5 +109,8 @@
         "rollup-plugin-node-polyfills": "^0.2.1",
         "sort-package-json": "^2.1.0",
         "typescript": "^4.9.4"
+    },
+    "engines": {
+        "node": ">=12"
     }
 }

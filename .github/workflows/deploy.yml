@@ -12,14 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     container: node:${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v3
-      - run: apt-get update && apt-get install -y mongodb && mkdir -p /data/db
-      - run: mongod &
-      - run: node --version
-      - run: npm install
-      - run: npm install --only=dev
-      - run: npm run build
-      - run: npm run lint
+      - name: Checkout code from repository
+        uses: actions/checkout@v3
+      - name: Install MongoDB
+        run: apt-get update && apt-get install -y mongodb && mkdir -p /data/db
+      - name: Start MongoDB instance
+        run: mongod &
+      - name: Print Node.js information
+        run: node --version
+      - name: Install package
+        run: npm install
+        - name: Install package (development)
+        run: npm install --only=dev
+      - name: Build package
+        run: npm run build
+      - name: Verify Javascript code linting
+        run: npm run lint
+      - name: Run unit tests
+        run: MONGO_URL=mongodb://localhost/test npm test
+      - name: Deploy package to NPM
       - run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           npm publish
