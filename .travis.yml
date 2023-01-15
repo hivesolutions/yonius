@@ -1,15 +1,11 @@
-dist: trusty
+dist: focal
 language: node_js
 node_js:
   - "14"
   - "16"
   - "17"
-matrix:
-  include:
-  - node_js: 18
-    dist: xenial
-  - node_js: 19
-    dist: xenial
+  - "18"
+  - "19"
 services:
   - mongodb
 install:
