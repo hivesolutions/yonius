@@ -4,8 +4,12 @@ node_js:
   - "14"
   - "16"
   - "17"
-  - "18"
-  - "19"
+matrix:
+  include:
+  - node_js: 18
+    dist: xenial
+  - node_js: 19
+    dist: xenial
 services:
   - mongodb
 install:

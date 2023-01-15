@@ -3,6 +3,7 @@ export const initMongo = async (mongoose, uri) => {
     _setSafe(mongoose, "useFindAndModify", false);
     _setSafe(mongoose, "useCreateIndex", true);
     _setSafe(mongoose, "useUnifiedTopology", true);
+    _setSafe(mongoose, "strictQuery", true);
     await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
