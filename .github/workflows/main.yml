@@ -1,8 +1,12 @@
 name: Main Workflow
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * 0"
 jobs:
   build:
     name: Build
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version: [14, 16, 17, 18, 19]
