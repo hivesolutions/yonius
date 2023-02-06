@@ -161,7 +161,20 @@ export class API extends Observable {
         } else {
             result = await response.blob();
         }
-        verify(response.ok, result.error || errorMessage, response.status || 500);
+        verify(
+            response.ok,
+            (result.error && result.error.message) ||
+                (result.exception && result.exception.message) ||
+                result.error ||
+                result.exception ||
+                errorMessage,
+            response.status || 500,
+            undefined,
+            {
+                response: response,
+                result: result
+            }
+        );
         return result;
     }
 
