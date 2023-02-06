@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Better fallback handling of error messages
+*
 
 ### Fixed
 
 *
+
+## [0.13.0] - 2023-02-06
+
+### Changed
+
+* Better fallback handling of API error messages
 
 ## [0.12.1] - 2023-01-14
 
