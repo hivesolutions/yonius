@@ -17,6 +17,7 @@ export interface QueryParams {
 
 export declare class Model {
     static niw<T = Model>(this: { new (): T }): T;
+    static fill<T = Model>(this: { new (): T }, model?: T, safe = false): Promise<void>;
     static get<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T>;
     static find<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T[]>;
     static count<T = Model>(this: { new (): T }, params?: QueryParams): Promise<number>;
