@@ -1081,8 +1081,8 @@ export class ModelStore extends Model {
         await Promise.all(
             Object.entries(this.model).map(async ([name, value]) => {
                 if (this.constructor.schema[name] === undefined) return;
-                if (incrementA && this.increments.includes(name)) return;
-                if (immutablesA && this.immutables.includes(name)) return;
+                if (incrementA && this.constructor.increments.includes(name)) return;
+                if (immutablesA && this.constructor.immutables.includes(name)) return;
                 model[name] = await this._evaluate(name, value, evaluator);
             })
         );
