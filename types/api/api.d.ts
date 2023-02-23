@@ -1,4 +1,4 @@
-type APIOptions = {
+export type APIOptions = {
     params?: Record<string, unknown>;
     headers?: HeadersInit;
     kwargs?: Record<string, unknown>;
