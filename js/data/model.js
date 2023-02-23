@@ -773,6 +773,20 @@ export class ModelStore extends Model {
         return increments;
     }
 
+    static get immutables() {
+        if (this._immutables !== undefined) return this._immutables;
+        const immutables = [];
+
+        for (const [name, value] of Object.entries(this.schema)) {
+            const isImmutable = value.immutable || false;
+            if (!isImmutable) continue;
+            immutables.push(name);
+        }
+
+        this._immutables = immutables;
+        return immutables;
+    }
+
     static _collection(options) {
         const adapter = this.adapter[0].toUpperCase() + this.adapter.slice(1);
         return new collection[adapter + "Collection"](options);
@@ -1067,7 +1081,8 @@ export class ModelStore extends Model {
         await Promise.all(
             Object.entries(this.model).map(async ([name, value]) => {
                 if (this.constructor.schema[name] === undefined) return;
-                // if (immutablesA && this.immutables[name] !== undefined) return;
+                if (incrementA && this.increments.includes(name)) return;
+                if (immutablesA && this.immutables.includes(name)) return;
                 model[name] = await this._evaluate(name, value, evaluator);
             })
         );

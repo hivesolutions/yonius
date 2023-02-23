@@ -22,6 +22,9 @@ export declare class Model {
     static find<T = Model>(this: { new (): T }, params?: QueryParams): Promise<T[]>;
     static count<T = Model>(this: { new (): T }, params?: QueryParams): Promise<number>;
 
+    static get increments<T = Model>(this: { new (): T }): string[];
+    static get immutables<T = Model>(this: { new (): T }): string[];
+
     constructor(options?: { fill?: boolean });
     apply<T = Model>(this: T, model: Record<string, unknown>): Promise<T>;
     save<T = Model>(this: T): Promise<T>;

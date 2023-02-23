@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Problem with the `fill` operation for the Model saving process, where situation with increments will create issues
 
 ## [0.13.1] - 2023-02-23
 
