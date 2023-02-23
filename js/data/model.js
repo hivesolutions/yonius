@@ -889,7 +889,7 @@ export class ModelStore extends Model {
         // checks if the instance to be saved is a new instance
         // or if this is an update operation and then determines
         // series of default values taking that into account
-        if (isNew === undefined) isNew = this._id === undefined;
+        if (isNew === undefined) isNew = this.isNew;
         if (incrementA === undefined) incrementA = isNew;
         if (immutablesA === undefined) immutablesA = !isNew;
 

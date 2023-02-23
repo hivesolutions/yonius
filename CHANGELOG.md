@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Problem with the `fill` operation for the Model saving process, where situation with increments will create issues
 * Export of `APIOptions` type
+* Issue related to invalid presence testing in `Reference` object
 
 ## [0.13.1] - 2023-02-23
 

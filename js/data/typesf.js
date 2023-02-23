@@ -36,8 +36,9 @@ export const reference = function(target, { name = null, dumpall = false } = {})
                     // then returns it immediately (no need for remove data source access)
                     if (name in target) return target[name];
 
-                    const exists = Boolean(target._object && target._object[name]);
+                    const exists = Boolean(target._object && target._object[name] !== undefined);
                     if (exists) return target._object[name];
+
                     if (target.isResolved) throw new AttributeError(`'${name}' not found`);
 
                     // triggers the base target get method that will resolve the reference
