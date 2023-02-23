@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [0.13.1] - 2023-02-23
+
+### Fixed
+
 * Small issue with the `fill()` method
 
 ## [0.13.0] - 2023-02-06
