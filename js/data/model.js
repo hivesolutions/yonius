@@ -128,7 +128,7 @@ export const VALUE_METHODS = {
 export class Model {
     constructor(options = {}) {
         const fill = options.fill === undefined ? true : options.fill;
-        if (fill) this.constructor.fill(this);
+        if (fill) this.cls.fill(this);
     }
 
     static niw() {
@@ -247,16 +247,16 @@ export class Model {
      * are going to be stored in the current object.
      */
     async _wrap(model) {
-        for (const key of Object.keys(this.constructor.schema)) {
+        for (const key of Object.keys(this.cls.schema)) {
             const value = model[key];
             if (value === undefined) continue;
-            this[key] = this.constructor.cast(key, value);
+            this[key] = this.cls.cast(key, value);
         }
         if (model._id !== undefined) this._id = model._id;
     }
 
     * _validate() {
-        for (const [name, value] of Object.entries(this.constructor.schema)) {
+        for (const [name, value] of Object.entries(this.cls.schema)) {
             const validation = value.validation || false;
             if (!validation) continue;
             for (const callable of validation) {
@@ -868,8 +868,13 @@ export class ModelStore extends Model {
         return eager;
     }
 
+    get cls() {
+        return this.constructor;
+    }
+
     async save({
         validate = true,
+        isNew = undefined,
         incrementA = undefined,
         immutablesA = undefined,
         preSave = true,
@@ -881,6 +886,13 @@ export class ModelStore extends Model {
         beforeCallbacks = [],
         afterCallbacks = []
     } = {}) {
+        // checks if the instance to be saved is a new instance
+        // or if this is an update operation and then determines
+        // series of default values taking that into account
+        if (isNew === undefined) isNew = this._id === undefined;
+        if (incrementA === undefined) incrementA = isNew;
+        if (immutablesA === undefined) immutablesA = !isNew;
+
         // in case the validate flag is set runs the model validation
         // defined for the current model
         if (validate) await this.validate();
@@ -918,13 +930,12 @@ export class ModelStore extends Model {
         // verifies if the current model is a new one or if instead
         // represents an update to a previously stored model and create
         // or update data accordingly
-        const isNew = this._id === undefined;
         if (isNew) {
-            model = await this.constructor.collection.create(model);
+            model = await this.cls.collection.create(model);
         } else {
             const conditions = {};
-            conditions[this.constructor.idName] = this.identifier;
-            model = await this.constructor.collection.findOneAndUpdate(conditions, model);
+            conditions[this.cls.idName] = this.identifier;
+            model = await this.cls.collection.findOneAndUpdate(conditions, model);
         }
 
         // wraps the model object using the current instance
@@ -967,8 +978,8 @@ export class ModelStore extends Model {
         // builds the set of conditions that rare going to be used for
         // the concrete delete operation to be performed
         const conditions = {};
-        conditions[this.constructor.idName] = this.identifier;
-        await this.constructor.collection.findOneAndDelete(conditions);
+        conditions[this.cls.idName] = this.identifier;
+        await this.cls.collection.findOneAndDelete(conditions);
 
         // calls the complete set of callbacks that should be called
         // after the concrete data store delete operation
@@ -986,10 +997,10 @@ export class ModelStore extends Model {
 
     async advance(name, delta = 1) {
         const conditions = {};
-        conditions[this.constructor.idName] = this.identifier;
+        conditions[this.cls.idName] = this.identifier;
         const increments = {};
         increments[name] = delta;
-        let value = await this.constructor.collection.findOneAndUpdate(
+        let value = await this.cls.collection.findOneAndUpdate(
             conditions,
             {
                 $inc: increments
@@ -998,7 +1009,7 @@ export class ModelStore extends Model {
                 new: true
             }
         );
-        value = value || (await this.constructor.collection.find_one(conditions));
+        value = value || (await this.cls.collection.find_one(conditions));
         const _value = value[name];
         this[name] = _value;
         return _value;
@@ -1008,7 +1019,7 @@ export class ModelStore extends Model {
         if (this.isNew) {
             throw new OperationalError("Can't reload a new model entity", 412);
         }
-        const model = await this.constructor.get({ ...params, _id: this._id });
+        const model = await this.cls.get({ ...params, _id: this._id });
         return model;
     }
 
@@ -1027,7 +1038,7 @@ export class ModelStore extends Model {
             400,
             OperationalError
         );
-        for (const [name, field] of Object.entries(this.constructor.schema)) {
+        for (const [name, field] of Object.entries(this.cls.schema)) {
             verify(
                 !field.required || ![undefined, null].includes(model[name]),
                 `No value provided for mandatory field '${name}'`,
@@ -1055,7 +1066,7 @@ export class ModelStore extends Model {
 
     async _filter({
         incrementA = true,
-        immutablesA = true,
+        immutablesA = false,
         normalize = false,
         resolve = false,
         all = false,
@@ -1066,13 +1077,13 @@ export class ModelStore extends Model {
         // iterates over each of the fields that are meant to have its value
         // increment and performs the appropriate operation taking into account
         // if the value is already populated or not
-        for (const name of this.constructor.increments) {
+        for (const name of this.cls.increments) {
             if (incrementA === false) continue;
             const exists = this.model[name] !== undefined;
             if (exists) {
-                model[name] = await this.constructor._ensureMin(name, this.model[name]);
+                model[name] = await this.cls._ensureMin(name, this.model[name]);
             } else {
-                model[name] = await this.constructor._increment(name);
+                model[name] = await this.cls._increment(name);
             }
         }
 
@@ -1080,9 +1091,9 @@ export class ModelStore extends Model {
         // that are not valid for the current class context
         await Promise.all(
             Object.entries(this.model).map(async ([name, value]) => {
-                if (this.constructor.schema[name] === undefined) return;
-                if (incrementA && this.constructor.increments.includes(name)) return;
-                if (immutablesA && this.constructor.immutables.includes(name)) return;
+                if (this.cls.schema[name] === undefined) return;
+                if (incrementA && this.cls.increments.includes(name)) return;
+                if (immutablesA && this.cls.immutables.includes(name)) return;
                 model[name] = await this._evaluate(name, value, evaluator);
             })
         );
@@ -1094,7 +1105,7 @@ export class ModelStore extends Model {
         if (normalize) {
             await Promise.all(
                 Object.entries(this.model).map(async ([name, value]) => {
-                    if (this.constructor.schema[name] === undefined) return;
+                    if (this.cls.schema[name] === undefined) return;
                     if (!value || !value.refV) return;
                     model[name] = await value.refV();
                 })
@@ -1157,7 +1168,7 @@ export class ModelStore extends Model {
         // value and sets it as the value in iteration
         const isModel = value instanceof Model;
         if (isModel) {
-            const meta = this.constructor.definitionN(name);
+            const meta = this.cls.definitionN(name);
             const type = meta.type || String;
             const _name = type._name;
             value = value[_name];
@@ -1172,7 +1183,7 @@ export class ModelStore extends Model {
     }
 
     getIdentifier(model) {
-        return model[this.constructor.idName];
+        return model[this.cls.idName];
     }
 
     get identifier() {

@@ -71,6 +71,7 @@ describe("ModelStore", function() {
             assert.strictEqual(personFriend.isResolved, false);
             assert.strictEqual(person.cats.length, 1);
             assert.strictEqual(person.cats[0].name, "NameCat");
+            assert.strictEqual(await personFriend.name, "NameCatFriend");
 
             person = await mock.Person.get({ id: 1, eager: ["cats.friend"] });
             assert.strictEqual(person.cats instanceof yonius.References, true);

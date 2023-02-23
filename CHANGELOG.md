@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Improved Model's `save()` method to make more structured and safer to use
 
 ### Fixed
 

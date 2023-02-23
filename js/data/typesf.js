@@ -28,16 +28,20 @@ export const reference = function(target, { name = null, dumpall = false } = {})
 
             const proxy = new Proxy(this, {
                 get(target, name) {
-                    // special case to avoid this Proxy
-                    // breaking when being accessed in
-                    // an async context
+                    // special case to avoid this `Proxy` breaking when being accessed in
+                    // an async context because of the `then()` method
                     if (name === "then") return target.then;
 
+                    // in case the name being access is already present in the target object
+                    // then returns it immediately (no need for remove data source access)
                     if (name in target) return target[name];
 
                     const exists = Boolean(target._object && target._object[name]);
                     if (exists) return target._object[name];
                     if (target.isResolved) throw new AttributeError(`'${name}' not found`);
+
+                    // triggers the base target get method that will resolve the reference
+                    // and access the remote data source for value retrieval
                     return target.get(name);
                 },
                 set(target, name, value) {
