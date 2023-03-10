@@ -1,5 +1,9 @@
 export declare class YoniusError extends Error {
+    name: string;
+    message: string;
     code: number;
+    stack?: string;
+    cause?: unknown;
     constructor(message: string, code?: number);
     isClient(): boolean;
     isServer(): boolean;
