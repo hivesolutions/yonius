@@ -903,10 +903,6 @@ export class ModelStore extends Model {
         if (preCreate) await this.preCreate();
         if (preUpdate) await this.preUpdate();
 
-        // runs the lower layer integrity verifications that should raise
-        // exception in case there's a failure
-        await this.verify(this.model);
-
         // filters the values that are present in the current model
         // so that only the valid ones are stored in, invalid values
         // are going to be removed, note that if the operation is an
@@ -919,6 +915,12 @@ export class ModelStore extends Model {
             immutablesA: immutablesA,
             normalize: true
         });
+
+        // runs the lower layer integrity verifications that should raise
+        // exception in case there's a failure, notice that the partial
+        // model payload is used for the new instances and the full model
+        // in instance is used for already existing ones
+        await this.verify(isNew ? model : this.model);
 
         // calls the complete set of callbacks that should be called
         // before the concrete data store save operation
@@ -1072,6 +1074,8 @@ export class ModelStore extends Model {
         all = false,
         evaluator = "jsonV"
     } = {}) {
+        // creates the object that is going to be populated with the valid
+        // values for persistence
         const model = {};
 
         // iterates over each of the fields that are meant to have its value
