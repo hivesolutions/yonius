@@ -238,6 +238,31 @@ describe("ModelStore", function() {
             assert.strictEqual(person.info, null);
         });
 
+        it("should be able to save entities multiple times", async () => {
+            let person = new mock.Person();
+            assert.strictEqual(person.id, undefined);
+            assert.strictEqual(person.idSafe, undefined);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+
+            await person.save();
+            assert.strictEqual(person.id, 1);
+            assert.strictEqual(person.idSafe, 1);
+            assert.strictEqual(person.name, "dummy");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+
+            person = await mock.Person.get({ id: 1 });
+            person.name = "dummy changed";
+            await person.save();
+            assert.strictEqual(person.id, 1);
+            assert.strictEqual(person.idSafe, 1);
+            assert.strictEqual(person.name, "dummy changed");
+            assert.strictEqual(person.age, null);
+            assert.strictEqual(person.info, null);
+        });
+
         it("should be able to validate models", async () => {
             const person = new mock.Person();
             await person.save();

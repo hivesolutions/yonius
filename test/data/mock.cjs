@@ -7,12 +7,14 @@ class Person extends yonius.ModelStore {
                 type: Number,
                 index: true,
                 increment: true,
+                immutable: true,
                 default: true
             },
             idSafe: {
                 type: Number,
                 index: true,
                 increment: true,
+                immutable: true,
                 safe: true
             },
             name: {
