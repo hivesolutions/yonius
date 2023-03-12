@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [0.13.3] - 2023-03-12
+
+### Fixed
+
 * Issue related to the `verify()` operation included in the `save()` method
 
 ## [0.13.2] - 2023-02-23
