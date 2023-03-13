@@ -917,10 +917,10 @@ export class ModelStore extends Model {
         });
 
         // runs the lower layer integrity verifications that should raise
-        // exception in case there's a failure, notice that the partial
-        // model payload is used for the new instances and the full model
-        // in instance is used for already existing ones
-        await this.verify(isNew ? model : this.model);
+        // exception in case there's a failure, the verifications greatly
+        // vary depending if the model is being persisted for the first
+        // time or not (`isNew` flag)
+        await this.verify(model, isNew);
 
         // calls the complete set of callbacks that should be called
         // before the concrete data store save operation
@@ -1032,22 +1032,41 @@ export class ModelStore extends Model {
      *
      * @param {Object} model The model that is going to
      * be verified for a series of elements.
+     * @param {Boolean} isNew If the model is being persisted
+     * for the first time in the data source, or if instead
+     * it's a secondary persistence action.
      */
-    async verify(model) {
-        verify(
-            this.getIdentifier(model) !== undefined && this.getIdentifier(model) !== null,
-            "The identifier must be defined before saving",
-            400,
-            OperationalError
-        );
-        for (const [name, field] of Object.entries(this.cls.schema)) {
+    async verify(model, isNew = true) {
+        if (isNew) {
+            // ensures that the primary identifier field of the model is set,
+            // not having this on initial save would break mode's integrity
             verify(
-                !field.required || ![undefined, null].includes(model[name]),
-                `No value provided for mandatory field '${name}'`,
+                this.getIdentifier(model) !== undefined && this.getIdentifier(model) !== null,
+                "The identifier must be defined before saving",
                 400,
                 OperationalError
             );
+
+            // makes sure that all of the required fields in the schema
+            // are present in the model
+            for (const [name, field] of Object.entries(this.cls.schema)) {
+                verify(
+                    !field.required || ![undefined, null].includes(model[name]),
+                    `No value provided for required field '${name}'`,
+                    400,
+                    OperationalError
+                );
+            }
         }
+
+        // verifies that the model to be saved has at least one field
+        // set, otherwise the save operation would be superfluous
+        verify(
+            Object.keys(model).length > 0,
+            "There must be at least one field being persisted",
+            400,
+            OperationalError
+        );
     }
 
     async preSave() {}
