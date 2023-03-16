@@ -80,7 +80,7 @@
         "watch": "rollup -c -w"
     },
     "dependencies": {
-        "node-fetch": "^2.6.8"
+        "node-fetch": "^3.3.1"
     },
     "devDependencies": {
         "@babel/core": "^7.21.3",
@@ -98,14 +98,14 @@
         "fastify": "^4.14.1",
         "mocha": "^10.2.0",
         "mocha-cli": "^1.0.1",
-        "mongoose": "^6.8.3",
+        "mongoose": "^7.0.2",
         "npm-check-updates": "^16.7.12",
         "nyc": "15.1.0",
         "prettier": "^2.8.4",
         "prettier-config-hive": "^0.1.7",
         "rollup": "^3.19.1",
         "rollup-plugin-dts": "^5.2.0",
-        "rollup-plugin-polyfill-node": "^0.11.0",
+        "rollup-plugin-polyfill-node": "^0.12.0",
         "sort-package-json": "^2.4.1",
         "typescript": "^5.0.2"
     },
