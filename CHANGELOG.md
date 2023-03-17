@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Issue related to the usage of `fixResponseChunkedTransferBadEnding()` method in node-fetch and deno, de-bumped node-fetch version to <2.6.7
 
 ## [0.13.3] - 2023-03-12
 
