@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [0.13.5] - 2023-03-18
+
+### Fixed
+
 * Coalescing issue in default find values
 
 ## [0.13.4] - 2023-03-17
