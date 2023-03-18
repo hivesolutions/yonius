@@ -126,10 +126,10 @@ const _findDefaults = function(params, options = {}) {
     Object.entries(options)
         .filter(([key]) => FIND_TYPES[key])
         .forEach(([key, value]) => {
-            result[key] = params[key] || value;
+            result[key] = params[key] ?? value;
         });
     Object.entries(FIND_DEFAULTS).forEach(([key, value]) => {
-        result[key] = params[key] || value;
+        result[key] = params[key] ?? value;
     });
     return result;
 };
