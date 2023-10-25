@@ -1167,11 +1167,11 @@ export class ModelStore extends Model {
         let isIterable;
         try {
             isIterable = Boolean((value && value.items) || Array.isArray(value));
-        } catch (error) {
+        } catch (err) {
             // AttributeErrors are tolerated since they might simply
             // represent a missing "items" field when dealing with
             // references
-            if (!(error instanceof AttributeError)) throw error;
+            if (!(err instanceof AttributeError)) throw err;
             isIterable = false;
         }
 

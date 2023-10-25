@@ -290,14 +290,11 @@ export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, time
         const start = Date.now();
         try {
             return await fetch(url, options);
-        } catch (error) {
-            const isHangup =
-                error.name === "FetchError" &&
-                error.code === "ECONNRESET" &&
-                error.message.includes("socket hang up");
+        } catch (err) {
+            const isReset = err.code === "ECONNRESET";
             const elapsed = Date.now() - start;
-            if (retries === 0 || elapsed > timeout || !isHangup) {
-                throw error;
+            if (retries === 0 || elapsed > timeout || !isReset) {
+                throw err;
             }
             await new Promise(resolve => setTimeout(resolve, delay));
             retries--;

@@ -7,7 +7,7 @@ let HOME_DIR = null;
 export const pathExists = async function(path) {
     try {
         await fs.promises.access(path);
-    } catch (error) {
+    } catch (err) {
         return false;
     }
     return true;
