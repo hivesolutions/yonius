@@ -19,7 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
-## [0.13.8] - 2023-10-25
+## [0.13.9] - 2023-10-25
+
+### Changed
+
+* More context for hang up of sockets handled
+
+# [0.13.8] - 2023-10-25
 
 ### Changed
 
