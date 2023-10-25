@@ -291,8 +291,7 @@ export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, time
         try {
             return await fetch(url, options);
         } catch (err) {
-            console.log(JSON.stringify(err, Object.getOwnPropertyNames(err), 2));
-            const isReset = err.code === "ECONNRESET" || err.code === "EPIPE";
+            const isReset = err.code === "ECONNRESET";
             const elapsed = Date.now() - start;
             if (retries === 0 || elapsed > timeout || !isReset) {
                 throw err;
