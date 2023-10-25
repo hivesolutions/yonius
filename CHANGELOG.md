@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Made changes to the way connections are handled so that connections that are kept-alive are do not generate ECONNRESET - related to [node-fetch/node-fetch#1735](https://github.com/node-fetch/node-fetch/issues/1735)
 
 ### Fixed
 

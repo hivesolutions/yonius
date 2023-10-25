@@ -76,7 +76,7 @@ export class API extends Observable {
 
     async _methodBasic(method, url, options = {}) {
         const params = options.params !== undefined ? options.params : {};
-        const headers = options.headers !== undefined ? options.headers : {};
+        let headers = options.headers !== undefined ? options.headers : {};
         const kwargs = options.kwargs !== undefined ? options.kwargs : {};
         const handle = options.handle !== undefined ? options.handle : true;
         const getAgent = options.getAgent !== undefined ? options.getAgent : undefined;
@@ -87,7 +87,22 @@ export class API extends Observable {
         });
         const query = urlEncode(params || {});
         if (query) url += url.includes("?") ? "&" + query : "?" + query;
-        const response = await fetch(url, {
+
+        // runs a dummy agent retrieval to check if the current agent
+        // is set to keep connections alive
+        const _getAgent = getAgent || globals.getAgent || undefined;
+        const agent = _getAgent ? _getAgent(new URL(url)) : undefined;
+        const keepAlive = (agent && agent.keepAlive) || false;
+
+        headers = Object.assign({}, headers);
+        if (keepAlive) headers.Connection = "keep-alive";
+
+        // adds a new forced loop, tick to the event loop, this should
+        // help solve closed connection handling problems in node-fetch
+        // while not adding extra issues
+        await new Promise(resolve => setTimeout(resolve, 0));
+
+        const response = await fetchRetry(url, {
             method: method,
             headers: headers || {},
             agent: getAgent || globals.getAgent || undefined
@@ -133,10 +148,22 @@ export class API extends Observable {
             mime = mime || "application/x-www-form-urlencoded";
         }
 
+        // runs a dummy agent retrieval to check if the current agent
+        // is set to keep connections alive
+        const _getAgent = getAgent || globals.getAgent || undefined;
+        const agent = _getAgent ? _getAgent(new URL(url)) : undefined;
+        const keepAlive = (agent && agent.keepAlive) || false;
+
         headers = Object.assign({}, headers);
         if (mime) headers["Content-Type"] = mime;
+        if (keepAlive) headers.Connection = "keep-alive";
 
-        const response = await fetch(url, {
+        // adds a new forced loop, tick to the event loop, this should
+        // help solve closed connection handling problems in node-fetch
+        // while not adding extra issues
+        await new Promise(resolve => setTimeout(resolve, 0));
+
+        const response = await fetchRetry(url, {
             method: method,
             headers: headers || {},
             body: data,
@@ -254,6 +281,28 @@ export class API extends Observable {
         return buffer;
     }
 }
+
+export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, timeout = 100) => {
+    let response = null;
+    while (!response && retries > 0) {
+        const start = Date.now();
+        try {
+            response = await fetch(url, options);
+        } catch (error) {
+            const isHangup =
+                error.name === "FetchError" &&
+                error.code === "ECONNRESET" &&
+                error.message.includes("socket hang up");
+            const elapsed = Date.now() - start;
+            if (retries === 0 || elapsed > timeout || !isHangup) {
+                throw error;
+            }
+            await new Promise(resolve => setTimeout(resolve, delay));
+            retries--;
+        }
+    }
+    return response;
+};
 
 export const buildGetAgent = (AgentHttp, AgentHttps, set = true, options = {}) => {
     const httpAgent = new AgentHttp({
