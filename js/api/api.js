@@ -283,15 +283,13 @@ export class API extends Observable {
 }
 
 export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, timeout = 100) => {
-    let response = null;
-
     // loops around the multiple retries to catching any premature
     // connection close, resulting from dropped connections in the
     // pool, this is a common problem in node.js related to keep-alive
-    while (!response && retries > 0) {
+    while (true) {
         const start = Date.now();
         try {
-            response = await fetch(url, options);
+            return await fetch(url, options);
         } catch (error) {
             const isHangup =
                 error.name === "FetchError" &&
@@ -305,7 +303,6 @@ export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, time
             retries--;
         }
     }
-    return response;
 };
 
 export const buildGetAgent = (AgentHttp, AgentHttps, set = true, options = {}) => {
