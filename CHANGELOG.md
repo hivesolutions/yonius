@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Less strict test for connection reset
+*
 
 ### Fixed
 
 *
+
+## [0.13.8] - 2023-10-25
+
+### Changed
+
+* Less strict test for connection reset
 
 ## [0.13.7] - 2023-10-25
 
