@@ -13,12 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Bumped dependencies
-* Made node-fetch support deno while unblocking its version
+*
 
 ### Fixed
 
 *
+
+## [0.13.6] - 2023-10-25
+
+### Changed
+
+* Bumped dependencies
+* Made node-fetch support deno while unblocking its version
 
 ## [0.13.5] - 2023-03-18
 
