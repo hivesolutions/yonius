@@ -284,6 +284,10 @@ export class API extends Observable {
 
 export const fetchRetry = async (url, options = {}, retries = 5, delay = 0, timeout = 100) => {
     let response = null;
+
+    // loops around the multiple retries to catching any premature
+    // connection close, resulting from dropped connections in the
+    // pool, this is a common problem in node.js related to keep-alive
     while (!response && retries > 0) {
         const start = Date.now();
         try {
