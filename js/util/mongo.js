@@ -10,8 +10,8 @@ export const initMongo = async (mongoose, uri) => {
     });
 };
 
-export const destroyMongo = mongoose => {
-    mongoose.disconnect();
+export const destroyMongo = async mongoose => {
+    await mongoose.disconnect();
 };
 
 const _setSafe = (mongoose, key, value) => {

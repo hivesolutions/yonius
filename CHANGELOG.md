@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Made `destroyMongo()` an `async` function
 
 ## [0.13.10] - 2023-10-25
 
