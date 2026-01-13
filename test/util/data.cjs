@@ -154,4 +154,107 @@ describe("#getObject()", function() {
             }
         );
     });
+
+    it("should handle sorter and direction", () => {
+        assert.deepStrictEqual(
+            yonius.getObject(
+                {
+                    sorter: "name",
+                    direction: "ascending"
+                },
+                {
+                    alias: true,
+                    page: true,
+                    find: true
+                }
+            ),
+            {
+                sorter: "name",
+                direction: "ascending",
+                limit: 50,
+                skip: 0,
+                sort: [["name", 1]]
+            }
+        );
+
+        assert.deepStrictEqual(
+            yonius.getObject(
+                {
+                    sorter: "price",
+                    direction: "descending"
+                },
+                {
+                    alias: true,
+                    page: true,
+                    find: true
+                }
+            ),
+            {
+                sorter: "price",
+                direction: "descending",
+                limit: 50,
+                skip: 0,
+                sort: [["price", -1]]
+            }
+        );
+
+        assert.deepStrictEqual(
+            yonius.getObject(
+                {
+                    sorter: "id"
+                },
+                {
+                    alias: true,
+                    page: true,
+                    find: true
+                }
+            ),
+            {
+                sorter: "id",
+                limit: 50,
+                skip: 0,
+                sort: [["id", -1]]
+            }
+        );
+    });
+
+    it("should handle default sort", () => {
+        assert.deepStrictEqual(
+            yonius.getObject(
+                {
+                    sort: "default"
+                },
+                {
+                    alias: true,
+                    page: true,
+                    find: true
+                }
+            ),
+            {
+                limit: 50,
+                skip: 0,
+                sort: null
+            }
+        );
+    });
+
+    it("should handle empty array parameters", () => {
+        assert.deepStrictEqual(
+            yonius.getObject(
+                {
+                    "filters[]": []
+                },
+                {
+                    alias: true,
+                    page: true,
+                    find: true
+                }
+            ),
+            {
+                find_d: [],
+                limit: 50,
+                skip: 0
+            }
+        );
+    });
 });

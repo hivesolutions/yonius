@@ -9,14 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Added comprehensive tests for `MixinBuilder` class covering single and multiple mixins
+* Added tests for `getObject()` function covering sorter/direction and empty array parameters
+* Added tests for `sizeRoundUnit()` covering justified values, simplified units, and edge cases
+* Added tests for `absoluteUrl()` function covering base URL, custom env vars, and fallbacks
 
 ### Changed
 
 * Migrated from ESLint 8 to ESLint 9 with flat config format
 * Updated GitHub Actions workflows to use modern setup-node action and MongoDB 7.0
 * Updated Node.js test matrix to versions 18, 19, 20, 21, and 22
-* Updated minimum Node.js engine requirement from >=12 to >=18.18
+* Updated minimum Node.js engine requirement from >=12 to >=18
 * Bumped ESLint and TypeScript-ESLint dependencies to latest versions
 * Removed unnecessary ESLint disable comments from model callbacks
 * Removed deprecated Travis CI configuration

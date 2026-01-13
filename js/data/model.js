@@ -255,7 +255,7 @@ export class Model {
         if (model._id !== undefined) this._id = model._id;
     }
 
-    * _validate() {
+    *_validate() {
         for (const [name, value] of Object.entries(this.cls.schema)) {
             const validation = value.validation || false;
             if (!validation) continue;
