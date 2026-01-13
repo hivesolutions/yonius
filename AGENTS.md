@@ -6,7 +6,7 @@ Always format the code before commiting using, making sure that the Python code 
 
 ```bash
 yarn install
-yarn run prettier
+yarn run pretty
 ```
 
 ## Testing
@@ -26,7 +26,7 @@ yarn test
 - Write commit messages using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - Never bump the internal package version in `package.json`. This is handled automatically by the release process.
 - TypeScript and Javascript files use CRLF as the line ending.
-- The style should respect the "prettier" formatting.
+- The style should respect the "pretty" formatting.
 - The implementation should be done in a way that is compatible with the existing codebase.
 - The commenting style of the project is unique, try to keep commenting style consistent.
 
@@ -79,7 +79,7 @@ version: 1.8.0
 
 Before committing, ensure that the following operations items check:
 
-- [ ] Code is formatted with `yarn run prettier`
+- [ ] Code is formatted with `yarn run pretty`
 - [ ] Tests pass: `yarn test`
 - [ ] CHANGELOG.md is updated in [Unreleased] section
 - [ ] No debugging print statements or commented-out code
