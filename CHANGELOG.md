@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [0.14.0] - 2026-01-13
+
+### Added
+
 * Added comprehensive tests for `MixinBuilder` class covering single and multiple mixins
 * Added tests for `getObject()` function covering sorter/direction and empty array parameters
 * Added tests for `sizeRoundUnit()` covering justified values, simplified units, and edge cases
@@ -23,10 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Bumped ESLint and TypeScript-ESLint dependencies to latest versions
 * Removed unnecessary ESLint disable comments from model callbacks
 * Removed deprecated Travis CI configuration
-
-### Fixed
-
-*
 
 ## [0.13.12] - 2026-01-13
 
