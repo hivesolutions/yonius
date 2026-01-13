@@ -925,7 +925,6 @@ export class ModelStore extends Model {
         // calls the complete set of callbacks that should be called
         // before the concrete data store save operation
         for (const callback of beforeCallbacks) {
-            // eslint-disable-next-line n/no-callback-literal
             await callback(this, this.model);
         }
 
@@ -947,7 +946,6 @@ export class ModelStore extends Model {
         // calls the complete set of callbacks that should be called
         // after the concrete data store save operation
         for (const callback of afterCallbacks) {
-            // eslint-disable-next-line n/no-callback-literal
             await callback(this, this.model);
         }
 
@@ -973,7 +971,6 @@ export class ModelStore extends Model {
         // calls the complete set of callbacks that should be called
         // before the concrete data store delete operation
         for (const callback of beforeCallbacks) {
-            // eslint-disable-next-line n/no-callback-literal
             await callback(this, this.model);
         }
 
@@ -986,7 +983,6 @@ export class ModelStore extends Model {
         // calls the complete set of callbacks that should be called
         // after the concrete data store delete operation
         for (const callback of afterCallbacks) {
-            // eslint-disable-next-line n/no-callback-literal
             await callback(this, this.model);
         }
 

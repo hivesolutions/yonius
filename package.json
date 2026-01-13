@@ -89,13 +89,14 @@
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-json": "^6.0.1",
         "@rollup/plugin-node-resolve": "^15.2.3",
-        "@typescript-eslint/eslint-plugin": "^5.62.0",
-        "@typescript-eslint/parser": "^5.62.0",
+        "@typescript-eslint/eslint-plugin": "^8.18.0",
+        "@typescript-eslint/parser": "^8.18.0",
         "coveralls": "^3.1.1",
-        "eslint": "^8.52.0",
+        "eslint": "^9.18.0",
         "eslint-config-hive": "^0.6.0",
-        "eslint-plugin-n": "^15.7.0",
+        "eslint-plugin-n": "^17.14.0",
         "fastify": "^4.24.3",
+        "globals": "^17.0.0",
         "mocha": "^10.2.0",
         "mocha-cli": "^1.0.1",
         "mongoose": "^7.6.3",
@@ -110,7 +111,7 @@
         "typescript": "^5.2.2"
     },
     "engines": {
-        "node": ">=12"
+        "node": ">=18.18"
     },
     "base": "dist/yonius.js",
     "import": "dist/yonius.esm.mjs",

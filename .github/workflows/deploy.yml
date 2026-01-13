@@ -7,22 +7,20 @@ jobs:
   build:
     name: Deploy
     timeout-minutes: 10
-    strategy:
-      matrix:
-        node-version: [14]
     runs-on: ubuntu-latest
-    container: node:${{ matrix.node-version }}-buster
     steps:
       - name: Checkout code from repository
         uses: actions/checkout@v4
-      - name: Instal MongoDB
-        run: |
-          wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
-          echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-          apt-get update && apt-get install -y mongodb-org mongodb-org-server mongodb-org-database\
-            mongodb-org-mongos mongodb-org-shell mongodb-org-tools && mkdir -p /data/db
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: https://registry.npmjs.org/
       - name: Start MongoDB instance
-        run: mongod &
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: 7.0
       - name: Print Node.js information
         run: node --version
       - name: Install package
@@ -34,10 +32,10 @@ jobs:
       - name: Verify Javascript code linting
         run: npm run lint
       - name: Run unit tests
-        run: MONGO_URL=mongodb://localhost/test npm test
-      - name: Deploy package to NPM
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm publish
+        run: npm test
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          MONGO_URL: mongodb://localhost/test
+      - name: Deploy package to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

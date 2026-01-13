@@ -17,6 +17,7 @@ and run the appropriate test suite (last command).
 Try to run the unit tests whenever making changes to the codebase, before commiting new code.
 
 ```bash
+yarn install
 yarn test
 ```
 

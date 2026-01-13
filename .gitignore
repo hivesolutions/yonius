@@ -1,8 +1,11 @@
+tmpclaude-*
+
 .DS_Store
 
 yarn.lock
 package-lock.json
 
+/.claude
 /.nyc_output
 /.vscode/settings.json
 

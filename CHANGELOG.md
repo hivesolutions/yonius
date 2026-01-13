@@ -13,7 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Migrated from ESLint 8 to ESLint 9 with flat config format
+* Updated GitHub Actions workflows to use modern setup-node action and MongoDB 7.0
+* Updated Node.js test matrix to versions 18, 19, 20, 21, and 22
+* Updated minimum Node.js engine requirement from >=12 to >=18.18
+* Bumped ESLint and TypeScript-ESLint dependencies to latest versions
+* Removed unnecessary ESLint disable comments from model callbacks
+* Removed deprecated Travis CI configuration
 
 ### Fixed
 

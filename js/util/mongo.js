@@ -21,5 +21,7 @@ export const destroyMongo = async mongoose => {
 const _setSafe = (mongoose, key, value) => {
     try {
         mongoose.set(key, value);
-    } catch (err) {}
+    } catch (err) {
+        // silently ignore errors when setting mongoose options
+    }
 };

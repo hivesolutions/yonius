@@ -9,20 +9,20 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        node-version: [14, 16, 17, 18, 19, 20]
+        node-version: [18, 19, 20, 21, 22]
     runs-on: ubuntu-latest
-    container: node:${{ matrix.node-version }}-buster
     steps:
       - name: Checkout code from repository
         uses: actions/checkout@v4
-      - name: Instal MongoDB
-        run: |
-          wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
-          echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-          apt-get update && apt-get update && apt-get install -y mongodb-org mongodb-org-server mongodb-org-database\
-            mongodb-org-mongos mongodb-org-shell mongodb-org-tools && mkdir -p /data/db
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
       - name: Start MongoDB instance
-        run: mongod &
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: 7.0
       - name: Print Node.js information
         run: node --version
       - name: Install package
@@ -34,4 +34,6 @@ jobs:
       - name: Verify Javascript code linting
         run: npm run lint
       - name: Run unit tests
-        run: MONGO_URL=mongodb://localhost/test npm test
+        run: npm test
+        env:
+          MONGO_URL: mongodb://localhost/test
