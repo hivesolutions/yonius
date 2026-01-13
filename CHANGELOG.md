@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Improved MongoDB connection retry logic with fallback for deprecated options
+*
 
 ### Fixed
 
 *
+
+## [0.13.12] - 2026-01-13
+
+### Changed
+
+* Improved MongoDB connection retry logic with fallback for deprecated options
 
 ## [0.13.11] - 2024-01-16
 
